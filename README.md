@@ -110,6 +110,7 @@ This repository contains the practical work for the Programming Paradigms course
 
 ## Additional material
 
+-   [Practical work report](#) <!-- TODO -->
 -   [Practical work requirements](./docs/translations/en/requirements.md)
 
 ## License
