@@ -178,7 +178,6 @@ Final inventory (previously mentioned) **(+1 point)**
 
 Catalysts are additional elements that optimize the crafting process, possibly reducing the number of base materials needed or increasing the amount of resulting materials. Each catalyst is linked to a specific type of recipe (e.g., fire catalysts can only be used with fire-type recipes). There is one type of catalyst per recipe type, and the inventory may contain none or multiple units of each type.
 
-> [!IMPORTANT]
 > Catalysts cannot be used as ingredients in recipes.
 
 </details>
@@ -188,7 +187,6 @@ Catalysts are additional elements that optimize the crafting process, possibly r
 
 Workbenches are optional tools that expand the set of available crafting recipes. Each bench unlocks between `1` and `N` additional recipes. Multiple types of benches must exist, and their presence or absence in the inventory (`0` or `1` per type) directly affects which recipes are available, thus modifying the system's overall behavior. This item can be combined with bonus point 2, but it is not compatible with the catalyst mechanic (bonus point 4).
 
-> [!TIP]
 > If I had the ingredients, I could craft workbenches **(+1 point)**.
 
 </details>

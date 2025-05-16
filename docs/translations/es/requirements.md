@@ -178,7 +178,6 @@ Inventario final (mencionado previamente) **(+1 punto)**
 
 Los catalizadores son elementos adicionales que permiten optimizar el proceso de fabricación, pudiendo reducir la cantidad de materiales base necesarios o aumentar la cantidad de materiales obtenidos como resultado. Cada catalizador está vinculado a un tipo específico de receta (por ejemplo, los catalizadores de fuego solo pueden utilizarse con recetas de tipo fuego). Existe un tipo de catalizador por cada tipo de receta y el inventario puede contener desde ninguno hasta múltiples ejemplares de cada uno.
 
-> [!IMPORTANT]
 > Los catalizadores no pueden ser utilizados como ingredientes en la creación de recetas.
 
 </details>
@@ -188,7 +187,6 @@ Los catalizadores son elementos adicionales que permiten optimizar el proceso de
 
 Las mesas de trabajo son herramientas opcionales que amplían el repertorio de recetas disponibles para fabricar. Cada mesa desbloquea entre `1` y `N` recetas adicionales. Deben existir múltiples tipos de mesas y su presencia o ausencia en el inventario (`0` o `1` por tipo) afecta directamente qué recetas están disponibles, modificando así el comportamiento general del sistema. Este ítem puede combinarse con el punto bonus 2, pero no es compatible con la mecánica de catalizadores (punto bonus 4).
 
-> [!TIP]
 > Si tuviera los ingredientes, puedo craftear mesas de trabajo **(+1 punto)**.
 
 </details>
