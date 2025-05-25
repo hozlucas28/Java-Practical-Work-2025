@@ -46,6 +46,123 @@ This repository contains the practical work for the Programming Paradigms course
 
 1. [TODO]. <!-- TODO -->
 
+## Diagrams
+
+<details>
+<summary>Class diagram</summary>
+
+```mermaid
+---
+config:
+  class:
+    hideEmptyMembersBox: true
+
+  theme: redux
+  look: neo
+  layout: elk
+---
+classDiagram
+direction TB
+
+    class RecipesRepository {
+	    +HashMap~String, Item~ items
+
+	    Item getItem(String key)
+	    List~Item~ getItems()
+    }
+
+    class PreInit {
+	    +static Inventory loadInventoryJSON(String path)
+	    +static RecipesRepository loadRecipesJSON(String path)
+    }
+
+    class Item {
+	    -String name
+	    -int quantity
+	    -List~Recipe~ recipes
+
+	    +String getName()
+	    +int getQuantity()
+	    +List~Recipe~ getCraftableRecipes(Inventory inventory)
+	    +bool isBase()
+    }
+
+    class Recipe {
+	    -Item craftingTable
+	    -List~Ingredient~ ingredients
+	    -int time
+	    -int itemsToCraft
+
+	    +List~Item~ getIngredients()
+	    +List~Item~ getIngredientsToBase()
+    }
+
+    class Inventory {
+	    -List~Item~ items
+
+	    +List~Item~ getItems()
+	    +String toJSON()
+	    +void toJSON(String path)
+    }
+
+    class CraftedItem {
+	    -Date fecha
+	    -Recipe usedRecipe
+
+	    +List~Item~ undo()
+    }
+
+    class Ingredient {
+	    -Item item
+	    -int quantity
+
+	    +Item getItem()
+	    +int getQuantity()
+    }
+
+    class CraftingSystem {
+	    -List~Item~ itemsToCraft
+	    -Inventory inventory
+	    -CraftingHistory history
+
+	    +int getCraftableUnits()
+	    +List~Item~ getRequiredIngredients()
+	    +List~Item~ getRequiredIngredientsToBase()
+	    +List~Item~ setItemsToCraft(List~Item~ itemsToCraft)
+	    +bool canCraft()
+	    +craftItems()
+	    +bool redoCraft()
+	    +bool undoLastCraft()
+    }
+
+    class CraftingHistory {
+	    -List~CraftedItem~ items
+	    -List~CraftedItem~ undoItems
+
+	    +bool redoCraft(Inventory inventory)
+	    +bool undoLastCraft(Inventory inventory)
+    }
+
+    Recipe "0...*" o-- "1" Item : Has
+
+    Item "0...*" o-- "1" Inventory : Has
+
+    Item <|-- CraftedItem : Inherits from
+
+    Ingredient "1...*" o-- "1" Recipe : Has
+
+    Item "1...*" o-- "1" CraftingSystem : Has
+    Inventory "1" o-- "1" CraftingSystem : Has
+    CraftingHistory "1" *-- "1" CraftingSystem : Instance
+
+    CraftedItem "0...*" o-- "1" CraftingHistory : Has
+```
+
+</details>
+
+> [!NOTE]
+> The diagrams were developed from scratch as part of the preliminary project reports.
+
 ## Team workflow
 
 ```mermaid
