@@ -165,13 +165,11 @@ direction TB
 
 ## Team workflow
 
-<div media="(prefers-color-scheme: dark)">
-
 ```mermaid
 ---
 config:
   logLevel: debug
-  theme: dark
+  theme: base
   gitGraph:
     showBranches: true
     showCommitLabel: true
@@ -211,61 +209,7 @@ gitGraph:
         merge "Maudet Alejandro"
         merge "Hoz Lucas"
         merge "Monges Omar" tag: "v1.0.0"
-
 ```
-
-</div>
-
-<div media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)">
-
----
-
-config:
-logLevel: debug
-theme: base
-gitGraph:
-showBranches: true
-showCommitLabel: true
-mainBranchName: Master
-parallelCommits: true
-
----
-
-gitGraph:
-commit
-commit tag: "v0.0.1"
-branch "Aguilera Emanuel"
-commit
-commit
-checkout Master
-branch "De Marco Juan"
-commit
-commit
-checkout Master
-branch "Hoz Lucas"
-commit
-commit
-checkout Master
-branch "Rueda Olarte Joel"
-commit
-commit
-checkout Master
-branch "Maudet Alejandro"
-commit
-commit
-checkout Master
-branch "Monges Omar"
-commit
-commit
-checkout Master
-merge "De Marco Juan"
-merge "Aguilera Emanuel"
-merge "Rueda Olarte Joel"
-merge "Maudet Alejandro"
-merge "Hoz Lucas"
-merge "Monges Omar" tag: "v1.0.0"
-
-</div>
 
 ### Tags
 
