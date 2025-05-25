@@ -151,7 +151,7 @@ direction TB
 
     Ingredient "1...*" o-- "1" Recipe : Has
 
-    Item "1...*" o-- "1" CraftingSystem : Has
+    Item "0...*" o-- "1" CraftingSystem : Has
     Inventory "1" o-- "1" CraftingSystem : Has
     CraftingHistory "1" *-- "1" CraftingSystem : Instance
 
