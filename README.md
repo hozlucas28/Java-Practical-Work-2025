@@ -64,25 +64,24 @@ config:
 classDiagram
 direction TB
 
-    class RecipesRepository {
-	    +HashMap~String, Item~ items
-
-	    Item getItem(String key)
-	    List~Item~ getItems()
+    class FileManager {
+	    +static Inventory loadInventoryFromJSON(String path)
+	    +static ItemsRepository loadRecipesFromJSON(String path)
+	    +static void saveInventoryToJSON(Inventory inventory, String path)
     }
 
-    class PreInit {
-	    +static Inventory loadInventoryJSON(String path)
-	    +static RecipesRepository loadRecipesJSON(String path)
+    class ItemsRepository {
+	    +HashMap~String, Item~ items
+
+	    +Item getItem(String key)
+	    +HashMap~String, Item~ getItems()
     }
 
     class Item {
 	    -String name
-	    -int quantity
 	    -List~Recipe~ recipes
 
 	    +String getName()
-	    +int getQuantity()
 	    +List~Recipe~ getCraftableRecipes(Inventory inventory)
 	    +bool isBase()
     }
@@ -98,11 +97,10 @@ direction TB
     }
 
     class Inventory {
-	    -List~Item~ items
+        -HashMap~Item, int~ items
 
-	    +List~Item~ getItems()
-	    +String toJSON()
-	    +void toJSON(String path)
+	    +HashMap~Item, int~ getItems()
+	    +Item getItemQuantity(Item item)
     }
 
     class CraftedItem {
@@ -142,6 +140,9 @@ direction TB
 	    +bool redoCraft(Inventory inventory)
 	    +bool undoLastCraft(Inventory inventory)
     }
+
+    FileManager --> ItemsRepository : Instance
+    Item "0...*" o-- "1" ItemsRepository : Has
 
     Recipe "0...*" o-- "1" Item : Has
 
