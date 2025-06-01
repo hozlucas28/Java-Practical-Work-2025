@@ -12,10 +12,11 @@
     <a href="#summary">Summary</a> •
     <a href="#features">Features</a> •
     <a href="#installation">Installation</a> •
+    <a href="#installation">Diagrams</a> •
     <a href="#team-workflow">Team workflow</a> •
-    <a href="#development-team">Development team</a> •
-    <a href="#additional-material">Additional material</a>
+    <a href="#development-team">Development team</a>
     <br>
+    <a href="#additional-material">Additional material</a> •
     <a href="#license">License</a> •
     <a href="#acknowledgments">Acknowledgments</a>
 </p>
