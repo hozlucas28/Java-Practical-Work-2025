@@ -57,7 +57,7 @@ This repository contains the practical work for the Programming Paradigms course
 ## Installation
 
 1. Clone the repository to your device and install [Eclipse IDE for Java developers](https://www.eclipse.org/downloads/packages/).
-2. Open the cloned repository with Eclipse IDE and the [Index.java](./src/Main.java) file inside the [default package](./src/).
+2. Open the cloned repository with Eclipse IDE and the [Index.java](./src/Main.java) file.
 3. Then, press the green button (`Run index`) at the top of the navbar.
 4. That's all, enjoy the crafting system through the interaction with the console.
 
@@ -73,7 +73,7 @@ If you want to run all JUnit tests, you have to press `Right click` on the proje
 
 To change the items in the inventory, you have to update the [inventory.json](./src/assets/inventory.json) file with the desired ones.
 
-> It's important to follow the same structure as the original ones and these must be inside the [recipes.json](./src/assets/recipes.json) file (except the basic items).
+> It's important to follow the same structure as the original ones, and these must be defined inside the [recipes.json](./src/assets/recipes.json) file.
 
 </details>
 
