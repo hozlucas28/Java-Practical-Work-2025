@@ -108,6 +108,7 @@ direction TB
 	    -HashMap~String, Item~ items
 
 	    +Item getItem(String key)
+        +static ItemsRepository loadFromJSON(String path)
     }
 
     class Item {
@@ -141,6 +142,7 @@ direction TB
 	    +void addItem(Item item, int quantity)
 	    +void removeItem(Item item, int quantity)
         +void storeOnJSON(String path)
+        +static Inventory loadFromJSON(String path)
     }
 
     class CraftedItem {
