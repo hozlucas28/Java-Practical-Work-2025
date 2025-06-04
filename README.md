@@ -71,16 +71,16 @@ If you want to run all JUnit tests, you have to press `Right click` on the proje
 <details>
 <summary>How can I change the inventory?</summary>
 
-To change the items in the inventory, you have to update the [inventory.json](./src/statics/inventory.json) file with the desired ones.
+To change the items in the inventory, you have to update the [inventory.json](./src/assets/inventory.json) file with the desired ones.
 
-> It's important to follow the same structure as the original ones and these must be inside the [recipes.json](./src/statics/recipes.json) file (except the basic items).
+> It's important to follow the same structure as the original ones and these must be inside the [recipes.json](./src/assets/recipes.json) file (except the basic items).
 
 </details>
 
 <details>
 <summary>How can I change the list of available items to craft?</summary>
 
-To change the list of available items to craft, you must update the [recipes.json](./src/statics/recipes.json) file with the new craftable items.
+To change the list of available items to craft, you must update the [recipes.json](./src/assets/recipes.json) file with the new craftable items.
 
 > It's important to follow the same structure as the original ones.
 
