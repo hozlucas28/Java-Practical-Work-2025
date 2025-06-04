@@ -37,15 +37,54 @@
 
 ## Summary
 
-This repository contains the practical work for the Programming Paradigms course at the [National University of La Matanza (UNLaM)](https://www.unlam.edu.ar/). The practical work consists of [TODO]. <!-- TODO -->
+This repository contains the practical work for the Programming Paradigms course at the [National University of La Matanza (UNLaM)](https://www.unlam.edu.ar/). The practical work consists of doing a crafting system in Java and testing it with [JUnit 5](https://junit.org/junit5/).
 
 ## Features
 
--   [TODO]. <!-- TODO -->
+-   Architecture planning
+-   Code conventions and standards
+-   Code documentation
+-   Collections
+-   Commits following the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+-   Deployment of releases
+-   E2E testing with [JUnit 5](https://junit.org/junit5/)
+-   File reading and interpretation
+-   Input control using validations
+-   Local storage of records
+-   Team Workflow planning (branches, tags, and releases)
+-   Unit testing with [JUnit 5](https://junit.org/junit5/)
 
 ## Installation
 
-1. [TODO]. <!-- TODO -->
+1. Clone the repository to your device and install [Eclipse IDE for Java developers](https://www.eclipse.org/downloads/packages/).
+2. Open the cloned repository with Eclipse IDE and the [Index.java](./src/Main.java) file inside the [default package](./src/).
+3. Then, press the green button (`Run index`) at the top of the navbar.
+4. That's all, enjoy the crafting system through the interaction with the console.
+
+<details>
+<summary>How can I run all JUnit tests?</summary>
+
+If you want to run all JUnit tests, you have to press `Right click` on the project within `Package explorer` of Eclipse IDE, and select `Run as` -> `JUnit Test`. That's all, Eclipse IDE will start running all the tests.
+
+</details>
+
+<details>
+<summary>How can I change the inventory?</summary>
+
+To change the items in the inventory, you have to update the [inventory.json](./src/statics/inventory.json) file with the desired ones.
+
+> It's important to follow the same structure as the original ones and these must be inside the [recipes.json](./src/statics/recipes.json) file (except the basic items).
+
+</details>
+
+<details>
+<summary>How can I change the list of available items to craft?</summary>
+
+To change the list of available items to craft, you must update the [recipes.json](./src/statics/recipes.json) file with the new craftable items.
+
+> It's important to follow the same structure as the original ones.
+
+</details>
 
 ## Diagrams
 
@@ -65,17 +104,10 @@ config:
 classDiagram
 direction TB
 
-    class FileManager {
-	    +static Inventory loadInventoryFromJSON(String path)
-	    +static ItemsRepository loadRecipesFromJSON(String path)
-	    +static void saveInventoryToJSON(Inventory inventory, String path)
-    }
-
     class ItemsRepository {
-	    +HashMap~String, Item~ items
+	    -HashMap~String, Item~ items
 
 	    +Item getItem(String key)
-	    +HashMap~String, Item~ getItems()
     }
 
     class Item {
@@ -83,32 +115,40 @@ direction TB
 	    -List~Recipe~ recipes
 
 	    +String getName()
+	    +List~Recipe~ getRecipes()
 	    +List~Recipe~ getCraftableRecipes(Inventory inventory)
 	    +bool isBase()
     }
 
     class Recipe {
-	    -Item craftingTable
+	    -Optional~Item~ craftingTable
 	    -List~Ingredient~ ingredients
-	    -int time
+	    -int timeToCraftInMilliseconds
 	    -int itemsToCraft
 
+	    +Optional~Item~ getCraftingTable()
 	    +List~Item~ getIngredients()
+	    +int getTimeToCraftInMilliseconds()
+	    +int getItemsToCraft()
 	    +List~Item~ getIngredientsToBase()
     }
 
     class Inventory {
-        -HashMap~Item, int~ items
+        -HashMap~Item, Integer~ items
 
-	    +HashMap~Item, int~ getItems()
+	    +HashMap~Item, Integer~ getItems()
 	    +Item getItemQuantity(Item item)
+	    +void addItem(Item item, int quantity)
+	    +void removeItem(Item item, int quantity)
+        +void storeOnJSON(String path)
     }
 
     class CraftedItem {
-	    -Date fecha
+	    -Date date
 	    -Recipe usedRecipe
 
-	    +List~Item~ undo()
+	    +Date getDate()
+	    +Recipe getUsedRecipe()
     }
 
     class Ingredient {
@@ -120,29 +160,27 @@ direction TB
     }
 
     class CraftingSystem {
-	    -List~Item~ itemsToCraft
 	    -Inventory inventory
+	    -List~Item~ itemsToCraft
 	    -CraftingHistory history
 
 	    +int getCraftableUnits()
 	    +List~Item~ getRequiredIngredients()
 	    +List~Item~ getRequiredIngredientsToBase()
-	    +List~Item~ setItemsToCraft(List~Item~ itemsToCraft)
 	    +bool canCraft()
+	    +List~Item~ setItemsToCraft(List~Item~ itemsToCraft)
 	    +craftItems()
-	    +bool redoCraft()
 	    +bool undoLastCraft()
     }
 
     class CraftingHistory {
 	    -List~CraftedItem~ items
-	    -List~CraftedItem~ undoItems
 
-	    +bool redoCraft(Inventory inventory)
-	    +bool undoLastCraft(Inventory inventory)
+        +List~CraftedItem~ getItems()
+	    +void addItem(Item item, Recipe usedRecipe)
+	    +CraftedItem removeLastItem()
     }
 
-    FileManager --> ItemsRepository : Instance
     Item "0...*" o-- "1" ItemsRepository : Has
 
     Recipe "0...*" o-- "1" Item : Has
