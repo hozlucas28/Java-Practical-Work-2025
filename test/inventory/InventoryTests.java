@@ -78,6 +78,7 @@ class InventoryTests {
 		});
 	}
 
+	@Test
 	void addItem_OutOfRangeException() {
 		// Arrange
 		HashMap<Item, Integer> items = new HashMap<Item, Integer>();
@@ -117,9 +118,10 @@ class InventoryTests {
 		});
 	}
 
+	@Test
 	void removeItem_ItemNotFoundException() {
 		// Arrange
-		Item item = new Item("A", "My item", null);
+		Item item = new Item("A", "My item");
 
 		HashMap<Item, Integer> items = new HashMap<Item, Integer>();
 		Inventory inventory = new Inventory(items);
@@ -132,6 +134,7 @@ class InventoryTests {
 		});
 	}
 
+	@Test
 	void removeItem_OutOfRangeException() {
 		// Arrange
 		Item item = new Item("A", "My item");
