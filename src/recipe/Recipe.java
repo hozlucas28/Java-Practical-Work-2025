@@ -6,10 +6,10 @@ import java.util.Optional;
 import inventory.Item;
 
 public class Recipe {
-	private final Optional<Item> craftingTable;
 	private final List<Ingredient> ingredients;
 	private final int timeToCraftInMilliseconds;
 	private final int itemsToCraft;
+	private final Optional<Item> craftingTable;
 
 	public Recipe(List<Ingredient> ingredients, int timeToCraftInMilliseconds, int itemsToCraft) {
 		this.craftingTable = Optional.empty();
@@ -25,10 +25,6 @@ public class Recipe {
 		this.itemsToCraft = itemsToCraft;
 	}
 
-	public Optional<Item> getCraftingTable() {
-		return this.craftingTable;
-	}
-
 	public List<Ingredient> getIngredients() {
 		return this.ingredients;
 	}
@@ -39,6 +35,10 @@ public class Recipe {
 
 	public int getItemsToCraft() {
 		return this.itemsToCraft;
+	}
+	
+	public Optional<Item> getCraftingTable() {
+		return this.craftingTable;
 	}
 
 	public List<Ingredient> getIngredientsToBase() {
