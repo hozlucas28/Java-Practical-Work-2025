@@ -124,16 +124,16 @@ direction TB
     }
 
     class Recipe {
-	    -Optional~Item~ craftingTable
 	    -List~Ingredient~ ingredients
 	    -int timeToCraftInMilliseconds
 	    -int itemsToCraft
+	    -Optional~Item~ craftingTable
 
-	    +Optional~Item~ getCraftingTable()
 	    +List~Item~ getIngredients()
 	    +int getTimeToCraftInMilliseconds()
 	    +int getItemsToCraft()
 	    +List~Item~ getIngredientsToBase()
+	    +Optional~Item~ getCraftingTable()
     }
 
     class Inventory {
