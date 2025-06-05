@@ -2,6 +2,7 @@ package repositories;
 
 import java.util.HashMap;
 
+import exceptions.ItemNotFoundException;
 import inventory.Item;
 
 public class ItemsRepository {
@@ -11,8 +12,15 @@ public class ItemsRepository {
 		this.items = items;
 	};
 
-	public Item getItem(String itemName) {
-		return this.items.get(itemName);
+	public Item getItem(String itemId) throws ItemNotFoundException {
+		Item item = this.items.get(itemId);
+		
+		if (item == null) {
+			String errorMessage = String.format("Item with `%s` id was not found inside items repository", itemId);
+			throw new ItemNotFoundException(errorMessage);
+		}
+		
+		return item;
 	}
 	
 	public static ItemsRepository loadFromJSON(String path) {

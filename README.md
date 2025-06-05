@@ -107,7 +107,7 @@ direction TB
     class ItemsRepository {
 	    -HashMap~String, Item~ items
 
-	    +Item getItem(String key)
+	    +Item getItem(String itemId)
         +static ItemsRepository loadFromJSON(String path)
     }
 
