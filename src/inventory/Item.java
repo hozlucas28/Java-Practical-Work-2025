@@ -5,12 +5,18 @@ import java.util.List;
 import recipe.Recipe;
 
 public class Item {
+	private final String id;
 	private final String name;
 	private final List<Recipe> recipes;
 
-	public Item(String name, List<Recipe> recipes) {
+	public Item(String id, String name, List<Recipe> recipes) {
+		this.id = id;
 		this.name = name;
 		this.recipes = recipes;
+	}
+	
+	public String getId() {
+		return this.id;
 	}
 
 	public String getName() {

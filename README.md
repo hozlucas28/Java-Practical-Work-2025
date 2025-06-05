@@ -112,9 +112,11 @@ direction TB
     }
 
     class Item {
+	    -String id
 	    -String name
 	    -List~Recipe~ recipes
 
+	    +String getId()
 	    +String getName()
 	    +List~Recipe~ getRecipes()
 	    +List~Recipe~ getCraftableRecipes(Inventory inventory)

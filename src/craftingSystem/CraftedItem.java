@@ -10,8 +10,8 @@ public class CraftedItem extends Item {
 	private final Date date;
 	private final Recipe usedRecipe;
 
-	public CraftedItem(String name, List<Recipe> recipes, Recipe usedRecipe) {
-		super(name, recipes);
+	public CraftedItem(String id, String name, List<Recipe> recipes, Recipe usedRecipe) {
+		super(id, name, recipes);
 		this.date = new Date();
 		this.usedRecipe = usedRecipe;
 	}

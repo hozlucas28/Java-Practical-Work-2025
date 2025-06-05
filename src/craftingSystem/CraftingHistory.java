@@ -17,7 +17,7 @@ public class CraftingHistory {
 	};
 
 	public void addItem(Item item, Recipe usedRecipe) {
-		CraftedItem craftedItem = new CraftedItem(item.getName(), item.getRecipes(), usedRecipe);
+		CraftedItem craftedItem = new CraftedItem(item.getId(), item.getName(), item.getRecipes(), usedRecipe);
 		this.items.add(craftedItem);
 	}
 
