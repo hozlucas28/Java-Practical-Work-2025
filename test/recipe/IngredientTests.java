@@ -13,7 +13,7 @@ class IngredientTests {
 	void getItem() {
 		assertDoesNotThrow(() -> {
 			// Arrange
-			Item item = new Item("A", "My item", null);
+			Item item = new Item("A", "My item");
 			int itemQuantity = 2;
 
 			Ingredient ingredient = new Ingredient(item, itemQuantity);
@@ -30,7 +30,7 @@ class IngredientTests {
 	@Test
 	void getItem_OutOfRangeException() {
 		// Arrange
-		Item item = new Item("A", "My item", null);
+		Item item = new Item("A", "My item");
 		int itemQuantity = 0;
 
 		// Act within assert
@@ -41,7 +41,7 @@ class IngredientTests {
 	void getQuantity() {
 		assertDoesNotThrow(() -> {
 			// Arrange
-			Item item = new Item("A", "My item", null);
+			Item item = new Item("A", "My item");
 			int itemQuantity = 5;
 
 			Ingredient ingredient = new Ingredient(item, itemQuantity);

@@ -14,10 +14,10 @@ class ItemsRepositoryTests {
 	@Test
 	void getItem() {
 		// Arrange
-		Item item01 = new Item("A01", "My item", null);
-		Item item02 = new Item("A02", "My item", null);
-		Item item03 = new Item("A03", "My item", null);
-		Item item04 = new Item("A04", "My item", null);
+		Item item01 = new Item("A01", "My item");
+		Item item02 = new Item("A02", "My item");
+		Item item03 = new Item("A03", "My item");
+		Item item04 = new Item("A04", "My item");
 
 		HashMap<String, Item> items = new HashMap<String, Item>();
 
@@ -41,8 +41,8 @@ class ItemsRepositoryTests {
 	@Test
 	void getItem_ItemNotFoundException() {
 		// Arrange
-		Item item01 = new Item("A01", "My item", null);
-		Item item02 = new Item("A02", "My item", null);
+		Item item01 = new Item("A01", "My item");
+		Item item02 = new Item("A02", "My item");
 
 		HashMap<String, Item> items = new HashMap<String, Item>();
 
