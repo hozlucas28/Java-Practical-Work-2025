@@ -1,5 +1,6 @@
 package craftingSystem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import exceptions.ThereAreNoCraftedItemsException;
@@ -10,6 +11,7 @@ public class CraftingHistory {
 	private List<CraftedItem> items;
 
 	public CraftingHistory() {
+		this.items = new ArrayList<CraftedItem>();
 	};
 
 	public List<CraftedItem> getItems() {
