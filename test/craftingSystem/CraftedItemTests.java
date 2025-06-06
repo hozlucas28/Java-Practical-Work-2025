@@ -2,16 +2,70 @@ package craftingSystem;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
+
+import inventory.Item;
+import recipe.Ingredient;
+import recipe.Recipe;
 
 class CraftedItemTests {
 
-    // TODO: test getDate()
-    // TODO: test getUsedRecipe()
-
 	@Test
-	void test() {
-		fail("Not yet implemented");
+	void getDate() {
+		assertDoesNotThrow(() -> {
+			// Arrange
+			Item item = new Item("A", "My item");
+
+			Ingredient ingredient = new Ingredient(item, 1);
+			List<Ingredient> ingredients = new ArrayList<Ingredient>();
+
+			ingredients.add(ingredient);
+
+			Recipe craftedItemRecipe = new Recipe(ingredients, 1000, 1);
+			List<Recipe> craftedItemRecipes = new ArrayList<Recipe>();
+
+			craftedItemRecipes.add(craftedItemRecipe);
+
+			CraftedItem craftedItem = new CraftedItem("B", "My item", craftedItemRecipes, craftedItemRecipes.get(0));
+
+			// Act
+			ZonedDateTime expected = ZonedDateTime.now();
+			ZonedDateTime received = craftedItem.getDate();
+
+			// Assert
+			assertEquals(expected, received);
+		});
 	}
 
+	@Test
+	void getUsedRecipe() {
+		assertDoesNotThrow(() -> {
+			// Arrange
+			Item item = new Item("A", "My item");
+
+			Ingredient ingredient = new Ingredient(item, 1);
+			List<Ingredient> ingredients = new ArrayList<Ingredient>();
+
+			ingredients.add(ingredient);
+
+			Recipe craftedItemRecipe = new Recipe(ingredients, 1000, 1);
+			List<Recipe> craftedItemRecipes = new ArrayList<Recipe>();
+
+			craftedItemRecipes.add(craftedItemRecipe);
+
+			CraftedItem craftedItem = new CraftedItem("B", "My item", craftedItemRecipes, craftedItemRecipes.get(0));
+
+			// Act
+			Recipe expected = craftedItemRecipes.get(0);
+			Recipe received = craftedItem.getUsedRecipe();
+
+			// Assert
+			assertEquals(expected, received);
+		});
+	}
 }
