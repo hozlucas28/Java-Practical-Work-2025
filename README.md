@@ -148,10 +148,10 @@ direction TB
     }
 
     class CraftedItem {
-	    -Date date
+	    -ZonedDateTime date
 	    -Recipe usedRecipe
 
-	    +Date getDate()
+	    +ZonedDateTime getDate()
 	    +Recipe getUsedRecipe()
     }
 
