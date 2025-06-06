@@ -2,6 +2,7 @@ package inventory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import recipe.Recipe;
 
@@ -42,5 +43,29 @@ public class Item {
 
 	public boolean isBase() {
 		return this.recipes.size() == 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (obj == null) {
+			return false;
+		}
+
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+
+		Item other = (Item) obj;
+
+		return this.id == other.id;
 	}
 }
