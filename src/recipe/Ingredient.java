@@ -1,5 +1,7 @@
 package recipe;
 
+import java.util.Objects;
+
 import exceptions.OutOfRangeException;
 import inventory.Item;
 
@@ -24,5 +26,29 @@ public class Ingredient {
 
 	public int getQuantity() {
 		return this.quantity;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(item, quantity);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (obj == null) {
+			return false;
+		}
+
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+
+		Ingredient other = (Ingredient) obj;
+
+		return item == other.item && quantity == other.quantity;
 	}
 }
