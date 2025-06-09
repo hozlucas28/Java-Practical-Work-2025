@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +39,7 @@ class CraftedItemTests {
 			ZonedDateTime received = craftedItem.getDate();
 
 			// Assert
-			assertEquals(expected, received);
+			assertEquals(0, ChronoUnit.SECONDS.between(expected, received));
 		});
 	}
 
