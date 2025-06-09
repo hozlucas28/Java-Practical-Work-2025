@@ -169,8 +169,8 @@ direction TB
 	    -CraftingHistory history
 
 	    +int getCraftableUnits()
-	    +List~Item~ getRequiredIngredients()
-	    +List~Item~ getRequiredIngredientsToBase()
+	    +HashMap<Item, List<List<Ingredient>>> getRequiredIngredients()
+	    +HashMap<Item, List<List<Ingredient>>> getRequiredIngredientsToBase()
 	    +bool canCraft()
 	    +List~Item~ setItemsToCraft(List~Item~ itemsToCraft)
 	    +craftItems()

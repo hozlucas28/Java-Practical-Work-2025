@@ -1,12 +1,16 @@
 package craftingSystem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
+import exceptions.OutOfRangeException;
 import exceptions.ThereAreNoCraftedItemsException;
 import inventory.Inventory;
 import inventory.Item;
 import recipe.Ingredient;
+import recipe.Recipe;
 
 public class CraftingSystem {
 	private final Inventory inventory;
@@ -24,16 +28,40 @@ public class CraftingSystem {
 		return 0;
 	}
 
-	public List<Item> getRequiredIngredients() {
-		// TODO
-		List<Item> requiredIngredients = new ArrayList<Item>();
+	public HashMap<Item, List<List<Ingredient>>> getRequiredIngredients() {
+		HashMap<Item, List<List<Ingredient>>> requiredIngredients = new HashMap<Item, List<List<Ingredient>>>();
+
+		for (Item item : this.itemsToCraft) {
+			List<Recipe> recipes = item.getRecipes();
+			List<List<Ingredient>> recipesIngredients = new ArrayList<List<Ingredient>>();
+
+			for (Recipe recipe : recipes) {
+				List<Ingredient> ingredients = new ArrayList<Ingredient>();
+
+				Optional<Item> craftingTable = recipe.getCraftingTable();
+
+				if (craftingTable.isPresent()) {
+					try {
+						Ingredient craftingTableIngredient = new Ingredient(craftingTable.get(), 1);
+						ingredients.add(craftingTableIngredient);
+					} catch (OutOfRangeException e) {
+						// With a quantity of 1 ingredient, it's never throw an OutOfRangeException.
+					}
+				}
+
+				ingredients.addAll(recipe.getIngredients());
+				recipesIngredients.add(ingredients);
+			}
+
+			requiredIngredients.put(item, recipesIngredients);
+		}
 
 		return requiredIngredients;
 	}
 
-	public List<Item> getRequiredIngredientsToBase() {
+	public HashMap<Item, List<List<Ingredient>>> getRequiredIngredientsToBase() {
 		// TODO
-		List<Item> requiredIngredients = new ArrayList<Item>();
+		HashMap<Item, List<List<Ingredient>>> requiredIngredients = new HashMap<Item, List<List<Ingredient>>>();
 
 		return requiredIngredients;
 	}
@@ -61,7 +89,7 @@ public class CraftingSystem {
 		// TODO
 		CraftedItem lastCraftedItem = this.history.removeLastItem();
 		List<Ingredient> usedIngredients = lastCraftedItem.getUsedRecipe().getIngredients();
-		
+
 		// TODO: remover item crafteado (si y solo si existe)
 		// TODO: agregar ingredientes utilizados al inventario
 	}
