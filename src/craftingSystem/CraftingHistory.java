@@ -18,6 +18,16 @@ public class CraftingHistory {
 		return this.items;
 	};
 
+	public CraftedItem getLastItem() throws ThereAreNoCraftedItemsException {
+		final int lastIndex = this.items.size() - 1;
+
+		if (lastIndex < 0) {
+			throw new ThereAreNoCraftedItemsException();
+		}
+
+		return this.items.get(lastIndex);
+	};
+
 	public void addItem(Item item, Recipe usedRecipe) {
 		CraftedItem craftedItem = new CraftedItem(item.getId(), item.getName(), item.getRecipes(), usedRecipe);
 		this.items.add(craftedItem);
