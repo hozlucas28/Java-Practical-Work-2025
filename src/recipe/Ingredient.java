@@ -7,7 +7,7 @@ import inventory.Item;
 
 public class Ingredient {
 	private final Item item;
-	private final int quantity;
+	private int quantity;
 
 	public Ingredient(Item item, int quantity) throws OutOfRangeException {
 		if (quantity < 1) {
@@ -28,9 +28,19 @@ public class Ingredient {
 		return this.quantity;
 	}
 
+	public void incrementQuantity(int quantity) throws OutOfRangeException {
+		if (quantity < 1) {
+			String errorMessage = String.format("Received %d as quantity, but expect it greather than or equal to %d",
+					quantity, 1);
+			throw new OutOfRangeException(errorMessage);
+		}
+
+		this.quantity += quantity;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(item, quantity);
+		return Objects.hash(item);
 	}
 
 	@Override
@@ -49,6 +59,6 @@ public class Ingredient {
 
 		Ingredient other = (Ingredient) obj;
 
-		return item == other.item && quantity == other.quantity;
+		return item == other.item;
 	}
 }
