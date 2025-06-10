@@ -45,6 +45,10 @@ public class Item {
 		return this.recipes.size() == 0;
 	}
 
+	public Item copy() {
+		return new Item(this.id, this.name, this.recipes);
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

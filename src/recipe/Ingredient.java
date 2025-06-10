@@ -38,6 +38,18 @@ public class Ingredient {
 		this.quantity += quantity;
 	}
 
+	public Ingredient copy() {
+		Ingredient copy = null;
+
+		try {
+			copy = new Ingredient(this.item.copy(), this.quantity);
+		} catch (OutOfRangeException e) {
+			// With a quantity greater than 1, it's never throw an OutOfRangeException.
+		}
+
+		return copy;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(item);
