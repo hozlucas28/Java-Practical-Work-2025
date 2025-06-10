@@ -150,9 +150,11 @@ direction TB
     class CraftedItem {
 	    -ZonedDateTime date
 	    -Recipe usedRecipe
+	    -int craftedItems
 
 	    +ZonedDateTime getDate()
 	    +Recipe getUsedRecipe()
+	    +int getCraftedItems()
     }
 
     class Ingredient {
@@ -181,6 +183,7 @@ direction TB
 	    -List~CraftedItem~ items
 
         +List~CraftedItem~ getItems()
+        +CraftedItem getLastItem()
 	    +void addItem(Item item, Recipe usedRecipe)
 	    +CraftedItem removeLastItem()
     }
