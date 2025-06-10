@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import exceptions.ItemNotFoundException;
 import exceptions.OutOfRangeException;
 import exceptions.ThereAreNoCraftedItemsException;
 import inventory.Inventory;
@@ -85,12 +86,33 @@ public class CraftingSystem {
 		// TODO
 	}
 
-	public void undoLastCraft() throws ThereAreNoCraftedItemsException {
-		// TODO
-		CraftedItem lastCraftedItem = this.history.removeLastItem();
-		List<Ingredient> usedIngredients = lastCraftedItem.getUsedRecipe().getIngredients();
+	public void undoLastCraft() throws ThereAreNoCraftedItemsException, ItemNotFoundException {
+		CraftedItem lastCraftedItem = this.history.getLastItem();
+		int craftedItems = lastCraftedItem.getCraftedItems();
 
-		// TODO: remover item crafteado (si y solo si existe)
-		// TODO: agregar ingredientes utilizados al inventario
+		try {
+			this.inventory.removeItem(lastCraftedItem, craftedItems);
+		} catch (ItemNotFoundException e) {
+			throw new ItemNotFoundException("The last crafted item was not found in the inventory");
+		} catch (OutOfRangeException e) {
+			// With a crafted items quantity greater than 1, it's never throw an
+			// OutOfRangeException.
+		}
+
+		lastCraftedItem = this.history.removeLastItem();
+		Recipe usedRecipe = lastCraftedItem.getUsedRecipe();
+		List<Ingredient> usedIngredients = usedRecipe.getIngredients();
+
+		for (Ingredient ingredient : usedIngredients) {
+			Item itemIngredient = ingredient.getItem();
+			int itemIngredientQuantity = ingredient.getQuantity();
+
+			try {
+				this.inventory.addItem(itemIngredient, itemIngredientQuantity);
+			} catch (OutOfRangeException e) {
+				// With an item quantity greater than 1, it's never throw an
+				// OutOfRangeException.
+			}
+		}
 	}
 }
