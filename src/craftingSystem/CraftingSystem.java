@@ -61,10 +61,34 @@ public class CraftingSystem {
 	}
 
 	public HashMap<Item, List<List<Ingredient>>> getRequiredIngredientsToBase() {
-		// TODO
-		HashMap<Item, List<List<Ingredient>>> requiredIngredients = new HashMap<Item, List<List<Ingredient>>>();
+		HashMap<Item, List<List<Ingredient>>> requiredBaseIngredients = new HashMap<Item, List<List<Ingredient>>>();
 
-		return requiredIngredients;
+		for (Item item : this.itemsToCraft) {
+			List<Recipe> recipes = item.getRecipes();
+			List<List<Ingredient>> recipesBaseIngredients = new ArrayList<List<Ingredient>>();
+
+			for (Recipe recipe : recipes) {
+				List<Ingredient> baseIngredients = new ArrayList<Ingredient>();
+
+				Optional<Item> craftingTable = recipe.getCraftingTable();
+
+				if (craftingTable.isPresent()) {
+					try {
+						Ingredient craftingTableIngredient = new Ingredient(craftingTable.get(), 1);
+						baseIngredients.add(craftingTableIngredient);
+					} catch (OutOfRangeException e) {
+						// With a quantity of 1 ingredient, it's never throw an OutOfRangeException.
+					}
+				}
+
+				baseIngredients.addAll(recipe.getIngredientsToBase());
+				recipesBaseIngredients.add(baseIngredients);
+			}
+
+			requiredBaseIngredients.put(item, recipesBaseIngredients);
+		}
+
+		return requiredBaseIngredients;
 	}
 
 	public List<CraftedItem> getCraftedItems() {
