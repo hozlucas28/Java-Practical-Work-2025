@@ -65,7 +65,7 @@ public class Menu {
         
 
 
-        } while (option != 12);
+        } while (option != 11);
 
         scanner.close();
     }
