@@ -7,7 +7,7 @@ import java.util.Objects;
 import recipe.Recipe;
 
 public class Item {
-		private final String name;
+	private final String name;
 	private final List<Recipe> recipes;
 
 	public Item(String name) {
@@ -36,6 +36,10 @@ public class Item {
 
 	public boolean isBase() {
 		return this.recipes.size() == 0;
+	}
+	
+	public void addRecipe(Recipe recipe) {
+		this.recipes.add(recipe);
 	}
 
 	public Item copy() {

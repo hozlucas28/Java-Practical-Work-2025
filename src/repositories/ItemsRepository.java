@@ -1,8 +1,21 @@
 package repositories;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.io.InputStreamReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import exceptions.ItemNotFoundException;
+import exceptions.OutOfRangeException;
 import inventory.Item;
 
 public class ItemsRepository {
@@ -12,21 +25,92 @@ public class ItemsRepository {
 		this.items = items;
 	};
 
-	public Item getItem(String itemId) throws ItemNotFoundException {
-		Item item = this.items.get(itemId);
-		
+	public Item getItem(String name) throws ItemNotFoundException {
+		Item item = this.items.get(name);
+
 		if (item == null) {
-			String errorMessage = String.format("Item with `%s` id was not found inside items repository", itemId);
+			String errorMessage = String.format("Item with \"%s\" name was not found inside items repository", name);
 			throw new ItemNotFoundException(errorMessage);
 		}
-		
+
 		return item;
 	}
-	
-	public static ItemsRepository loadFromJSON(String path) {
-		// TODO
-		HashMap<String, Item> allItems = new HashMap<String, Item>();
-		ItemsRepository itemsRepository = new ItemsRepository(allItems);
+
+	public static ItemsRepository loadFromJSON(String path)
+			throws FileNotFoundException, IOException, ItemNotFoundException, OutOfRangeException {
+		FileInputStream fileStream = new FileInputStream(path);
+		InputStreamReader streamReader = new InputStreamReader(fileStream, StandardCharsets.UTF_8);
+
+		JsonArray json = JsonParser.parseReader(streamReader).getAsJsonArray();
+
+		HashMap<String, Item> items = new HashMap<String, Item>();
+		HashMap<String, List<JSONRecipe>> recipesPerItem = new HashMap<String, List<JSONRecipe>>();
+
+		for (JsonElement jsonItemElement : json) {
+			JsonObject jsonItemElementAsObj = jsonItemElement.getAsJsonObject();
+
+			// Get item
+			String itemName = jsonItemElementAsObj.get("name").getAsString().trim();
+			Item item = new Item(itemName);
+
+			// Put item in map
+			items.put(itemName, item);
+
+			if (jsonItemElementAsObj.has("recipes")) {
+				JsonArray jsonItemElementRecipes = jsonItemElementAsObj.getAsJsonArray("recipes");
+
+				List<JSONRecipe> jsonItemRecipes = new ArrayList<JSONRecipe>();
+
+				// Get item recipes
+				for (JsonElement jsonItemElementRecipe : jsonItemElementRecipes) {
+					JsonObject jsonItemElementRecipeAsObj = jsonItemElementRecipe.getAsJsonObject();
+					JsonObject jsonItemElementRecipeIngredients = jsonItemElementRecipeAsObj
+							.getAsJsonObject("ingredients");
+
+					// Get ingredients
+					HashMap<String, Integer> ingredients = new HashMap<String, Integer>();
+
+					for (String ingredientName : jsonItemElementRecipeIngredients.keySet()) {
+						int ingredientQuantity = jsonItemElementRecipeIngredients.get(ingredientName).getAsInt();
+						ingredients.put(ingredientName, ingredientQuantity);
+					}
+
+					// Get time to craft in milliseconds
+					int timeToCraftInMilliseconds = jsonItemElementRecipeAsObj.get("time_to_craft").getAsInt();
+
+					// Get items to craft
+					int itemsToCraft = jsonItemElementRecipeAsObj.get("items_to_craft").getAsInt();
+
+					// Get crafting table if it's exists
+					Item craftingTable = null;
+
+					if (jsonItemElementRecipeAsObj.has("crafting_table")) {
+						String craftingTableName = jsonItemElementRecipeAsObj.get("crafting_table").getAsString()
+								.trim();
+						craftingTable = new Item(craftingTableName);
+					}
+
+					// Append recipe to list
+					JSONRecipe jsonRecipe = craftingTable == null
+							? new JSONRecipe(ingredients, timeToCraftInMilliseconds, itemsToCraft)
+							: new JSONRecipe(ingredients, timeToCraftInMilliseconds, itemsToCraft, craftingTable);
+
+					jsonItemRecipes.add(jsonRecipe);
+				}
+
+				// Put recipes in map
+				recipesPerItem.put(itemName, jsonItemRecipes);
+			}
+		}
+
+		streamReader.close();
+		fileStream.close();
+
+		// Assign and link items with recipes
+		JSONRecipe.linkItemsAndRecipes(items, recipesPerItem);
+		
+		// Create repository
+		ItemsRepository itemsRepository = new ItemsRepository(items);
 
 		return itemsRepository;
 	}

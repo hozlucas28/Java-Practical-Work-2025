@@ -111,6 +111,8 @@ direction TB
         +static ItemsRepository loadFromJSON(String path)
     }
 
+
+
     class Item {
 	    -String name
 	    -List~Recipe~ recipes
@@ -119,6 +121,8 @@ direction TB
 	    +List~Recipe~ getRecipes()
 	    +List~Recipe~ getCraftableRecipes(Inventory inventory)
 	    +bool isBase()
+        +void addRecipe(Recipe recipe)
+        +Item copy()
     }
 
     class Recipe {
@@ -132,6 +136,17 @@ direction TB
 	    +int getItemsToCraft()
 	    +List~Item~ getIngredientsToBase()
 	    +Optional~Item~ getCraftingTable()
+    }
+
+    class JSONRecipe {
+        <<adapter>>
+
+	    -HashMap~String, Integer~ ingredients
+	    -int timeToCraftInMilliseconds
+	    -int itemsToCraft
+	    -Optional~Item~ craftingTable
+
+	    +static void linkItemsAndRecipes(HashMap~String, Item~ items, HashMap~String, List~JSONRecipe~~ recipesPerItem)
     }
 
     class Inventory {
@@ -188,6 +203,7 @@ direction TB
     }
 
     Item "0...*" o-- "1" ItemsRepository : Has
+    JSONRecipe "1...*" *-- "1" ItemsRepository : Instance and uses the static method
 
     Recipe "0...*" o-- "1" Item : Has
 
@@ -196,6 +212,8 @@ direction TB
     Item <|-- CraftedItem : Inherits from
 
     Ingredient "1...*" o-- "1" Recipe : Has
+
+    Item "0...1" o-- "1" JSONRecipe : Has
 
     Item "0...*" o-- "1" CraftingSystem : Has
     Inventory "1" o-- "1" CraftingSystem : Has
