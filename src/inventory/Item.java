@@ -37,7 +37,7 @@ public class Item {
 	public boolean isBase() {
 		return this.recipes.size() == 0;
 	}
-	
+
 	public void addRecipe(Recipe recipe) {
 		this.recipes.add(recipe);
 	}
@@ -67,6 +67,6 @@ public class Item {
 
 		Item other = (Item) obj;
 
-		return this.name == other.name;
+		return this.name.equalsIgnoreCase(other.name);
 	}
 }
