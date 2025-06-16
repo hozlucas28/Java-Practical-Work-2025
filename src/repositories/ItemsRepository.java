@@ -11,7 +11,9 @@ import java.nio.charset.StandardCharsets;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 
 import exceptions.ItemNotFoundException;
@@ -36,8 +38,8 @@ public class ItemsRepository {
 		return item;
 	}
 
-	public static ItemsRepository loadFromJSON(String path)
-			throws FileNotFoundException, IOException, ItemNotFoundException, OutOfRangeException {
+	public static ItemsRepository loadFromJSON(String path) throws FileNotFoundException, JsonIOException,
+			JsonSyntaxException, ItemNotFoundException, OutOfRangeException, IOException {
 		FileInputStream fileStream = new FileInputStream(path);
 		InputStreamReader streamReader = new InputStreamReader(fileStream, StandardCharsets.UTF_8);
 
@@ -108,7 +110,7 @@ public class ItemsRepository {
 
 		// Assign and link items with recipes
 		JSONRecipe.linkItemsAndRecipes(items, recipesPerItem);
-		
+
 		// Create repository
 		ItemsRepository itemsRepository = new ItemsRepository(items);
 
