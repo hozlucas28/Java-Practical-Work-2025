@@ -7,24 +7,17 @@ import java.util.Objects;
 import recipe.Recipe;
 
 public class Item {
-	private final String id;
-	private final String name;
+		private final String name;
 	private final List<Recipe> recipes;
 
-	public Item(String id, String name) {
-		this.id = id;
-		this.name = name;
+	public Item(String name) {
+				this.name = name;
 		this.recipes = new ArrayList<Recipe>();
 	}
 
-	public Item(String id, String name, List<Recipe> recipes) {
-		this.id = id;
-		this.name = name;
+	public Item(String name, List<Recipe> recipes) {
+				this.name = name;
 		this.recipes = recipes;
-	}
-
-	public String getId() {
-		return this.id;
 	}
 
 	public String getName() {
@@ -51,7 +44,7 @@ public class Item {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
+		return Objects.hash(this.name);
 	}
 
 	@Override
@@ -70,6 +63,6 @@ public class Item {
 
 		Item other = (Item) obj;
 
-		return this.id == other.id;
+		return this.name == other.name;
 	}
 }

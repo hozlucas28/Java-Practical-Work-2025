@@ -25,12 +25,12 @@ class CraftingSystemTests {
 			Inventory inventory = new Inventory(itemsInInventory);
 			CraftingSystem craftingSystem = new CraftingSystem(inventory);
 
-			Item craftingTable = new Item("Crafting-Table-A", "Crafting table A");
+			Item craftingTable = new Item("Crafting table A");
 
-			Item itemBase01 = new Item("Base-01", "Item base 01");
-			Item itemBase02 = new Item("Base-02", "Item base 02");
-			Item itemBase03 = new Item("Base-03", "Item base 03");
-			Item itemBase04 = new Item("Base-04", "Item base 04");
+			Item itemBase01 = new Item("Item base 01");
+			Item itemBase02 = new Item("Item base 02");
+			Item itemBase03 = new Item("Item base 03");
+			Item itemBase04 = new Item("Item base 04");
 
 			Ingredient ingredient01 = new Ingredient(itemBase01, 1);
 			Ingredient ingredient02 = new Ingredient(itemBase02, 2);
@@ -59,8 +59,8 @@ class CraftingSystemTests {
 
 			recipes02.add(recipe02);
 
-			Item itemToCraft01 = new Item("A01", "Item A01", recipes01);
-			Item itemToCraft02 = new Item("A02", "Item A02", recipes02);
+			Item itemToCraft01 = new Item("Item A01", recipes01);
+			Item itemToCraft02 = new Item("Item A02", recipes02);
 
 			List<Item> itemsToCraft = new ArrayList<Item>();
 

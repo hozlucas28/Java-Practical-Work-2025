@@ -13,28 +13,11 @@ import recipe.Recipe;
 class ItemTests {
 
 	@Test
-	void getId() {
-		// Arrange
-		String itemId = "A";
-		String itemName = "My item";
-
-		Item item = new Item(itemId, itemName);
-
-		// Act
-		String expected = itemId;
-		String received = item.getId();
-
-		// Assert
-		assertEquals(expected, received);
-	}
-
-	@Test
 	void getName() {
 		// Arrange
-		String itemId = "A";
 		String itemName = "My item";
 
-		Item item = new Item(itemId, itemName);
+		Item item = new Item(itemName);
 
 		// Act
 		String expected = itemName;
@@ -48,10 +31,10 @@ class ItemTests {
 	void getRecipes() {
 		assertDoesNotThrow(() -> {
 			// Arrange
-			Item item01 = new Item("A01", "My item 01");
-			Item item02 = new Item("A02", "My item 02");
-			Item item03 = new Item("A03", "My item 03");
-			Item item04 = new Item("A04", "My item 04");
+			Item item01 = new Item("My item A01");
+			Item item02 = new Item("My item A02");
+			Item item03 = new Item("My item A03");
+			Item item04 = new Item("My item A04");
 
 			Ingredient ingredient01 = new Ingredient(item01, 1);
 			Ingredient ingredient02 = new Ingredient(item02, 3);
@@ -75,7 +58,7 @@ class ItemTests {
 			recipes.add(recipe01);
 			recipes.add(recipe02);
 
-			Item item = new Item("B", "My item", recipes);
+			Item item = new Item("My item B", recipes);
 
 			// Act
 			List<Recipe> expected = recipes;
@@ -91,10 +74,9 @@ class ItemTests {
 	@Test
 	void isBase() {
 		// Arrange
-		String itemId = "A";
 		String itemName = "My item";
 
-		Item item = new Item(itemId, itemName);
+		Item item = new Item(itemName);
 
 		// Act
 		boolean received = item.isBase();

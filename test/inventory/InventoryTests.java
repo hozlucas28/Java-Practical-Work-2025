@@ -14,8 +14,8 @@ class InventoryTests {
 	@Test
 	void getItems() {
 		// Arrange
-		Item item01 = new Item("A01", "My item 01");
-		Item item02 = new Item("A02", "My item 02");
+		Item item01 = new Item("My item A01");
+		Item item02 = new Item("My item A02");
 
 		int item01Quantity = 1;
 		int item02Quantity = 3;
@@ -38,7 +38,7 @@ class InventoryTests {
 	@Test
 	void getItemQuantity() {
 		// Arrange
-		Item item = new Item("A", "My item");
+		Item item = new Item("My item A");
 
 		int itemQuantity = 7;
 
@@ -62,7 +62,7 @@ class InventoryTests {
 		HashMap<Item, Integer> items = new HashMap<Item, Integer>();
 		Inventory inventory = new Inventory(items);
 
-		Item item = new Item("A", "My item");
+		Item item = new Item("My item A");
 
 		int itemQuantity = 7;
 
@@ -84,7 +84,7 @@ class InventoryTests {
 		HashMap<Item, Integer> items = new HashMap<Item, Integer>();
 		Inventory inventory = new Inventory(items);
 
-		Item item = new Item("A", "My item");
+		Item item = new Item("My item A");
 
 		int itemQuantity = 0;
 
@@ -95,7 +95,7 @@ class InventoryTests {
 	@Test
 	void removeItem() {
 		// Arrange
-		Item item = new Item("A", "My item");
+		Item item = new Item("My item A");
 
 		int itemQuantity = 7;
 
@@ -121,7 +121,7 @@ class InventoryTests {
 	@Test
 	void removeItem_ItemNotFoundException() {
 		// Arrange
-		Item item = new Item("A", "My item");
+		Item item = new Item("My item A");
 
 		HashMap<Item, Integer> items = new HashMap<Item, Integer>();
 		Inventory inventory = new Inventory(items);
@@ -137,7 +137,7 @@ class InventoryTests {
 	@Test
 	void removeItem_OutOfRangeException() {
 		// Arrange
-		Item item = new Item("A", "My item");
+		Item item = new Item("My item A");
 
 		int itemQuantity = 7;
 

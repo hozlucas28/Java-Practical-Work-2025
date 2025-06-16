@@ -19,7 +19,7 @@ class CraftedItemTests {
 	void getDate() {
 		assertDoesNotThrow(() -> {
 			// Arrange
-			Item item = new Item("A", "My item");
+			Item item = new Item("My item A");
 
 			Ingredient ingredient = new Ingredient(item, 1);
 			List<Ingredient> ingredients = new ArrayList<Ingredient>();
@@ -31,7 +31,7 @@ class CraftedItemTests {
 
 			craftedItemRecipes.add(craftedItemRecipe);
 
-			CraftedItem craftedItem = new CraftedItem("B", "My item", craftedItemRecipes, craftedItemRecipes.get(0));
+			CraftedItem craftedItem = new CraftedItem("My item B", craftedItemRecipes, craftedItemRecipes.get(0));
 
 			// Act
 			ZonedDateTime expected = ZonedDateTime.now();
@@ -46,7 +46,7 @@ class CraftedItemTests {
 	void getUsedRecipe() {
 		assertDoesNotThrow(() -> {
 			// Arrange
-			Item item = new Item("A", "My item");
+			Item item = new Item("My item A");
 
 			Ingredient ingredient = new Ingredient(item, 1);
 			List<Ingredient> ingredients = new ArrayList<Ingredient>();
@@ -58,7 +58,7 @@ class CraftedItemTests {
 
 			craftedItemRecipes.add(craftedItemRecipe);
 
-			CraftedItem craftedItem = new CraftedItem("B", "My item", craftedItemRecipes, craftedItemRecipes.get(0));
+			CraftedItem craftedItem = new CraftedItem("My item B", craftedItemRecipes, craftedItemRecipes.get(0));
 
 			// Act
 			Recipe expected = craftedItemRecipes.get(0);

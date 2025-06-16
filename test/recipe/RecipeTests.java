@@ -15,7 +15,7 @@ class RecipeTests {
 	@Test
 	void getCraftingTable() {
 		// Arrange
-		Item craftingTable = new Item("A", "Crafting table");
+		Item craftingTable = new Item("Crafting table");
 		List<Ingredient> ingredients = new ArrayList<Ingredient>();
 		int timeToCraftInMilliseconds = 1000;
 		int itemsToCraft = 2;

@@ -12,16 +12,16 @@ public class CraftedItem extends Item {
 	private final Recipe usedRecipe;
 	private final int craftedItems;
 
-	public CraftedItem(String id, String name, List<Recipe> recipes, Recipe usedRecipe) {
-		super(id, name, recipes);
+	public CraftedItem(String name, List<Recipe> recipes, Recipe usedRecipe) {
+		super(name, recipes);
 		this.date = ZonedDateTime.now();
 		this.usedRecipe = usedRecipe;
 		this.craftedItems = 1;
 	}
 
-	public CraftedItem(String id, String name, List<Recipe> recipes, Recipe usedRecipe, int craftedItems)
+	public CraftedItem(String name, List<Recipe> recipes, Recipe usedRecipe, int craftedItems)
 			throws OutOfRangeException {
-		super(id, name, recipes);
+		super(name, recipes);
 
 		if (craftedItems < 1) {
 			String errorMessage = String.format("Received %d as craftedItems, but expect it greater than or equal to %d",

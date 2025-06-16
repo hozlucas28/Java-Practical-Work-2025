@@ -18,8 +18,8 @@ class CraftingHistoryTests {
 	void addItems() {
 		assertDoesNotThrow(() -> {
 			// Arrange
-			Item item01 = new Item("A01", "My item 01");
-			Item item02 = new Item("A02", "My item 02");
+			Item item01 = new Item("My item A01");
+			Item item02 = new Item("My item A02");
 
 			Ingredient ingredient01 = new Ingredient(item01, 5);
 			Ingredient ingredient02 = new Ingredient(item02, 2);
@@ -39,8 +39,8 @@ class CraftingHistoryTests {
 			recipesCraftedItem01.add(recipeItem03);
 			recipesCraftedItem02.add(recipeItem04);
 
-			Item craftedItem01 = new Item("B01", "My item 01", recipesCraftedItem01);
-			Item craftedItem02 = new Item("B02", "My item 02", recipesCraftedItem02);
+			Item craftedItem01 = new Item("My item B01", recipesCraftedItem01);
+			Item craftedItem02 = new Item("My item B02", recipesCraftedItem02);
 
 			CraftingHistory craftingHistory = new CraftingHistory();
 
@@ -53,10 +53,10 @@ class CraftingHistoryTests {
 			// Act
 			List<CraftedItem> expected = new ArrayList<CraftedItem>();
 
-			expected.add(new CraftedItem(craftedItem01.getId(), craftedItem01.getName(), craftedItem01.getRecipes(),
+			expected.add(new CraftedItem(craftedItem01.getName(), craftedItem01.getRecipes(),
 					usedRecipeCraftedItem01));
 
-			expected.add(new CraftedItem(craftedItem02.getId(), craftedItem02.getName(), craftedItem02.getRecipes(),
+			expected.add(new CraftedItem(craftedItem02.getName(), craftedItem02.getRecipes(),
 					usedRecipeCraftedItem02));
 
 			List<CraftedItem> received = craftingHistory.getItems();
@@ -70,8 +70,8 @@ class CraftingHistoryTests {
 	void removeLastItem() {
 		assertDoesNotThrow(() -> {
 			// Arrange
-			Item item01 = new Item("A01", "My item 01");
-			Item item02 = new Item("A02", "My item 02");
+			Item item01 = new Item("My item A01");
+			Item item02 = new Item("My item A02");
 
 			Ingredient ingredient01 = new Ingredient(item01, 5);
 			Ingredient ingredient02 = new Ingredient(item02, 2);
@@ -91,8 +91,8 @@ class CraftingHistoryTests {
 			recipesCraftedItem01.add(recipeItem03);
 			recipesCraftedItem02.add(recipeItem04);
 
-			Item craftedItem01 = new Item("B01", "My item 01", recipesCraftedItem01);
-			Item craftedItem02 = new Item("B02", "My item 02", recipesCraftedItem02);
+			Item craftedItem01 = new Item("My item B01", recipesCraftedItem01);
+			Item craftedItem02 = new Item("My item B02", recipesCraftedItem02);
 
 			CraftingHistory craftingHistory = new CraftingHistory();
 
@@ -103,7 +103,7 @@ class CraftingHistoryTests {
 			craftingHistory.addItem(craftedItem02, usedRecipeCraftedItem02);
 
 			// Act
-			CraftedItem expected = new CraftedItem(craftedItem02.getId(), craftedItem02.getName(),
+			CraftedItem expected = new CraftedItem(craftedItem02.getName(),
 					craftedItem02.getRecipes(), usedRecipeCraftedItem02);
 			CraftedItem received = craftingHistory.removeLastItem();
 
