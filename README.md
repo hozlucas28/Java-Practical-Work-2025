@@ -188,7 +188,7 @@ direction TB
 	    +HashMap<Item, List<List<Ingredient>>> getRequiredIngredients()
 	    +HashMap<Item, List<List<Ingredient>>> getRequiredIngredientsToBase()
 	    +bool canCraft()
-	    +List~Item~ setItemsToCraft(List~Item~ itemsToCraft)
+	    +this setItemsToCraft(List~Item~ itemsToCraft)
 	    +craftItems()
 	    +bool undoLastCraft()
     }
