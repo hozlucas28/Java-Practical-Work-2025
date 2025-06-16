@@ -3,7 +3,7 @@ package craftingSystem;
 import java.util.ArrayList;
 import java.util.List;
 
-import exceptions.ThereAreNoCraftedItemsException;
+import exceptions.ItemNotFoundException;
 import inventory.Item;
 import recipe.Recipe;
 
@@ -18,11 +18,11 @@ public class CraftingHistory {
 		return this.items;
 	};
 
-	public CraftedItem getLastItem() throws ThereAreNoCraftedItemsException {
+	public CraftedItem getLastItem() throws ItemNotFoundException {
 		final int lastIndex = this.items.size() - 1;
 
 		if (lastIndex < 0) {
-			throw new ThereAreNoCraftedItemsException();
+			throw new ItemNotFoundException("There are no crafted items within the `CraftingHistory` instance");
 		}
 
 		return this.items.get(lastIndex);
@@ -33,11 +33,11 @@ public class CraftingHistory {
 		this.items.add(craftedItem);
 	}
 
-	public CraftedItem removeLastItem() throws ThereAreNoCraftedItemsException {
+	public CraftedItem removeLastItem() throws ItemNotFoundException {
 		final int lastIndex = this.items.size() - 1;
 
 		if (lastIndex < 0) {
-			throw new ThereAreNoCraftedItemsException();
+			throw new ItemNotFoundException("There are no crafted items within the `CraftingHistory` instance");
 		}
 
 		CraftedItem lastCraftedItem = this.items.remove(lastIndex);

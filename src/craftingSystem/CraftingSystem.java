@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import exceptions.ItemNotFoundException;
 import exceptions.OutOfRangeException;
-import exceptions.ThereAreNoCraftedItemsException;
 import inventory.Inventory;
 import inventory.Item;
 import recipe.Ingredient;
@@ -110,7 +109,7 @@ public class CraftingSystem {
 		// TODO
 	}
 
-	public void undoLastCraft() throws ThereAreNoCraftedItemsException, ItemNotFoundException {
+	public void undoLastCraft() throws ItemNotFoundException {
 		CraftedItem lastCraftedItem = this.history.getLastItem();
 		int craftedItems = lastCraftedItem.getCraftedItems();
 

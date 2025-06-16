@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import exceptions.ThereAreNoCraftedItemsException;
+import exceptions.ItemNotFoundException;
 import inventory.Item;
 import recipe.Ingredient;
 import recipe.Recipe;
@@ -113,9 +113,9 @@ class CraftingHistoryTests {
 	}
 
 	@Test
-	void removeLastItem_ThereAreNoCraftedItemsException() {
+	void removeLastItem_ItemNotFoundException() {
 		// Assert
-		assertThrows(ThereAreNoCraftedItemsException.class, () -> {
+		assertThrows(ItemNotFoundException.class, () -> {
 			// Arrange
 			CraftingHistory craftingHistory = new CraftingHistory();
 
