@@ -1,6 +1,7 @@
 package inventory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,7 +26,7 @@ public class Item {
 	}
 
 	public List<Recipe> getRecipes() {
-		return this.recipes;
+		return Collections.unmodifiableList(this.recipes);
 	}
 
 	public List<Recipe> getCraftableRecipes(Inventory inventory) {

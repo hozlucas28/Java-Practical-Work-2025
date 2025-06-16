@@ -1,6 +1,7 @@
 package recipe;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +29,7 @@ public class Recipe {
 	}
 
 	public List<Ingredient> getIngredients() {
-		return this.ingredients;
+		return Collections.unmodifiableList(this.ingredients);
 	}
 
 	public int getTimeToCraftInMilliseconds() {
