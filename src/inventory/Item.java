@@ -11,12 +11,12 @@ public class Item {
 	private final List<Recipe> recipes;
 
 	public Item(String name) {
-				this.name = name;
+		this.name = name;
 		this.recipes = new ArrayList<Recipe>();
 	}
 
 	public Item(String name, List<Recipe> recipes) {
-				this.name = name;
+		this.name = name;
 		this.recipes = recipes;
 	}
 
