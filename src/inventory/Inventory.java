@@ -22,7 +22,7 @@ public class Inventory {
 
 	public void addItem(Item item, int quantity) throws OutOfRangeException {
 		if (quantity < 1) {
-			String errorMessage = String.format("Received %d as quantity, but expect it greather than or equal to %d",
+			String errorMessage = String.format("Received %d as quantity, but expect it greater than or equal to %d",
 					quantity, 1);
 			throw new OutOfRangeException(errorMessage);
 		}
@@ -38,7 +38,7 @@ public class Inventory {
 		String errorMessage;
 
 		if (!this.items.containsKey(item)) {
-			errorMessage = String.format("Item with `%s` id was not found inside the inventory", item.getId());
+			errorMessage = String.format("Item with \"%s\" name was not found inside the inventory", item.getName());
 			throw new ItemNotFoundException(errorMessage);
 		}
 

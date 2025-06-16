@@ -11,7 +11,7 @@ public class Ingredient {
 
 	public Ingredient(Item item, int quantity) throws OutOfRangeException {
 		if (quantity < 1) {
-			String errorMessage = String.format("Received %d as quantity, but expect it greather than or equal to %d",
+			String errorMessage = String.format("Received %d as quantity, but expect it greater than or equal to %d",
 					quantity, 1);
 			throw new OutOfRangeException(errorMessage);
 		}
@@ -30,7 +30,7 @@ public class Ingredient {
 
 	public void incrementQuantity(int quantity) throws OutOfRangeException {
 		if (quantity < 1) {
-			String errorMessage = String.format("Received %d as quantity, but expect it greather than or equal to %d",
+			String errorMessage = String.format("Received %d as quantity, but expect it greater than or equal to %d",
 					quantity, 1);
 			throw new OutOfRangeException(errorMessage);
 		}
