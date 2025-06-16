@@ -2,12 +2,16 @@ package inventory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
 
 import exceptions.ItemNotFoundException;
 import exceptions.OutOfRangeException;
+import repositories.ItemsRepository;
 
 class InventoryTests {
 
@@ -157,8 +161,52 @@ class InventoryTests {
 
 	@Test
 	void storeOnJSON() {
-		// TODO
-		fail("Not yet implemented");
+		assertDoesNotThrow(() -> {
+			String jsonPath = Paths.get("test", "assets", "inventory__storeOnJSON.temporal.json").toString();
+
+			// Before
+			Files.deleteIfExists(Paths.get(jsonPath));
+
+			// Arrange
+			Item itemA = new Item("Item A");
+			Item itemB = new Item("Item B");
+			Item itemC = new Item("Item C");
+			Item itemD = new Item("Item D");
+
+			int itemAQuantity = 2;
+			int itemBQuantity = 5;
+			int itemCQuantity = 9;
+			int itemDQuantity = 1;
+
+			HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
+
+			inventoryItems.put(itemA, itemAQuantity);
+			inventoryItems.put(itemB, itemBQuantity);
+			inventoryItems.put(itemC, itemCQuantity);
+			inventoryItems.put(itemD, itemDQuantity);
+
+			Inventory inventory = new Inventory(inventoryItems);
+
+			HashMap<String, Item> repositoryItems = new HashMap<String, Item>();
+
+			repositoryItems.put(itemA.getName(), itemA);
+			repositoryItems.put(itemB.getName(), itemB);
+			repositoryItems.put(itemC.getName(), itemC);
+			repositoryItems.put(itemD.getName(), itemD);
+
+			ItemsRepository itemsRepository = new ItemsRepository(repositoryItems);
+
+			// Act
+			inventory.storeOnJSON(jsonPath);
+
+			// Assert
+			Inventory savedInventory = Inventory.loadFromJSON(jsonPath, itemsRepository);
+
+			assertEquals(inventory.getItems(), savedInventory.getItems());
+
+			// After
+			Files.deleteIfExists(Paths.get(jsonPath));
+		});
 	}
 
 	@Test
