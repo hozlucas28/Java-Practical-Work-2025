@@ -49,7 +49,7 @@ class CraftingSystemTests {
 			ingredientsRecipe02.add(ingredient04);
 
 			Recipe recipe01 = new Recipe(ingredientsRecipe01, 1000, 2);
-			Recipe recipe02 = new Recipe(craftingTable, ingredientsRecipe02, 1250, 4);
+			Recipe recipe02 = new Recipe(ingredientsRecipe02, 1250, 4, craftingTable);
 
 			List<Recipe> recipes01 = new ArrayList<Recipe>();
 

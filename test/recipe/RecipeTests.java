@@ -20,7 +20,7 @@ class RecipeTests {
 		int timeToCraftInMilliseconds = 1000;
 		int itemsToCraft = 2;
 
-		Recipe recipe = new Recipe(craftingTable, ingredients, timeToCraftInMilliseconds, itemsToCraft);
+		Recipe recipe = new Recipe(ingredients, timeToCraftInMilliseconds, itemsToCraft, craftingTable);
 
 		// Act
 		Item expected = craftingTable;
