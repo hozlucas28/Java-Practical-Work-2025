@@ -1,9 +1,24 @@
 package inventory;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Map;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 import exceptions.ItemNotFoundException;
 import exceptions.OutOfRangeException;
+import repositories.ItemsRepository;
 
 public class Inventory {
 	private HashMap<Item, Integer> items;
@@ -59,13 +74,49 @@ public class Inventory {
 		}
 	}
 
-	public void storeOnJSON(String path) {
-		// TODO
+	public void storeOnJSON(String path) throws IOException {
+		JsonObject json = new JsonObject();
+
+		for (Map.Entry<Item, Integer> entry : this.items.entrySet()) {
+			Item item = entry.getKey();
+			Integer quantity = entry.getValue();
+
+			json.addProperty(item.getName(), quantity);
+		}
+
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+		try {
+			FileWriter writer = new FileWriter(path, StandardCharsets.UTF_8);
+			
+			gson.toJson(json, writer);
+			
+			writer.close();
+		} catch (IOException e) {
+			String errorMessage = String.format("Failed to write inventory to \"%s\" file", path);
+			throw new IOException(errorMessage);
+		}
 	}
 
-	public static Inventory loadFromJSON(String path) {
-		// TODO
+	public static Inventory loadFromJSON(String path, ItemsRepository itemsRepository)
+			throws FileNotFoundException, JsonIOException, JsonSyntaxException, ItemNotFoundException, IOException {
+		FileInputStream fileStream = new FileInputStream(path);
+		InputStreamReader streamReader = new InputStreamReader(fileStream, StandardCharsets.UTF_8);
+
+		JsonObject json = JsonParser.parseReader(streamReader).getAsJsonObject();
+
 		HashMap<Item, Integer> items = new HashMap<Item, Integer>();
+
+		for (String name : json.keySet()) {
+			Item item = itemsRepository.getItem(name);
+			int quantity = json.get(name).getAsInt();
+
+			items.put(item, quantity);
+		}
+
+		streamReader.close();
+		fileStream.close();
+
 		Inventory inventory = new Inventory(items);
 
 		return inventory;
