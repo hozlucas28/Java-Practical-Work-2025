@@ -6,6 +6,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
@@ -211,7 +212,33 @@ class InventoryTests {
 
 	@Test
 	void loadFromJSON() {
-		// TODO
-		fail("Not yet implemented");
+		assertDoesNotThrow(() -> {
+			// Arrange
+			Item coal = new Item("coal");
+			Item wood = new Item("wood");
+			Item iron = new Item("iron");
+			Item stick = new Item("stick");
+			Item woodCraftingTable = new Item("wood crafting table");
+
+			HashMap<String, Item> repositoryItems = new HashMap<String, Item>();
+
+			repositoryItems.put(coal.getName(), coal);
+			repositoryItems.put(wood.getName(), wood);
+			repositoryItems.put(iron.getName(), iron);
+			repositoryItems.put(stick.getName(), stick);
+			repositoryItems.put(woodCraftingTable.getName(), woodCraftingTable);
+
+			ItemsRepository itemsRepository = new ItemsRepository(repositoryItems);
+
+			// Act
+			String jsonPath = Paths.get("test", "assets", "inventory.json").toString();
+			Inventory inventory = Inventory.loadFromJSON(jsonPath, itemsRepository);
+
+			// Assert
+			Map<Item, Integer> expected = Map.of(wood, 2, iron, 7, woodCraftingTable, 1);
+			HashMap<Item, Integer> received = inventory.getItems();
+
+			assertEquals(expected, received);
+		});
 	}
 }
