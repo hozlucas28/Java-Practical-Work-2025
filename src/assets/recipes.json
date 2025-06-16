@@ -1,0 +1,140 @@
+[
+    {
+        "name": "shovel",
+        "recipes": [
+            {
+                "crafting_table": "wood crafting table",
+                "ingredients": {
+                    "stick": 2,
+                    "wood": 1
+                },
+                "items_to_craft": 1,
+                "time_to_craft": 1800
+            }
+        ]
+    },
+    {
+        "name": "stick",
+        "recipes": [
+            {
+                "crafting_table": "wood crafting table",
+                "ingredients": {
+                    "wood": 1
+                },
+                "items_to_craft": 4,
+                "time_to_craft": 1000
+            }
+        ]
+    },
+    {
+        "name": "torch",
+        "recipes": [
+            {
+                "crafting_table": "wood crafting table",
+                "ingredients": {
+                    "coal": 1,
+                    "stick": 1
+                },
+                "items_to_craft": 3,
+                "time_to_craft": 1300
+            },
+            {
+                "crafting_table": "wood crafting table",
+                "ingredients": {
+                    "charcoal": 1,
+                    "stick": 1
+                },
+                "items_to_craft": 3,
+                "time_to_craft": 1400
+            }
+        ]
+    },
+    {
+        "name": "sword",
+        "recipes": [
+            {
+                "crafting_table": "iron crafting table",
+                "ingredients": {
+                    "iron": 2,
+                    "stick": 1
+                },
+                "items_to_craft": 1,
+                "time_to_craft": 2000
+            }
+        ]
+    },
+    {
+        "name": "charcoal",
+        "recipes": [
+            {
+                "crafting_table": "furnace",
+                "ingredients": {
+                    "wood": 1
+                },
+                "items_to_craft": 1,
+                "time_to_craft": 1600
+            }
+        ]
+    },
+    {
+        "name": "iron ingot",
+        "recipes": [
+            {
+                "crafting_table": "furnace",
+                "ingredients": {
+                    "iron": 1
+                },
+                "items_to_craft": 1,
+                "time_to_craft": 1700
+            }
+        ]
+    },
+    {
+        "name": "wood"
+    },
+    {
+        "name": "coal"
+    },
+    {
+        "name": "stone"
+    },
+    {
+        "name": "iron"
+    },
+    {
+        "name": "wood crafting table"
+    },
+    {
+        "name": "iron crafting table"
+    },
+    {
+        "name": "furnace"
+    },
+    {
+        "name": "plank",
+        "recipes": [
+            {
+                "ingredients": {
+                    "wood": 1
+                },
+                "items_to_craft": 2,
+                "time_to_craft": 1200
+            }
+        ]
+    },
+    {
+        "name": "rope",
+        "recipes": [
+            {
+                "ingredients": {
+                    "plant fiber": 3
+                },
+                "items_to_craft": 1,
+                "time_to_craft": 1500
+            }
+        ]
+    },
+    {
+        "name": "plant fiber"
+    }
+]
