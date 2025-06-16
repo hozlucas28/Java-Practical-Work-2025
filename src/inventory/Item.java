@@ -39,7 +39,7 @@ public class Item {
 	}
 
 	public Item copy() {
-		return new Item(this.id, this.name, this.recipes);
+		return new Item(this.name, this.recipes);
 	}
 
 	@Override
