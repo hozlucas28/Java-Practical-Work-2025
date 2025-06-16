@@ -3,6 +3,7 @@ package repositories;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.io.InputStreamReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -115,5 +116,39 @@ public class ItemsRepository {
 		ItemsRepository itemsRepository = new ItemsRepository(items);
 
 		return itemsRepository;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(items);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (obj == null) {
+			return false;
+		}
+
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+
+		ItemsRepository other = (ItemsRepository) obj;
+
+		if (this.items.size() != other.items.size()) {
+			return false;
+		}
+
+		for (String itemName : this.items.keySet()) {
+			if (!other.items.containsKey(itemName) || !Objects.equals(this.items.get(itemName), other.items.get(itemName))) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 }

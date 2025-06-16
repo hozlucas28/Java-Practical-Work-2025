@@ -1,0 +1,52 @@
+[
+    {
+        "name": "stick"
+    },
+    {
+        "name": "charcoal",
+        "recipes": [
+            {
+                "crafting_table": "furnace",
+                "ingredients": {
+                    "wood": 1
+                },
+                "items_to_craft": 1,
+                "time_to_craft": 1600
+            }
+        ]
+    },
+    {
+        "name": "torch",
+        "recipes": [
+            {
+                "crafting_table": "wood crafting table",
+                "ingredients": {
+                    "coal": 1,
+                    "stick": 1
+                },
+                "items_to_craft": 3,
+                "time_to_craft": 1300
+            },
+            {
+                "ingredients": {
+                    "charcoal": 1,
+                    "stick": 1
+                },
+                "items_to_craft": 3,
+                "time_to_craft": 1400
+            }
+        ]
+    },
+    {
+        "name": "wood crafting table"
+    },
+    {
+        "name": "wood"
+    },
+    {
+        "name": "furnace"
+    },
+    {
+        "name": "coal"
+    }
+]
