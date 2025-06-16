@@ -71,6 +71,6 @@ public class Ingredient {
 
 		Ingredient other = (Ingredient) obj;
 
-		return item == other.item;
+		return Objects.equals(this.item, other.item);
 	}
 }
