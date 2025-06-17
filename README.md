@@ -158,7 +158,7 @@ direction TB
 	    +void removeItem(Item item, int quantity)
         +void storeOnJSON(String path)
         +static Inventory loadFromJSON(String path)
-        +String toProlog()
+        +String toProlog(String eventName)
     }
 
     class CraftedItem {

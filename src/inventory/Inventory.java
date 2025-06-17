@@ -122,9 +122,17 @@ public class Inventory {
 		return inventory;
 	}
 
-	public String toProlog() {
-		// TODO
+	public String toProlog(String eventName) {
+		String prologLines = null;
 
-		return "";
+		for (Map.Entry<Item, Integer> entry : this.items.entrySet()) {
+			Item item = entry.getKey();
+			Integer itemQuantity = entry.getValue();
+
+			String prologLine = String.format("%s(\"%s\", %d).", eventName, item.getName(), itemQuantity);
+			prologLines = prologLines == null ? prologLine : String.format("%s\n%s", prologLines, prologLine);
+		}
+
+		return prologLines;
 	}
 }

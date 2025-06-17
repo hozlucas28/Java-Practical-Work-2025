@@ -241,4 +241,43 @@ class InventoryTests {
 			assertEquals(expected, received);
 		});
 	}
+
+	@Test
+	void toProlog() {
+		// Arrange
+		Item coal = new Item("coal");
+		Item wood = new Item("wood");
+		Item woodCraftingTable = new Item("wood crafting table");
+
+		int coalQuantity = 2;
+		int woodQuantity = 5;
+		int woodCraftingTableQuantity = 1;
+
+		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
+
+		inventoryItems.put(coal, coalQuantity);
+		inventoryItems.put(wood, woodQuantity);
+		inventoryItems.put(woodCraftingTable, woodCraftingTableQuantity);
+
+		Inventory inventory = new Inventory(inventoryItems);
+
+		// Act
+		String eventName = "have";
+		String prolog = inventory.toProlog(eventName);
+
+		// Assert
+		String expected = null;
+
+		for (Map.Entry<Item, Integer> entry : inventoryItems.entrySet()) {
+			Item item = entry.getKey();
+			Integer itemQuantity = entry.getValue();
+
+			String line = String.format("%s(\"%s\", %d).", eventName, item.getName(), itemQuantity);
+			expected = expected == null ? line : String.format("%s\n%s", expected, line);
+		}
+
+		String received = prolog;
+
+		assertEquals(expected, received);
+	}
 }
