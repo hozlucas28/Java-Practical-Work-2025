@@ -109,9 +109,8 @@ direction TB
 
 	    +Item getItem(String name)
         +static ItemsRepository loadFromJSON(String path)
+        +String toProlog()
     }
-
-
 
     class Item {
 	    -String name
@@ -136,6 +135,7 @@ direction TB
 	    +int getItemsToCraft()
 	    +List~Item~ getIngredientsToBase()
 	    +Optional~Item~ getCraftingTable()
+        +String toProlog()
     }
 
     class JSONRecipe {
@@ -158,6 +158,7 @@ direction TB
 	    +void removeItem(Item item, int quantity)
         +void storeOnJSON(String path)
         +static Inventory loadFromJSON(String path)
+        +String toProlog()
     }
 
     class CraftedItem {
@@ -185,6 +186,8 @@ direction TB
 	    -CraftingHistory history
 
 	    +int getCraftableUnits()
+        +HashMap<Item, List<List<Ingredient>>> getMissingIngredients()
+        +HashMap<Item, List<List<Ingredient>>> getMissingIngredientsToBase()
 	    +HashMap<Item, List<List<Ingredient>>> getRequiredIngredients()
 	    +HashMap<Item, List<List<Ingredient>>> getRequiredIngredientsToBase()
 	    +bool canCraft()

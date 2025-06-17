@@ -28,6 +28,20 @@ public class CraftingSystem {
 		return 0;
 	}
 
+	public HashMap<Item, List<List<Ingredient>>> getMissingIngredients() {
+		// TODO
+		HashMap<Item, List<List<Ingredient>>> missingIngredients = new HashMap<Item, List<List<Ingredient>>>();
+
+		return missingIngredients;
+	}
+
+	public HashMap<Item, List<List<Ingredient>>> getMissingIngredientsToBase() {
+		// TODO
+		HashMap<Item, List<List<Ingredient>>> missingIngredients = new HashMap<Item, List<List<Ingredient>>>();
+
+		return missingIngredients;
+	}
+
 	public HashMap<Item, List<List<Ingredient>>> getRequiredIngredients() {
 		HashMap<Item, List<List<Ingredient>>> requiredIngredients = new HashMap<Item, List<List<Ingredient>>>();
 

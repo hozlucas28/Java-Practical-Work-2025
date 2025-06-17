@@ -88,9 +88,9 @@ public class Inventory {
 
 		try {
 			FileWriter writer = new FileWriter(path, StandardCharsets.UTF_8);
-			
+
 			gson.toJson(json, writer);
-			
+
 			writer.close();
 		} catch (IOException e) {
 			String errorMessage = String.format("Failed to write inventory to \"%s\" file", path);
@@ -120,5 +120,11 @@ public class Inventory {
 		Inventory inventory = new Inventory(items);
 
 		return inventory;
+	}
+
+	public String toProlog() {
+		// TODO
+
+		return "";
 	}
 }

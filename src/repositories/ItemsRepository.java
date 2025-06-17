@@ -118,6 +118,12 @@ public class ItemsRepository {
 		return itemsRepository;
 	}
 
+	public String toProlog() {
+		// TODO
+
+		return "";
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(items);
@@ -148,7 +154,7 @@ public class ItemsRepository {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 }
