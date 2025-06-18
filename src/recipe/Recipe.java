@@ -99,10 +99,4 @@ public class Recipe {
 
 		return baseIngredients;
 	}
-
-	public String toProlog() {
-		// TODO
-
-		return "";
-	}
 }

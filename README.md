@@ -135,7 +135,6 @@ direction TB
 	    +int getItemsToCraft()
 	    +List~Item~ getIngredientsToBase()
 	    +Optional~Item~ getCraftingTable()
-        +String toProlog()
     }
 
     class JSONRecipe {
