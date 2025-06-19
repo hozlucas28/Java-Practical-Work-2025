@@ -24,10 +24,10 @@ class RecipeTests {
 
 		// Act
 		Item expected = craftingTable;
-		Optional<Item> received = recipe.getCraftingTable();
+		Item received = recipe.getCraftingTable().get();
 
 		// Assert
-		assertEquals(expected, received.get());
+		assertEquals(expected, received);
 	}
 
 	@Test
