@@ -28,14 +28,8 @@ public class ItemsRepository {
 		this.items = items;
 	};
 
-	public Item getItem(String name) throws ItemNotFoundException {
+	public Item getItem(String name) {
 		Item item = this.items.get(name);
-
-		if (item == null) {
-			String errorMessage = String.format("Item with \"%s\" name was not found inside items repository", name);
-			throw new ItemNotFoundException(errorMessage);
-		}
-
 		return item;
 	}
 

@@ -99,7 +99,7 @@ public class Inventory {
 	}
 
 	public static Inventory loadFromJSON(String path, ItemsRepository itemsRepository)
-			throws FileNotFoundException, JsonIOException, JsonSyntaxException, ItemNotFoundException, IOException {
+			throws FileNotFoundException, JsonIOException, JsonSyntaxException, IOException {
 		FileInputStream fileStream = new FileInputStream(path);
 		InputStreamReader streamReader = new InputStreamReader(fileStream, StandardCharsets.UTF_8);
 
