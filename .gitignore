@@ -102,6 +102,7 @@ local.properties
 # Package Files #
 *.jar
 !gson-2.13.1.jar
+!jpl.jar
 *.war
 *.nar
 *.ear
