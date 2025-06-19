@@ -110,7 +110,35 @@ direction TB
 	    +HashMap~String, Item~ getItems()
 	    +Item getItem(String name)
         +static ItemsRepository loadFromJSON(String path)
-        +String toProlog()
+    }
+
+    class PrologService {
+	    -String baseItemFactName
+	    -String ingredientFactName
+	    -String itemInInventoryFactName
+	    -ItemsRepository itemsRepository
+	    -Inventory inventory
+
+        +HashMap~Item, Integer~ craftableItems()
+        -void toFile(FileWriter fWriter)
+        -String toProlog(ItemsRepository itemsRepository)
+        -String toProlog(Inventory inventory)
+        -String utilityRules()
+    }
+
+    class PrologServiceBuilder {
+	    #String baseItemFactName
+	    #String ingredientFactName
+	    #String itemInInventoryFactName
+	    #ItemsRepository itemsRepository
+	    #Inventory inventory
+
+        +PrologServiceBuilder setBaseItemFactName(String baseItemFactName)
+        +PrologServiceBuilder setIngredientFactName(String ingredientFactName)
+        +PrologServiceBuilder setItemInInventoryFactName(String itemInInventoryFactName)
+        +PrologServiceBuilder setItemsRepository(ItemsRepository itemsRepository)
+        +PrologServiceBuilder setInventory(Inventory inventory)
+        +PrologService build()
     }
 
     class Item {
@@ -149,6 +177,16 @@ direction TB
 	    +static void linkItemsAndRecipes(HashMap~String, Item~ items, HashMap~String, List~JSONRecipe~~ recipesPerItem)
     }
 
+    class CraftedItem {
+	    -ZonedDateTime date
+	    -Recipe usedRecipe
+	    -int craftedItems
+
+	    +ZonedDateTime getDate()
+	    +Recipe getUsedRecipe()
+	    +int getCraftedItems()
+    }
+
     class Inventory {
         -HashMap~Item, Integer~ items
 
@@ -158,17 +196,6 @@ direction TB
 	    +void removeItem(Item item, int quantity)
         +void storeOnJSON(String path)
         +static Inventory loadFromJSON(String path)
-        +String toProlog(String eventName)
-    }
-
-    class CraftedItem {
-	    -ZonedDateTime date
-	    -Recipe usedRecipe
-	    -int craftedItems
-
-	    +ZonedDateTime getDate()
-	    +Recipe getUsedRecipe()
-	    +int getCraftedItems()
     }
 
     class Ingredient {
@@ -205,24 +232,32 @@ direction TB
 	    +CraftedItem removeLastItem()
     }
 
-    Item "0...*" o-- "1" ItemsRepository : Has
-    JSONRecipe "1...*" *-- "1" ItemsRepository : Instance and uses the static method
+    ItemsRepository "1" --o "0...*" Item : Has
+    ItemsRepository "1" --* "1...*" JSONRecipe : Instance and uses the static method
 
-    Recipe "0...*" o-- "1" Item : Has
+    PrologService "1" --o "1" Inventory : Has a reference to
+    PrologService "1" --o "1" ItemsRepository : Has a reference to
+    PrologService "1" --* "1" PrologServiceBuilder : Build by
 
-    Item "0...*" o-- "1" Inventory : Has
+    PrologServiceBuilder "1" --o "1" Inventory : Has a reference to
+    PrologServiceBuilder "1" --o "1" ItemsRepository : Has a reference to
 
-    Item <|-- CraftedItem : Inherits from
+    Item "1" --o "0...*" Recipe : Has
 
-    Ingredient "1...*" o-- "1" Recipe : Has
+    Recipe "1" --o "1...*" Ingredient : Has
+    Recipe "1" --o "0...1" Item : Has a reference to
 
-    Item "0...1" o-- "1" JSONRecipe : Has
+    JSONRecipe "1" --o "0...1" Item : Has
 
-    Item "0...*" o-- "1" CraftingSystem : Has
-    Inventory "1" o-- "1" CraftingSystem : Has
-    CraftingHistory "1" *-- "1" CraftingSystem : Instance
+    CraftedItem --|>  Item : Inherits from
 
-    CraftedItem "0...*" o-- "1" CraftingHistory : Has
+    Inventory "1" --o "0...*" Item : Has references to
+
+    CraftingSystem "1*" --o "0..." Item : Has references to
+    CraftingSystem "1" --o "1" Inventory : Has a reference to
+    CraftingSystem "1" --* "1" CraftingHistory : Has
+
+    CraftingHistory "1" --o "0...*" CraftedItem : Has
 ```
 
 </details>
