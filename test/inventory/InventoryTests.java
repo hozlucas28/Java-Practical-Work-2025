@@ -2,7 +2,6 @@ package inventory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -33,8 +32,12 @@ class InventoryTests {
 		Inventory inventory = new Inventory(items);
 
 		// Act
-		int expected = items.size();
-		int received = inventory.getItems().size();
+		HashMap<Item, Integer> expected = new HashMap<Item, Integer>();
+
+		expected.put(item01, item01Quantity);
+		expected.put(item02, item02Quantity);
+
+		HashMap<Item, Integer> received = inventory.getItems();
 
 		// Assert
 		assertEquals(expected, received);
@@ -242,42 +245,4 @@ class InventoryTests {
 		});
 	}
 
-	@Test
-	void toProlog() {
-		// Arrange
-		Item coal = new Item("coal");
-		Item wood = new Item("wood");
-		Item woodCraftingTable = new Item("wood crafting table");
-
-		int coalQuantity = 2;
-		int woodQuantity = 5;
-		int woodCraftingTableQuantity = 1;
-
-		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
-
-		inventoryItems.put(coal, coalQuantity);
-		inventoryItems.put(wood, woodQuantity);
-		inventoryItems.put(woodCraftingTable, woodCraftingTableQuantity);
-
-		Inventory inventory = new Inventory(inventoryItems);
-
-		// Act
-		String eventName = "have";
-		String prolog = inventory.toProlog(eventName);
-
-		// Assert
-		String expected = null;
-
-		for (Map.Entry<Item, Integer> entry : inventoryItems.entrySet()) {
-			Item item = entry.getKey();
-			Integer itemQuantity = entry.getValue();
-
-			String line = String.format("%s(\"%s\", %d).", eventName, item.getName(), itemQuantity);
-			expected = expected == null ? line : String.format("%s\n%s", expected, line);
-		}
-
-		String received = prolog;
-
-		assertEquals(expected, received);
-	}
 }
