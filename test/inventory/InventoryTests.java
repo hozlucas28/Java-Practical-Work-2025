@@ -2,6 +2,7 @@ package inventory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -166,11 +167,6 @@ class InventoryTests {
 	@Test
 	void storeOnJSON() {
 		assertDoesNotThrow(() -> {
-			String jsonPath = Paths.get("test", "assets", "inventory__storeOnJSON.temporal.json").toString();
-
-			// Before
-			Files.deleteIfExists(Paths.get(jsonPath));
-
 			// Arrange
 			Item itemA = new Item("Item A");
 			Item itemB = new Item("Item B");
@@ -201,15 +197,18 @@ class InventoryTests {
 			ItemsRepository itemsRepository = new ItemsRepository(repositoryItems);
 
 			// Act
-			inventory.storeOnJSON(jsonPath);
+			File tempFile = File.createTempFile("inventoryTests__storeOnJSON", ".tmp.json");
+			String tempFilePath = tempFile.getAbsolutePath().replace("\\", "/");
+
+			inventory.storeOnJSON(tempFilePath);
 
 			// Assert
-			Inventory savedInventory = Inventory.loadFromJSON(jsonPath, itemsRepository);
+			Inventory savedInventory = Inventory.loadFromJSON(tempFilePath, itemsRepository);
 
 			assertEquals(inventory.getItems(), savedInventory.getItems());
 
 			// After
-			Files.deleteIfExists(Paths.get(jsonPath));
+			tempFile.delete();
 		});
 	}
 
