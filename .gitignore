@@ -38,6 +38,9 @@ local.properties
 
 # Locally stored "Eclipse launch configurations"
 *.launch
+!Java-Practical-Work-2025.launch
+!Main.launch
+!PrologServiceTests.launch
 
 # PyDev specific (Python IDE for Eclipse)
 *.pydevproject
