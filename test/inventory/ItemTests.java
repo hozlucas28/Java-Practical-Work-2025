@@ -69,8 +69,6 @@ class ItemTests {
 		});
 	}
 
-	// TODO: test getCraftableRecipes()
-
 	@Test
 	void isBase() {
 		// Arrange

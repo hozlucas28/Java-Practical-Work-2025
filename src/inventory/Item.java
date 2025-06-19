@@ -29,12 +29,6 @@ public class Item {
 		return Collections.unmodifiableList(this.recipes);
 	}
 
-	public List<Recipe> getCraftableRecipes(Inventory inventory) {
-		// TODO
-
-		return this.recipes;
-	}
-
 	public boolean isBase() {
 		return this.recipes.size() == 0;
 	}
