@@ -56,10 +56,12 @@ This repository contains the practical work for the Programming Paradigms course
 
 ## Installation
 
-1. Clone the repository to your device and install [Eclipse IDE for Java developers](https://www.eclipse.org/downloads/packages/).
-2. Open the cloned repository with Eclipse IDE and the [Index.java](./src/Main.java) file.
-3. Then, press the green button (`Run index`) at the top of the navbar.
-4. That's all, enjoy the crafting system through the interaction with the console.
+1. Clone the repository to your device.
+2. Install [Java](https://www.java.com/en/download/) and [Prolog](https://www.swi-prolog.org/download/stable) (check `Add swipl to the system PATH` option during the installation).
+3. Install [Eclipse IDE for Java developers](https://www.eclipse.org/downloads/packages/).
+4. Open the cloned repository with Eclipse IDE.
+5. Then, press right click on [Main.java](./src/Main.java) file and select `Run As` -> `Java Application`.
+6. That's all, enjoy the crafting system through the interaction with the console.
 
 <details>
 <summary>How can I run all JUnit tests?</summary>
@@ -85,6 +87,12 @@ To change the list of available items to craft, you must update the [recipes.jso
 > It's important to follow the same structure as the original ones.
 
 </details>
+
+### Known issues
+
+| Issue                                                   | Solution                                                                                                                                                                                                                                                                                                                                                                                                         |
+| :------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Prolog could not find system resources  | _In Eclipse IDE, go to `File` tab and select `Import` option. Then, you have to search for `Launch configurations`, select it and press `Next`. After that, browse the project directory, select `Java-Practical-Work-2025`, `Main`, and `PrologServiceTests` files and check `Overwrite existing launch configurations without warning.` option. Finally, press `Finish` to load your local Prolog instance. If this didn't work, check out the value of each environment variable inside `Environment` tab in each run configurations of `Java-Practical-Work-2025`, `Main`, and `PrologServiceTests`, as they must aim to your local Prolog directory._ |
 
 ## Diagrams
 
