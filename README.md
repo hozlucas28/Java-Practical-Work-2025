@@ -107,6 +107,7 @@ direction TB
     class ItemsRepository {
 	    -HashMap~String, Item~ items
 
+	    +HashMap~String, Item~ getItems()
 	    +Item getItem(String name)
         +static ItemsRepository loadFromJSON(String path)
         +String toProlog()

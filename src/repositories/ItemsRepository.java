@@ -28,6 +28,10 @@ public class ItemsRepository {
 		this.items = items;
 	};
 
+	public HashMap<String, Item> getItems() {
+		return this.items;
+	}
+
 	public Item getItem(String name) {
 		Item item = this.items.get(name);
 		return item;
@@ -112,12 +116,6 @@ public class ItemsRepository {
 		return itemsRepository;
 	}
 
-	public String toProlog() {
-		// TODO
-
-		return "";
-	}
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(items);
@@ -144,7 +142,8 @@ public class ItemsRepository {
 		}
 
 		for (String itemName : this.items.keySet()) {
-			if (!other.items.containsKey(itemName) || !Objects.equals(this.items.get(itemName), other.items.get(itemName))) {
+			if (!other.items.containsKey(itemName)
+					|| !Objects.equals(this.items.get(itemName), other.items.get(itemName))) {
 				return false;
 			}
 		}
