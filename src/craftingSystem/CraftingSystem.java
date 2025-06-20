@@ -67,7 +67,9 @@ public class CraftingSystem {
 				recipesIngredients.add(ingredients);
 			}
 
-			requiredIngredients.put(item, recipesIngredients);
+			if (recipesIngredients.size() > 0) {
+				requiredIngredients.put(item, recipesIngredients);
+			}
 		}
 
 		return requiredIngredients;
@@ -98,7 +100,9 @@ public class CraftingSystem {
 				recipesBaseIngredients.add(baseIngredients);
 			}
 
-			requiredBaseIngredients.put(item, recipesBaseIngredients);
+			if (recipesBaseIngredients.size() > 0) {
+				requiredBaseIngredients.put(item, recipesBaseIngredients);
+			}
 		}
 
 		return requiredBaseIngredients;
