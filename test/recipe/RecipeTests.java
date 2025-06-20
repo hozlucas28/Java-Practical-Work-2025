@@ -81,7 +81,7 @@ class RecipeTests {
 	}
 
 	@Test
-	void getIngredientsToBase() {
+	void getBaseIngredients() {
 		assertDoesNotThrow(() -> {
 			// Arrange
 			Item wood = new Item("wood");
@@ -97,12 +97,12 @@ class RecipeTests {
 			Recipe swordRecipe = new Recipe(swordRecipeIngredients, 2100, 1);
 
 			// Act
-			List<Ingredient> baseIngredients = swordRecipe.getIngredientsToBase();
+			List<Ingredient> baseIngredients = swordRecipe.getBaseIngredients();
 
 			// Assert
 			List<Ingredient> expected = List.of(new Ingredient(wood, 2), new Ingredient(iron, 3));
 			List<Ingredient> received = baseIngredients;
-			
+
 			assertEquals(expected, received);
 		});
 	}

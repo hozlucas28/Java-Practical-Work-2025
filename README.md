@@ -169,7 +169,7 @@ direction TB
 	    +List~Item~ getIngredients()
 	    +int getTimeToCraftInMilliseconds()
 	    +int getItemsToCraft()
-	    +List~Item~ getIngredientsToBase()
+	    +List~Item~ getBaseIngredients()
 	    +Optional~Item~ getCraftingTable()
     }
 
@@ -221,9 +221,9 @@ direction TB
 
 	    +int getCraftableUnits()
         +HashMap<Item, List<List<Ingredient>>> getMissingIngredients()
-        +HashMap<Item, List<List<Ingredient>>> getMissingIngredientsToBase()
+        +HashMap<Item, List<List<Ingredient>>> getMissingBaseIngredients()
 	    +HashMap<Item, List<List<Ingredient>>> getRequiredIngredients()
-	    +HashMap<Item, List<List<Ingredient>>> getRequiredIngredientsToBase()
+	    +HashMap<Item, List<List<Ingredient>>> getRequiredBaseIngredients()
 	    +bool canCraft()
 	    +this setItemsToCraft(List~Item~ itemsToCraft)
 	    +craftItems()

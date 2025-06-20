@@ -73,7 +73,7 @@ public class CraftingSystem {
 		return requiredIngredients;
 	}
 
-	public HashMap<Item, List<List<Ingredient>>> getRequiredIngredientsToBase() {
+	public HashMap<Item, List<List<Ingredient>>> getRequiredBaseIngredients() {
 		HashMap<Item, List<List<Ingredient>>> requiredBaseIngredients = new HashMap<Item, List<List<Ingredient>>>();
 
 		for (Item item : this.itemsToCraft) {
@@ -94,7 +94,7 @@ public class CraftingSystem {
 					}
 				}
 
-				baseIngredients.addAll(recipe.getIngredientsToBase());
+				baseIngredients.addAll(recipe.getBaseIngredients());
 				recipesBaseIngredients.add(baseIngredients);
 			}
 

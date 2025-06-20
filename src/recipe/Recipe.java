@@ -44,7 +44,7 @@ public class Recipe {
 		return this.craftingTable;
 	}
 
-	public List<Ingredient> getIngredientsToBase() {
+	public List<Ingredient> getBaseIngredients() {
 		List<Ingredient> ingredients = this.ingredients;
 		List<Ingredient> baseIngredients = new ArrayList<Ingredient>();
 
@@ -74,7 +74,7 @@ public class Recipe {
 			}
 
 			for (Recipe itemRecipe : itemRecipes) {
-				List<Ingredient> itemBaseIngredients = itemRecipe.getIngredientsToBase();
+				List<Ingredient> itemBaseIngredients = itemRecipe.getBaseIngredients();
 
 				for (Ingredient itemBaseIngredient : itemBaseIngredients) {
 					int IItemBaseIngredient = baseIngredients.indexOf(itemBaseIngredient);

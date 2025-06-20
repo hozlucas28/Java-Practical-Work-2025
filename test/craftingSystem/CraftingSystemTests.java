@@ -95,7 +95,7 @@ class CraftingSystemTests {
 		});
 	}
 
-	// TODO: test getRequiredIngredientsToBase()
+	// TODO: test getRequiredBaseIngredients()
 	// TODO: test getCraftedItems()
 	// TODO: test canCraft()
 	// TODO: test craftItems()
