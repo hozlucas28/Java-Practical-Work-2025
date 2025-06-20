@@ -22,6 +22,10 @@ public class CraftingSystem {
 		this.history = new CraftingHistory();
 	}
 
+	public List<CraftedItem> getCraftedItems() {
+		return this.history.getItems();
+	}
+
 	public int getCraftableUnits() {
 		// TODO
 
@@ -108,9 +112,6 @@ public class CraftingSystem {
 		return requiredBaseIngredients;
 	}
 
-	public List<CraftedItem> getCraftedItems() {
-		return this.history.getItems();
-	}
 
 	public boolean canCraft() {
 		// TODO

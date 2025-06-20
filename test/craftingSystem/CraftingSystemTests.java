@@ -15,6 +15,7 @@ import recipe.Recipe;
 
 class CraftingSystemTests {
 
+	// TODO: test getCraftedItems()
 	// TODO: test getCraftableUnits()
 
 	@Test

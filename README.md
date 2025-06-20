@@ -219,14 +219,15 @@ direction TB
 	    -List~Item~ itemsToCraft
 	    -CraftingHistory history
 
+        +List~CraftedItem~ getCraftedItems()
 	    +int getCraftableUnits()
         +HashMap<Item, List<List<Ingredient>>> getMissingIngredients()
         +HashMap<Item, List<List<Ingredient>>> getMissingBaseIngredients()
 	    +HashMap<Item, List<List<Ingredient>>> getRequiredIngredients()
 	    +HashMap<Item, List<List<Ingredient>>> getRequiredBaseIngredients()
 	    +bool canCraft()
-	    +this setItemsToCraft(List~Item~ itemsToCraft)
-	    +craftItems()
+	    +CraftingSystem setItemsToCraft(List~Item~ itemsToCraft)
+	    +void craftItems()
 	    +bool undoLastCraft()
     }
 
