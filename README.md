@@ -174,7 +174,7 @@ direction TB
     }
 
     class JSONRecipe {
-        <<adapter>>
+        << Adapter >>
 
 	    -HashMap~String, Integer~ ingredients
 	    -int timeToCraftInMilliseconds
@@ -245,9 +245,6 @@ direction TB
     PrologService "1" --o "1" Inventory : Has a reference to
     PrologService "1" --o "1" ItemsRepository : Has a reference to
     PrologService "1" --* "1" PrologServiceBuilder : Build by
-
-    PrologServiceBuilder "1" --o "1" Inventory : Has a reference to
-    PrologServiceBuilder "1" --o "1" ItemsRepository : Has a reference to
 
     Item "1" --o "0...*" Recipe : Has
 
