@@ -1,6 +1,7 @@
 package craftingSystem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import exceptions.ItemNotFoundException;
@@ -15,7 +16,7 @@ public class CraftingHistory {
 	};
 
 	public List<CraftedItem> getItems() {
-		return this.items;
+		return Collections.unmodifiableList(this.items);
 	};
 
 	public CraftedItem getLastItem() throws ItemNotFoundException {
