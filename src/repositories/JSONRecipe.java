@@ -33,7 +33,7 @@ class JSONRecipe {
 		this.craftingTable = Optional.ofNullable(craftingTable);
 	}
 
-	public static void linkItemsAndRecipes(HashMap<String, Item> items,
+	public static void linkItemsWithRecipes(HashMap<String, Item> items,
 			HashMap<String, List<JSONRecipe>> recipesPerItem) throws ItemNotFoundException, OutOfRangeException {
 		String errorMessage;
 

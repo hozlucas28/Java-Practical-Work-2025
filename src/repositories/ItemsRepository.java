@@ -108,7 +108,7 @@ public class ItemsRepository {
 		fileStream.close();
 
 		// Assign and link items with recipes
-		JSONRecipe.linkItemsAndRecipes(items, recipesPerItem);
+		JSONRecipe.linkItemsWithRecipes(items, recipesPerItem);
 
 		// Create repository
 		ItemsRepository itemsRepository = new ItemsRepository(items);

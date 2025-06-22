@@ -179,7 +179,7 @@ direction TB
 	    -int itemsToCraft
 	    -Optional~Item~ craftingTable
 
-	    +static void linkItemsAndRecipes(HashMap~String, Item~ items, HashMap~String, List~JSONRecipe~~ recipesPerItem)
+	    +static void linkItemsWithRecipes(HashMap~String, Item~ items, HashMap~String, List~JSONRecipe~~ recipesPerItem)
     }
 
     class CraftedItem {
