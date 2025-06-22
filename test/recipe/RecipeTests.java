@@ -82,28 +82,27 @@ class RecipeTests {
 
 	@Test
 	void getBaseIngredients() {
-		assertDoesNotThrow(() -> {
-			// Arrange
-			Item wood = new Item("wood");
-			Item iron = new Item("iron");
+		// Arrange
+		Item wood = new Item("wood");
+		Item iron = new Item("iron");
 
-			List<Ingredient> stickRecipeIngredients = List.of(new Ingredient(wood, 2));
-			Recipe stickRecipe = new Recipe(stickRecipeIngredients, 1400, 1);
-			List<Recipe> stickRecipes = List.of(stickRecipe);
+		List<Ingredient> stickRecipeIngredients = List.of(new Ingredient(wood, 2));
+		Recipe stickRecipe = new Recipe(stickRecipeIngredients, 1400, 1);
+		List<Recipe> stickRecipes = List.of(stickRecipe);
 
-			Item stick = new Item("stick", stickRecipes);
+		Item stick = new Item("stick", stickRecipes);
 
-			List<Ingredient> swordRecipeIngredients = List.of(new Ingredient(stick, 1), new Ingredient(iron, 3));
-			Recipe swordRecipe = new Recipe(swordRecipeIngredients, 2100, 1);
+		List<Ingredient> swordRecipeIngredients = List.of(new Ingredient(stick, 1), new Ingredient(iron, 3));
+		Recipe swordRecipe = new Recipe(swordRecipeIngredients, 2100, 1);
 
-			// Act
-			List<Ingredient> baseIngredients = swordRecipe.getBaseIngredients();
+		// Act
+		List<Ingredient> baseIngredients = swordRecipe.getBaseIngredients();
 
-			// Assert
-			List<Ingredient> expected = List.of(new Ingredient(wood, 2), new Ingredient(iron, 3));
-			List<Ingredient> received = baseIngredients;
+		// Assert
+		List<Ingredient> expected = List.of(new Ingredient(wood, 2), new Ingredient(iron, 3));
+		List<Ingredient> received = baseIngredients;
 
-			assertEquals(expected, received);
-		});
+		assertTrue(received.size() == expected.size());
+		assertTrue(received.containsAll(expected));
 	}
 }

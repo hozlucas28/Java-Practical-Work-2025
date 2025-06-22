@@ -29,44 +29,42 @@ class ItemTests {
 
 	@Test
 	void getRecipes() {
-		assertDoesNotThrow(() -> {
-			// Arrange
-			Item item01 = new Item("My item A01");
-			Item item02 = new Item("My item A02");
-			Item item03 = new Item("My item A03");
-			Item item04 = new Item("My item A04");
+		// Arrange
+		Item item01 = new Item("My item A01");
+		Item item02 = new Item("My item A02");
+		Item item03 = new Item("My item A03");
+		Item item04 = new Item("My item A04");
 
-			Ingredient ingredient01 = new Ingredient(item01, 1);
-			Ingredient ingredient02 = new Ingredient(item02, 3);
-			Ingredient ingredient03 = new Ingredient(item03, 7);
-			Ingredient ingredient04 = new Ingredient(item04, 5);
+		Ingredient ingredient01 = new Ingredient(item01, 1);
+		Ingredient ingredient02 = new Ingredient(item02, 3);
+		Ingredient ingredient03 = new Ingredient(item03, 7);
+		Ingredient ingredient04 = new Ingredient(item04, 5);
 
-			List<Ingredient> ingredients01 = new ArrayList<Ingredient>();
-			List<Ingredient> ingredients02 = new ArrayList<Ingredient>();
+		List<Ingredient> ingredients01 = new ArrayList<Ingredient>();
+		List<Ingredient> ingredients02 = new ArrayList<Ingredient>();
 
-			ingredients01.add(ingredient01);
-			ingredients01.add(ingredient02);
+		ingredients01.add(ingredient01);
+		ingredients01.add(ingredient02);
 
-			ingredients02.add(ingredient03);
-			ingredients02.add(ingredient04);
+		ingredients02.add(ingredient03);
+		ingredients02.add(ingredient04);
 
-			Recipe recipe01 = new Recipe(ingredients01, 1000, 1);
-			Recipe recipe02 = new Recipe(ingredients02, 1250, 3);
+		Recipe recipe01 = new Recipe(ingredients01, 1000, 1);
+		Recipe recipe02 = new Recipe(ingredients02, 1250, 3);
 
-			List<Recipe> recipes = new ArrayList<Recipe>();
+		List<Recipe> recipes = new ArrayList<Recipe>();
 
-			recipes.add(recipe01);
-			recipes.add(recipe02);
+		recipes.add(recipe01);
+		recipes.add(recipe02);
 
-			Item item = new Item("My item B", recipes);
+		Item item = new Item("My item B", recipes);
 
-			// Act
-			List<Recipe> expected = recipes;
-			List<Recipe> received = item.getRecipes();
+		// Act
+		List<Recipe> expected = recipes;
+		List<Recipe> received = item.getRecipes();
 
-			// Assert
-			assertEquals(expected, received);
-		});
+		// Assert
+		assertEquals(expected, received);
 	}
 
 	@Test
