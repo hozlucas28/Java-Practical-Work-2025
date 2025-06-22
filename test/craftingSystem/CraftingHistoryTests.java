@@ -103,8 +103,8 @@ class CraftingHistoryTests {
 			craftingHistory.addItem(craftedItem02, usedRecipeCraftedItem02);
 
 			// Act
-			CraftedItem expected = new CraftedItem(craftedItem02.getName(),
-					craftedItem02.getRecipes(), usedRecipeCraftedItem02);
+			CraftedItem expected = new CraftedItem(craftedItem02.getName(), craftedItem02.getRecipes(),
+					usedRecipeCraftedItem02);
 			CraftedItem received = craftingHistory.removeLastItem();
 
 			// Assert
