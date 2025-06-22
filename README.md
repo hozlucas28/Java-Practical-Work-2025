@@ -209,7 +209,6 @@ direction TB
 
 	    +Item getItem()
 	    +int getQuantity()
-        +void incrementQuantity(int quantity)
     }
 
     class CraftingSystem {
