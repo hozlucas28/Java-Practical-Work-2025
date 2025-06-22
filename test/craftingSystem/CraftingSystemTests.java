@@ -2,9 +2,9 @@ package craftingSystem;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
@@ -17,87 +17,114 @@ class CraftingSystemTests {
 
 	// TODO: test getCraftedItems()
 	// TODO: test getCraftableUnits()
+	// TODO: test getMissingIngredients() X
+	// TODO: test getMissingBaseIngredients() X
 
 	@Test
 	void getRequiredIngredients() {
-		assertDoesNotThrow(() -> {
-			// Arrange
-			HashMap<Item, Integer> itemsInInventory = new HashMap<Item, Integer>();
-			Inventory inventory = new Inventory(itemsInInventory);
-			CraftingSystem craftingSystem = new CraftingSystem(inventory);
+		// Arrange
+		HashMap<Item, Integer> itemsInInventory = new HashMap<Item, Integer>();
+		Inventory inventory = new Inventory(itemsInInventory);
+		CraftingSystem craftingSystem = new CraftingSystem(inventory);
 
-			Item craftingTable = new Item("Crafting table A");
+		Item itemBase01 = new Item("Item base 01");
+		Item itemBase02 = new Item("Item base 02");
+		Item itemBase03 = new Item("Item base 03");
+		Item itemBase04 = new Item("Item base 04");
 
-			Item itemBase01 = new Item("Item base 01");
-			Item itemBase02 = new Item("Item base 02");
-			Item itemBase03 = new Item("Item base 03");
-			Item itemBase04 = new Item("Item base 04");
+		Ingredient ingredient01 = new Ingredient(itemBase01, 1);
+		Ingredient ingredient02 = new Ingredient(itemBase02, 2);
 
-			Ingredient ingredient01 = new Ingredient(itemBase01, 1);
-			Ingredient ingredient02 = new Ingredient(itemBase02, 2);
+		Ingredient ingredient03 = new Ingredient(itemBase03, 3);
+		Ingredient ingredient04 = new Ingredient(itemBase04, 5);
 
-			Ingredient ingredient03 = new Ingredient(itemBase03, 3);
-			Ingredient ingredient04 = new Ingredient(itemBase04, 5);
+		List<Ingredient> ingredientsRecipe01 = List.of(ingredient01, ingredient02);
+		List<Ingredient> ingredientsRecipe02 = List.of(ingredient03, ingredient04);
 
-			List<Ingredient> ingredientsRecipe01 = new ArrayList<Ingredient>();
+		Recipe recipe01 = new Recipe(ingredientsRecipe01, 1000, 2);
+		Recipe recipe02 = new Recipe(ingredientsRecipe02, 1250, 4);
 
-			ingredientsRecipe01.add(ingredient01);
-			ingredientsRecipe01.add(ingredient02);
+		Item itemToCraft01 = new Item("Item A01", List.of(recipe01));
+		Item itemToCraft02 = new Item("Item A02", List.of(recipe02));
 
-			List<Ingredient> ingredientsRecipe02 = new ArrayList<Ingredient>();
+		HashMap<Item, Integer> itemsToCraft = new HashMap<Item, Integer>();
 
-			ingredientsRecipe02.add(ingredient03);
-			ingredientsRecipe02.add(ingredient04);
+		itemsToCraft.put(itemToCraft01, 1);
+		itemsToCraft.put(itemToCraft02, 5);
 
-			Recipe recipe01 = new Recipe(ingredientsRecipe01, 1000, 2);
-			Recipe recipe02 = new Recipe(ingredientsRecipe02, 1250, 4, craftingTable);
+		craftingSystem.setItemsToCraft(itemsToCraft);
 
-			List<Recipe> recipes01 = new ArrayList<Recipe>();
+		// Act
+		// @formatter:off
+		Map<Item, Map<Recipe, List<Ingredient>>> expected = Map.of(
+			itemToCraft01,
+			Map.of(
+				recipe01,
+				List.of(new Ingredient(itemBase01, 1), new Ingredient(itemBase02, 2))
+			),
+			itemToCraft02,
+			Map.of(
+				recipe02,
+				List.of(new Ingredient(itemBase03, 3 * 2), new Ingredient(itemBase04, 5 * 2))
+			)
+		);
+		// @formatter:on
 
-			recipes01.add(recipe01);
+		HashMap<Item, HashMap<Recipe, List<Ingredient>>> received = craftingSystem.getRequiredIngredients();
 
-			List<Recipe> recipes02 = new ArrayList<Recipe>();
-
-			recipes02.add(recipe02);
-
-			Item itemToCraft01 = new Item("Item A01", recipes01);
-			Item itemToCraft02 = new Item("Item A02", recipes02);
-
-			List<Item> itemsToCraft = new ArrayList<Item>();
-
-			itemsToCraft.add(itemToCraft01);
-			itemsToCraft.add(itemToCraft02);
-
-			craftingSystem.setItemsToCraft(itemsToCraft);
-
-			// Act
-			HashMap<Item, List<List<Ingredient>>> expected = new HashMap<Item, List<List<Ingredient>>>();
-
-			List<List<Ingredient>> requiredIngredients01 = new ArrayList<List<Ingredient>>();
-
-			requiredIngredients01.add(ingredientsRecipe01);
-
-			List<List<Ingredient>> requiredIngredients02 = new ArrayList<List<Ingredient>>();
-
-			List<Ingredient> expectedIngredientsRecipe02 = new ArrayList<Ingredient>();
-
-			expectedIngredientsRecipe02.add(new Ingredient(craftingTable, 1));
-			expectedIngredientsRecipe02.addAll(ingredientsRecipe02);
-
-			requiredIngredients02.add(expectedIngredientsRecipe02);
-
-			expected.put(itemToCraft01, requiredIngredients01);
-			expected.put(itemToCraft02, requiredIngredients02);
-
-			HashMap<Item, List<List<Ingredient>>> received = craftingSystem.getRequiredIngredients();
-
-			// Assert
-			assertEquals(expected, received);
-		});
+		// Assert
+		assertEquals(expected, received);
 	}
 
-	// TODO: test getRequiredBaseIngredients()
-	// TODO: test getCraftedItems()
+	@Test
+	void getRequiredBaseIngredients() {
+		// Arrange
+		Item wood = new Item("wood");
+		Item iron = new Item("iron");
+
+		List<Ingredient> stickRecipeIngredients = List.of(new Ingredient(wood, 2));
+		Recipe stickRecipe = new Recipe(stickRecipeIngredients, 1400, 4);
+		List<Recipe> stickRecipes = List.of(stickRecipe);
+
+		Item stick = new Item("stick", stickRecipes);
+
+		List<Ingredient> swordRecipeIngredients = List.of(new Ingredient(stick, 1), new Ingredient(wood, 10), new Ingredient(iron, 3));
+		Recipe swordRecipe = new Recipe(swordRecipeIngredients, 2100, 1);
+		List<Recipe> swordRecipes = List.of(swordRecipe);
+
+		Item sword = new Item("sword", swordRecipes);
+
+		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
+
+		Inventory inventory = new Inventory(inventoryItems);
+		CraftingSystem craftingSystem = new CraftingSystem(inventory);
+
+		HashMap<Item, Integer> itemsToCraft = new HashMap<Item, Integer>();
+
+		itemsToCraft.put(sword, 2);
+
+		craftingSystem.setItemsToCraft(itemsToCraft);
+
+		// Act
+		// @formatter:off
+		Map<Item, Map<Recipe, List<Ingredient>>> expected = Map.of(
+			sword,
+			Map.of(
+				swordRecipe,
+				List.of(
+					new Ingredient(iron, 6),
+					new Ingredient(wood, 22)
+				)
+			)
+		);
+		// @formatter:on
+
+		HashMap<Item, HashMap<Recipe, List<Ingredient>>> received = craftingSystem.getRequiredBaseIngredients();
+
+		// Assert
+		assertEquals(expected, received);
+	}
+
 	// TODO: test canCraft()
 	// TODO: test craftItems()
 	// TODO: test undoLastCraft()

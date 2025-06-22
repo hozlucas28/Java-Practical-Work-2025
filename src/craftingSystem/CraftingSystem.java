@@ -3,7 +3,7 @@ package craftingSystem;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import exceptions.ItemNotFoundException;
 import exceptions.OutOfRangeException;
@@ -14,7 +14,7 @@ import recipe.Recipe;
 
 public class CraftingSystem {
 	private final Inventory inventory;
-	private List<Item> itemsToCraft;
+	private HashMap<Item, Integer> itemsToCraft;
 	private final CraftingHistory history;
 
 	public CraftingSystem(Inventory inventory) {
@@ -32,86 +32,148 @@ public class CraftingSystem {
 		return 0;
 	}
 
-	public HashMap<Item, List<List<Ingredient>>> getMissingIngredients() {
-		// TODO
-		HashMap<Item, List<List<Ingredient>>> missingIngredients = new HashMap<Item, List<List<Ingredient>>>();
-
-		return missingIngredients;
+	public HashMap<Item, HashMap<Recipe, List<Ingredient>>> getMissingIngredients() {
+		return this.getMissingIngredients(this.getRequiredIngredients());
 	}
 
-	public HashMap<Item, List<List<Ingredient>>> getMissingIngredientsToBase() {
-		// TODO
-		HashMap<Item, List<List<Ingredient>>> missingIngredients = new HashMap<Item, List<List<Ingredient>>>();
-
-		return missingIngredients;
+	public HashMap<Item, HashMap<Recipe, List<Ingredient>>> getMissingBaseIngredients() {
+		// TODO: add parameter to select which path of recipes the algorithm should follow
+		return this.getMissingIngredients(this.getRequiredBaseIngredients());
 	}
 
-	public HashMap<Item, List<List<Ingredient>>> getRequiredIngredients() {
-		HashMap<Item, List<List<Ingredient>>> requiredIngredients = new HashMap<Item, List<List<Ingredient>>>();
+	private HashMap<Item, HashMap<Recipe, List<Ingredient>>> getMissingIngredients(
+			HashMap<Item, HashMap<Recipe, List<Ingredient>>> ingredients) {
+		HashMap<Item, HashMap<Recipe, List<Ingredient>>> missingIngredients = new HashMap<Item, HashMap<Recipe, List<Ingredient>>>();
 
-		for (Item item : this.itemsToCraft) {
-			List<Recipe> recipes = item.getRecipes();
-			List<List<Ingredient>> recipesIngredients = new ArrayList<List<Ingredient>>();
+		for (Map.Entry<Item, HashMap<Recipe, List<Ingredient>>> entry01 : ingredients.entrySet()) {
+			Item item = entry01.getKey();
+			HashMap<Recipe, List<Ingredient>> itemRecipes = entry01.getValue();
 
-			for (Recipe recipe : recipes) {
-				List<Ingredient> ingredients = new ArrayList<Ingredient>();
+			HashMap<Recipe, List<Ingredient>> missingIngredientsPerRecipe = new HashMap<Recipe, List<Ingredient>>();
 
-				Optional<Item> craftingTable = recipe.getCraftingTable();
+			for (Map.Entry<Recipe, List<Ingredient>> entry02 : itemRecipes.entrySet()) {
+				Recipe recipe = entry02.getKey();
+				List<Ingredient> recipeIngredients = entry02.getValue();
 
-				if (craftingTable.isPresent()) {
-					try {
-						Ingredient craftingTableIngredient = new Ingredient(craftingTable.get(), 1);
-						ingredients.add(craftingTableIngredient);
-					} catch (OutOfRangeException e) {
-						// With a quantity of 1 ingredient, it's never throw an OutOfRangeException.
+				List<Ingredient> missingRecipeIngredients = new ArrayList<Ingredient>();
+
+				for (Ingredient ingredient : recipeIngredients) {
+					Item ingredientItem = ingredient.getItem();
+					int ingredientQuantity = ingredient.getQuantity();
+					int requiredQuantity = ingredientQuantity - this.inventory.getItemQuantity(ingredientItem);
+
+					if (requiredQuantity > 0) {
+						Ingredient missingIngredient = new Ingredient(ingredientItem, requiredQuantity);
+						missingRecipeIngredients.add(missingIngredient);
 					}
 				}
 
-				ingredients.addAll(recipe.getIngredients());
-				recipesIngredients.add(ingredients);
+				if (missingRecipeIngredients.size() > 0) {
+					missingIngredientsPerRecipe.put(recipe, missingRecipeIngredients);
+				}
 			}
 
-			if (recipesIngredients.size() > 0) {
-				requiredIngredients.put(item, recipesIngredients);
+			if (missingIngredientsPerRecipe.size() > 0) {
+				missingIngredients.put(item, missingIngredientsPerRecipe);
 			}
+		}
+
+		return missingIngredients;
+	}
+
+	public HashMap<Item, HashMap<Recipe, List<Ingredient>>> getRequiredIngredients() {
+		HashMap<Item, HashMap<Recipe, List<Ingredient>>> requiredIngredients = new HashMap<Item, HashMap<Recipe, List<Ingredient>>>();
+
+		for (Map.Entry<Item, Integer> entry : this.itemsToCraft.entrySet()) {
+			Item item = entry.getKey();
+			int itemsToCraft = entry.getValue();
+
+			List<Recipe> recipes = item.getRecipes();
+			HashMap<Recipe, List<Ingredient>> ingredientsPerRecipe = new HashMap<Recipe, List<Ingredient>>();
+
+			for (Recipe recipe : recipes) {
+				List<Ingredient> recipeIngredients = recipe.getIngredients();
+				int recipeItemsToCraft = recipe.getItemsToCraft();
+
+				List<Ingredient> realRecipeIngredients = new ArrayList<Ingredient>();
+
+				for (Ingredient ingredient : recipeIngredients) {
+					int realQuantity = (int) Math.ceil(itemsToCraft / (double) recipeItemsToCraft)
+							* ingredient.getQuantity();
+					Ingredient realIngredient = new Ingredient(ingredient.getItem(), realQuantity);
+
+					realRecipeIngredients.add(realIngredient);
+				}
+
+				ingredientsPerRecipe.put(recipe, realRecipeIngredients);
+			}
+
+			requiredIngredients.put(item, ingredientsPerRecipe);
 		}
 
 		return requiredIngredients;
 	}
 
-	public HashMap<Item, List<List<Ingredient>>> getRequiredBaseIngredients() {
-		HashMap<Item, List<List<Ingredient>>> requiredBaseIngredients = new HashMap<Item, List<List<Ingredient>>>();
+	public HashMap<Item, HashMap<Recipe, List<Ingredient>>> getRequiredBaseIngredients() {
+		HashMap<Item, HashMap<Recipe, List<Ingredient>>> requiredBaseIngredients = new HashMap<>();
 
-		for (Item item : this.itemsToCraft) {
+		for (Map.Entry<Item, Integer> entry : this.itemsToCraft.entrySet()) {
+			Item item = entry.getKey();
+			int itemsToCraft = entry.getValue();
+
 			List<Recipe> recipes = item.getRecipes();
-			List<List<Ingredient>> recipesBaseIngredients = new ArrayList<List<Ingredient>>();
+			HashMap<Recipe, List<Ingredient>> ingredientsPerRecipe = new HashMap<>();
 
 			for (Recipe recipe : recipes) {
-				List<Ingredient> baseIngredients = new ArrayList<Ingredient>();
-
-				Optional<Item> craftingTable = recipe.getCraftingTable();
-
-				if (craftingTable.isPresent()) {
-					try {
-						Ingredient craftingTableIngredient = new Ingredient(craftingTable.get(), 1);
-						baseIngredients.add(craftingTableIngredient);
-					} catch (OutOfRangeException e) {
-						// With a quantity of 1 ingredient, it's never throw an OutOfRangeException.
-					}
-				}
-
-				baseIngredients.addAll(recipe.getBaseIngredients());
-				recipesBaseIngredients.add(baseIngredients);
+				List<Ingredient> baseIngredients = getBaseIngredientsRecursive(recipe, itemsToCraft);
+				ingredientsPerRecipe.put(recipe, baseIngredients);
 			}
 
-			if (recipesBaseIngredients.size() > 0) {
-				requiredBaseIngredients.put(item, recipesBaseIngredients);
-			}
+			requiredBaseIngredients.put(item, ingredientsPerRecipe);
 		}
 
 		return requiredBaseIngredients;
 	}
 
+	private List<Ingredient> getBaseIngredientsRecursive(Recipe recipe, int totalToCraft) {
+		List<Ingredient> ingredients = recipe.getIngredients();
+
+		Map<Item, Integer> baseCount = new HashMap<Item, Integer>();
+		List<Ingredient> baseIngredients = new ArrayList<Ingredient>();
+
+		int craftsNeeded = (int) Math.ceil(totalToCraft / (double) recipe.getItemsToCraft());
+
+		for (Ingredient ingredient : ingredients) {
+			Item item = ingredient.getItem();
+			int itemQuantityNeeded = ingredient.getQuantity() * craftsNeeded;
+
+			if (item.isBase()) {
+				baseCount.put(item, baseCount.getOrDefault(item, 0) + itemQuantityNeeded);
+			} else {
+				Recipe firstRecipe = item.getRecipes().get(0);
+				List<Ingredient> firstRecipeBaseIngredients = getBaseIngredientsRecursive(firstRecipe,
+						itemQuantityNeeded);
+
+				for (Ingredient baseIngredient : firstRecipeBaseIngredients) {
+					Item baseItem = baseIngredient.getItem();
+					int baseItemQuantity = baseIngredient.getQuantity();
+
+					baseCount.put(baseItem, baseCount.getOrDefault(baseItem, 0) + baseItemQuantity);
+				}
+			}
+		}
+
+		for (Map.Entry<Item, Integer> entry : baseCount.entrySet()) {
+			Item item = entry.getKey();
+			Integer itemQuantity = entry.getValue();
+
+			Ingredient baseIngredient = new Ingredient(item, itemQuantity);
+
+			baseIngredients.add(baseIngredient);
+		}
+
+		return baseIngredients;
+	}
 
 	public boolean canCraft() {
 		// TODO
@@ -119,7 +181,7 @@ public class CraftingSystem {
 		return false;
 	};
 
-	public CraftingSystem setItemsToCraft(List<Item> items) {
+	public CraftingSystem setItemsToCraft(HashMap<Item, Integer> items) {
 		this.itemsToCraft = items;
 		return this;
 	}

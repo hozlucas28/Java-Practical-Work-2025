@@ -213,17 +213,18 @@ direction TB
 
     class CraftingSystem {
 	    -Inventory inventory
-	    -List~Item~ itemsToCraft
+	    -HashMap~Item, Integer~ itemsToCraft
 	    -CraftingHistory history
-
         +List~CraftedItem~ getCraftedItems()
 	    +int getCraftableUnits()
-        +HashMap<Item, List<List<Ingredient>>> getMissingIngredients()
-        +HashMap<Item, List<List<Ingredient>>> getMissingBaseIngredients()
-	    +HashMap<Item, List<List<Ingredient>>> getRequiredIngredients()
-	    +HashMap<Item, List<List<Ingredient>>> getRequiredBaseIngredients()
+        +HashMap~Item, HashMap~Recipe, List~Ingredient~~~ getMissingIngredients()
+        +HashMap~Item, HashMap~Recipe, List~Ingredient~~~ getMissingBaseIngredients()
+        -HashMap~~Item, HashMap~Recipe, List~Ingredient~~~ getMissingIngredients()
+	    +HashMap~Item, HashMap~Recipe, List~Ingredient~~~ getRequiredIngredients()
+        +HashMap~Item, HashMap~Recipe, List<Ingredient~~~ getRequiredBaseIngredients()
+        -List~Ingredient~ getBaseIngredientsRecursive(Recipe recipe, int totalToCraft)
 	    +bool canCraft()
-	    +CraftingSystem setItemsToCraft(List~Item~ itemsToCraft)
+	    +CraftingSystem setItemsToCraft(HashMap~Item, Integer~ items)
 	    +void craftItems()
 	    +bool undoLastCraft()
     }
