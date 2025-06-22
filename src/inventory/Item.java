@@ -30,7 +30,7 @@ public class Item {
 	}
 
 	public boolean isBase() {
-		return this.recipes.size() == 0;
+		return this.recipes.isEmpty();
 	}
 
 	@Override
