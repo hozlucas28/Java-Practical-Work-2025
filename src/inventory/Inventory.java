@@ -42,11 +42,7 @@ public class Inventory {
 			throw new OutOfRangeException(errorMessage);
 		}
 
-		if (this.items.containsKey(item)) {
-			this.items.compute(item, (key, value) -> value + quantity);
-		} else {
-			this.items.put(item, quantity);
-		}
+		this.items.put(item, this.items.getOrDefault(item, 0) + quantity);
 	}
 
 	public void removeItem(Item item, int quantity) throws ItemNotFoundException, OutOfRangeException {
