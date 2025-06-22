@@ -2,10 +2,11 @@ package recipe;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-import exceptions.OutOfRangeException;
 import inventory.Item;
 
 public class Recipe {
@@ -45,56 +46,34 @@ public class Recipe {
 	}
 
 	public List<Ingredient> getBaseIngredients() {
-		List<Ingredient> ingredients = this.ingredients;
+		HashMap<Ingredient, Integer> baseIngredientsMap = new HashMap<Ingredient, Integer>();
+
+		for (Ingredient ingredient : this.ingredients) {
+			Item item = ingredient.getItem();
+			List<Recipe> ingredientRecipes = item.getRecipes();
+
+			if (item.isBase()) {
+				baseIngredientsMap.put(ingredient, baseIngredientsMap.getOrDefault(ingredient, 0) + 1);
+			}
+
+			for (Recipe itemRecipe : ingredientRecipes) {
+				List<Ingredient> baseIngredients = itemRecipe.getBaseIngredients();
+
+				for (Ingredient baseIngredient : baseIngredients) {
+					baseIngredientsMap.put(baseIngredient, baseIngredientsMap.getOrDefault(baseIngredient, 0) + 1);
+				}
+			}
+		}
+
 		List<Ingredient> baseIngredients = new ArrayList<Ingredient>();
 
-		for (Ingredient ingredient : ingredients) {
-			Item item = ingredient.getItem();
-			List<Recipe> itemRecipes = item.getRecipes();
+		for (Map.Entry<Ingredient, Integer> entry : baseIngredientsMap.entrySet()) {
+			Ingredient baseIngredient = entry.getKey();
+			int realBaseIngredientQuantity = baseIngredient.getQuantity() * entry.getValue();
 
-			if (itemRecipes.size() < 1) {
-				int IBaseIngredient = baseIngredients.indexOf(ingredient);
+			Ingredient realBaseIngredient = new Ingredient(baseIngredient.getItem(), realBaseIngredientQuantity);
 
-				if (IBaseIngredient < 0) {
-					baseIngredients.add(ingredient.copy());
-					continue;
-				}
-
-				Ingredient $ingredient = baseIngredients.get(IBaseIngredient);
-				int $ingredientQuantity = $ingredient.getQuantity();
-
-				try {
-					$ingredient.incrementQuantity($ingredientQuantity);
-				} catch (OutOfRangeException e) {
-					// With an ingredient quantity greater than 1, it's never throw an
-					// OutOfRangeException.
-				}
-
-				continue;
-			}
-
-			for (Recipe itemRecipe : itemRecipes) {
-				List<Ingredient> itemBaseIngredients = itemRecipe.getBaseIngredients();
-
-				for (Ingredient itemBaseIngredient : itemBaseIngredients) {
-					int IItemBaseIngredient = baseIngredients.indexOf(itemBaseIngredient);
-
-					if (IItemBaseIngredient < 0) {
-						baseIngredients.add(itemBaseIngredient.copy());
-						continue;
-					}
-
-					Ingredient $ingredient = baseIngredients.get(IItemBaseIngredient);
-					int $ingredientQuantity = $ingredient.getQuantity();
-
-					try {
-						$ingredient.incrementQuantity($ingredientQuantity);
-					} catch (OutOfRangeException e) {
-						// With an ingredient quantity greater than 1, it's never throw an
-						// OutOfRangeException.
-					}
-				}
-			}
+			baseIngredients.add(realBaseIngredient);
 		}
 
 		return baseIngredients;
