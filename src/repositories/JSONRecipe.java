@@ -67,6 +67,13 @@ class JSONRecipe {
 						throw new ItemNotFoundException(errorMessage);
 					}
 
+					if (ingredientQuantity < 1) {
+						errorMessage = String.format(
+								"Received %d as ingredient quantity, but expect it greater than or equal to %d",
+								ingredientQuantity, 1);
+						throw new OutOfRangeException(errorMessage);
+					}
+
 					Ingredient ingredient = new Ingredient(ingredientItem, ingredientQuantity);
 					ingredients.add(ingredient);
 				}
