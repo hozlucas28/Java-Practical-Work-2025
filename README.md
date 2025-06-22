@@ -156,8 +156,6 @@ direction TB
 	    +String getName()
 	    +List~Recipe~ getRecipes()
 	    +bool isBase()
-        +void addRecipe(Recipe recipe)
-        +Item copy()
     }
 
     class Recipe {

@@ -48,6 +48,8 @@ class JSONRecipe {
 				throw new ItemNotFoundException(errorMessage);
 			}
 
+			List<Recipe> itemRecipes = new ArrayList<Recipe>();
+
 			// Map each recipe (value)
 			for (JSONRecipe jsonRecipe : itemJSONRecipes) {
 				List<Ingredient> ingredients = new ArrayList<Ingredient>();
@@ -75,8 +77,11 @@ class JSONRecipe {
 								jsonRecipe.craftingTable.get())
 						: new Recipe(ingredients, jsonRecipe.timeToCraftInMilliseconds, jsonRecipe.itemsToCraft);
 
-				item.addRecipe(recipe);
+				itemRecipes.add(recipe);
 			}
+
+			Item itemWithRecipes = new Item(item.getName(), itemRecipes);
+			items.replace(itemName, itemWithRecipes);
 		}
 	}
 }

@@ -33,14 +33,6 @@ public class Item {
 		return this.recipes.size() == 0;
 	}
 
-	public void addRecipe(Recipe recipe) {
-		this.recipes.add(recipe);
-	}
-
-	public Item copy() {
-		return new Item(this.name, this.recipes);
-	}
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.name);
