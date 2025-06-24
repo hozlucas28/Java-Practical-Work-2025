@@ -17,9 +17,9 @@ class RecipeTests {
 		Item craftingTable = new Item("Crafting table");
 		List<Ingredient> ingredients = new ArrayList<Ingredient>();
 		int timeToCraftInMilliseconds = 1000;
-		int itemsToCraft = 2;
+		int quantityToCraft = 2;
 
-		Recipe recipe = new Recipe(ingredients, timeToCraftInMilliseconds, itemsToCraft, craftingTable);
+		Recipe recipe = new Recipe(ingredients, timeToCraftInMilliseconds, quantityToCraft, craftingTable);
 
 		// Act
 		Item expected = craftingTable;
@@ -34,9 +34,9 @@ class RecipeTests {
 		// Arrange
 		List<Ingredient> ingredients = new ArrayList<Ingredient>();
 		int timeToCraftInMilliseconds = 1500;
-		int itemsToCraft = 7;
+		int quantityToCraft = 7;
 
-		Recipe recipe = new Recipe(ingredients, timeToCraftInMilliseconds, itemsToCraft);
+		Recipe recipe = new Recipe(ingredients, timeToCraftInMilliseconds, quantityToCraft);
 
 		// Act
 		List<Ingredient> expected = ingredients;
@@ -51,9 +51,9 @@ class RecipeTests {
 		// Arrange
 		List<Ingredient> ingredients = new ArrayList<Ingredient>();
 		int timeToCraftInMilliseconds = 2000;
-		int itemsToCraft = 1;
+		int quantityToCraft = 1;
 
-		Recipe recipe = new Recipe(ingredients, timeToCraftInMilliseconds, itemsToCraft);
+		Recipe recipe = new Recipe(ingredients, timeToCraftInMilliseconds, quantityToCraft);
 
 		// Act
 		int expected = timeToCraftInMilliseconds;
@@ -64,17 +64,17 @@ class RecipeTests {
 	}
 
 	@Test
-	void getItemsToCraft() {
+	void getQuantityToCraft() {
 		// Arrange
 		List<Ingredient> ingredients = new ArrayList<Ingredient>();
 		int timeToCraftInMilliseconds = 3000;
-		int itemsToCraft = 5;
+		int quantityToCraft = 5;
 
-		Recipe recipe = new Recipe(ingredients, timeToCraftInMilliseconds, itemsToCraft);
+		Recipe recipe = new Recipe(ingredients, timeToCraftInMilliseconds, quantityToCraft);
 
 		// Act
-		int expected = itemsToCraft;
-		int received = recipe.getItemsToCraft();
+		int expected = quantityToCraft;
+		int received = recipe.getQuantityToCraft();
 
 		// Assert
 		assertEquals(expected, received);

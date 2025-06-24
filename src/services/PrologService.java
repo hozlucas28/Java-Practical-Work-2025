@@ -113,7 +113,7 @@ public class PrologService {
 			List<Recipe> itemRecipes = item.getRecipes();
 
 			for (Recipe recipe : itemRecipes) {
-				int itemsToCraft = recipe.getItemsToCraft();
+				int quantityToCraft = recipe.getQuantityToCraft();
 				List<Ingredient> ingredients = recipe.getIngredients();
 
 				// Ingredient to prolog
@@ -123,7 +123,7 @@ public class PrologService {
 					int ingredientQuantity = ingredient.getQuantity();
 
 					prologLine = String.format("%s(\"%s\", %d, \"%s\", %d).", this.ingredientFactName, itemName,
-							itemsToCraft, ingredientName, ingredientQuantity);
+							quantityToCraft, ingredientName, ingredientQuantity);
 					prologIngredients = prologIngredients == null ? prologLine
 							: String.format("%s\n%s", prologIngredients, prologLine);
 				}
@@ -137,7 +137,7 @@ public class PrologService {
 					int craftingTableQuantity = 1;
 
 					prologLine = String.format("%s(\"%s\", %d, \"%s\", %d).", this.ingredientFactName, itemName,
-							itemsToCraft, craftingTableName, craftingTableQuantity);
+							quantityToCraft, craftingTableName, craftingTableQuantity);
 					prologIngredients = String.format("%s\n%s", prologIngredients, prologLine);
 				}
 			}

@@ -90,19 +90,19 @@ public class CraftingSystem {
 
 		for (Map.Entry<Item, Integer> entry : this.itemsToCraft.entrySet()) {
 			Item item = entry.getKey();
-			int itemsToCraft = entry.getValue();
+			int quantityToCraft = entry.getValue();
 
 			List<Recipe> recipes = item.getRecipes();
 			HashMap<Recipe, List<Ingredient>> ingredientsPerRecipe = new HashMap<Recipe, List<Ingredient>>();
 
 			for (Recipe recipe : recipes) {
 				List<Ingredient> recipeIngredients = recipe.getIngredients();
-				int recipeItemsToCraft = recipe.getItemsToCraft();
+				int recipeQuantityToCraft = recipe.getQuantityToCraft();
 
 				List<Ingredient> realRecipeIngredients = new ArrayList<Ingredient>();
 
 				for (Ingredient ingredient : recipeIngredients) {
-					int realQuantity = (int) Math.ceil(itemsToCraft / (double) recipeItemsToCraft)
+					int realQuantity = (int) Math.ceil(quantityToCraft / (double) recipeQuantityToCraft)
 							* ingredient.getQuantity();
 					Ingredient realIngredient = new Ingredient(ingredient.getItem(), realQuantity);
 
@@ -130,13 +130,13 @@ public class CraftingSystem {
 
 		for (Map.Entry<Item, Integer> entry : this.itemsToCraft.entrySet()) {
 			Item item = entry.getKey();
-			int itemsToCraft = entry.getValue();
+			int quantityToCraft = entry.getValue();
 
 			List<Recipe> recipes = item.getRecipes();
 			HashMap<Recipe, List<Ingredient>> ingredientsPerRecipe = new HashMap<>();
 
 			for (Recipe recipe : recipes) {
-				List<Ingredient> baseIngredients = getBaseIngredientsRecursive(recipe, itemsToCraft);
+				List<Ingredient> baseIngredients = getBaseIngredientsRecursive(recipe, quantityToCraft);
 				ingredientsPerRecipe.put(recipe, baseIngredients);
 			}
 
@@ -152,7 +152,7 @@ public class CraftingSystem {
 		Map<Item, Integer> baseCount = new HashMap<Item, Integer>();
 		List<Ingredient> baseIngredients = new ArrayList<Ingredient>();
 
-		int craftsNeeded = (int) Math.ceil(totalToCraft / (double) recipe.getItemsToCraft());
+		int craftsNeeded = (int) Math.ceil(totalToCraft / (double) recipe.getQuantityToCraft());
 
 		for (Ingredient ingredient : ingredients) {
 			Item item = ingredient.getItem();
@@ -175,7 +175,7 @@ public class CraftingSystem {
 		}
 
 		Optional<Item> craftingTable = recipe.getCraftingTable();
-		
+
 		if (craftingTable.isPresent()) {
 			Item table = craftingTable.get();
 			baseCount.put(table, 1);

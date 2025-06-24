@@ -161,12 +161,12 @@ direction TB
     class Recipe {
 	    -List~Ingredient~ ingredients
 	    -int timeToCraftInMilliseconds
-	    -int itemsToCraft
+	    -int quantityToCraft
 	    -Optional~Item~ craftingTable
 
 	    +List~Item~ getIngredients()
 	    +int getTimeToCraftInMilliseconds()
-	    +int getItemsToCraft()
+	    +int getQuantityToCraft()
 	    +List~Item~ getBaseIngredients()
 	    +Optional~Item~ getCraftingTable()
     }
@@ -176,7 +176,7 @@ direction TB
 
 	    -HashMap~String, Integer~ ingredients
 	    -int timeToCraftInMilliseconds
-	    -int itemsToCraft
+	    -int quantityToCraft
 	    -Optional~Item~ craftingTable
 
 	    +static void linkItemsWithRecipes(HashMap~String, Item~ items, HashMap~String, List~JSONRecipe~~ recipesPerItem)

@@ -12,20 +12,20 @@ import inventory.Item;
 public class Recipe {
 	private final List<Ingredient> ingredients;
 	private final int timeToCraftInMilliseconds;
-	private final int itemsToCraft;
+	private final int quantityToCraft;
 	private final Optional<Item> craftingTable;
 
-	public Recipe(List<Ingredient> ingredients, int timeToCraftInMilliseconds, int itemsToCraft) {
+	public Recipe(List<Ingredient> ingredients, int timeToCraftInMilliseconds, int quantityToCraft) {
 		this.ingredients = ingredients;
 		this.timeToCraftInMilliseconds = timeToCraftInMilliseconds;
-		this.itemsToCraft = itemsToCraft;
+		this.quantityToCraft = quantityToCraft;
 		this.craftingTable = Optional.empty();
 	}
 
-	public Recipe(List<Ingredient> ingredients, int timeInMilliseconds, int itemsToCraft, Item craftingTable) {
+	public Recipe(List<Ingredient> ingredients, int timeInMilliseconds, int quantityToCraft, Item craftingTable) {
 		this.ingredients = ingredients;
 		this.timeToCraftInMilliseconds = timeInMilliseconds;
-		this.itemsToCraft = itemsToCraft;
+		this.quantityToCraft = quantityToCraft;
 		this.craftingTable = Optional.ofNullable(craftingTable);
 	}
 
@@ -37,8 +37,8 @@ public class Recipe {
 		return this.timeToCraftInMilliseconds;
 	}
 
-	public int getItemsToCraft() {
-		return this.itemsToCraft;
+	public int getQuantityToCraft() {
+		return this.quantityToCraft;
 	}
 
 	public Optional<Item> getCraftingTable() {

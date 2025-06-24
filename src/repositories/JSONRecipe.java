@@ -15,21 +15,21 @@ import recipe.Recipe;
 class JSONRecipe {
 	private HashMap<String, Integer> ingredients;
 	private int timeToCraftInMilliseconds;
-	private int itemsToCraft;
+	private int quantityToCraft;
 	private Optional<Item> craftingTable;
 
-	public JSONRecipe(HashMap<String, Integer> ingredients, int timeToCraftInMilliseconds, int itemsToCraft) {
+	public JSONRecipe(HashMap<String, Integer> ingredients, int timeToCraftInMilliseconds, int quantityToCraft) {
 		this.ingredients = ingredients;
 		this.timeToCraftInMilliseconds = timeToCraftInMilliseconds;
-		this.itemsToCraft = itemsToCraft;
+		this.quantityToCraft = quantityToCraft;
 		this.craftingTable = Optional.empty();
 	}
 
-	public JSONRecipe(HashMap<String, Integer> ingredients, int timeInMilliseconds, int itemsToCraft,
+	public JSONRecipe(HashMap<String, Integer> ingredients, int timeInMilliseconds, int quantityToCraft,
 			Item craftingTable) {
 		this.ingredients = ingredients;
 		this.timeToCraftInMilliseconds = timeInMilliseconds;
-		this.itemsToCraft = itemsToCraft;
+		this.quantityToCraft = quantityToCraft;
 		this.craftingTable = Optional.ofNullable(craftingTable);
 	}
 
@@ -80,9 +80,9 @@ class JSONRecipe {
 
 				// Append recipe to item
 				Recipe recipe = jsonRecipe.craftingTable.isPresent()
-						? new Recipe(ingredients, jsonRecipe.timeToCraftInMilliseconds, jsonRecipe.itemsToCraft,
+						? new Recipe(ingredients, jsonRecipe.timeToCraftInMilliseconds, jsonRecipe.quantityToCraft,
 								jsonRecipe.craftingTable.get())
-						: new Recipe(ingredients, jsonRecipe.timeToCraftInMilliseconds, jsonRecipe.itemsToCraft);
+						: new Recipe(ingredients, jsonRecipe.timeToCraftInMilliseconds, jsonRecipe.quantityToCraft);
 
 				itemRecipes.add(recipe);
 			}
