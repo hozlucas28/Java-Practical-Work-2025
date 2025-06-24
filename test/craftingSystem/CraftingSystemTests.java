@@ -31,6 +31,8 @@ class CraftingSystemTests {
 			Item itemBase03 = new Item("Item base 03");
 			Item itemBase04 = new Item("Item base 04");
 
+			Item craftingTable = new Item("Crating table");
+
 			Ingredient ingredient01 = new Ingredient(itemBase01, 1);
 			Ingredient ingredient02 = new Ingredient(itemBase02, 2);
 
@@ -41,7 +43,7 @@ class CraftingSystemTests {
 			List<Ingredient> ingredientsRecipe02 = List.of(ingredient03, ingredient04);
 
 			Recipe recipe01 = new Recipe(ingredientsRecipe01, 1000, 2);
-			Recipe recipe02 = new Recipe(ingredientsRecipe02, 1250, 4);
+			Recipe recipe02 = new Recipe(ingredientsRecipe02, 1250, 4, craftingTable);
 
 			Item itemToCraft01 = new Item("Item A01", List.of(recipe01));
 			Item itemToCraft02 = new Item("Item A02", List.of(recipe02));
@@ -63,12 +65,18 @@ class CraftingSystemTests {
 				itemToCraft01,
 				Map.of(
 					recipe01,
-					List.of(new Ingredient(itemBase02, 1))
+					List.of(
+						new Ingredient(itemBase02, 1)
+					)
 				),
 				itemToCraft02,
 				Map.of(
 					recipe02,
-					List.of(new Ingredient(itemBase03, 3 * 2), new Ingredient(itemBase04, (5 * 2) - 4))
+					List.of(
+						new Ingredient(itemBase03, 3 * 2),
+						new Ingredient(itemBase04, (5 * 2) - 4),
+						new Ingredient(craftingTable, 1)
+					)
 				)
 			);
 			// @formatter:on

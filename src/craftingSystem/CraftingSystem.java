@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import exceptions.ItemNotFoundException;
 import exceptions.OutOfRangeException;
@@ -60,22 +61,25 @@ public class CraftingSystem {
 				for (Ingredient ingredient : recipeIngredients) {
 					Item ingredientItem = ingredient.getItem();
 					int ingredientQuantity = ingredient.getQuantity();
-					int requiredQuantity = ingredientQuantity - this.inventory.getItemQuantity(ingredientItem);
+					int missingQuantity = ingredientQuantity - this.inventory.getItemQuantity(ingredientItem);
 
-					if (requiredQuantity > 0) {
-						Ingredient missingIngredient = new Ingredient(ingredientItem, requiredQuantity);
+					if (missingQuantity > 0) {
+						Ingredient missingIngredient = new Ingredient(ingredientItem, missingQuantity);
 						missingRecipeIngredients.add(missingIngredient);
 					}
 				}
 
-				if (missingRecipeIngredients.size() > 0) {
-					missingIngredientsPerRecipe.put(recipe, missingRecipeIngredients);
+				Optional<Item> craftingTable = recipe.getCraftingTable();
+
+				if (craftingTable.isPresent() && this.inventory.getItemQuantity(craftingTable.get()) < 1) {
+					Ingredient table = new Ingredient(craftingTable.get(), 1);
+					missingRecipeIngredients.add(table);
 				}
+
+				missingIngredientsPerRecipe.put(recipe, missingRecipeIngredients);
 			}
 
-			if (missingIngredientsPerRecipe.size() > 0) {
-				missingIngredients.put(item, missingIngredientsPerRecipe);
-			}
+			missingIngredients.put(item, missingIngredientsPerRecipe);
 		}
 
 		return missingIngredients;
