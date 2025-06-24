@@ -75,6 +75,7 @@ class CraftingSystemTests {
 					List.of(
 						new Ingredient(itemBase03, 3 * 2),
 						new Ingredient(itemBase04, (5 * 2) - 4),
+						new Ingredient(craftingTable, 1),
 						new Ingredient(craftingTable, 1)
 					)
 				)
