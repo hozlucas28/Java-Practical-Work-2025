@@ -1,6 +1,7 @@
 package craftingSystem;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -180,9 +181,17 @@ public class CraftingSystem {
 	}
 
 	public boolean canCraft() {
-		// TODO
+		HashMap<Item, HashMap<Recipe, List<Ingredient>>> missingIngredientsPerItem = this.getMissingIngredients();
 
-		return false;
+		for (HashMap<Recipe, List<Ingredient>> missingIngredientsPerRecipe : missingIngredientsPerItem.values()) {
+			for (List<Ingredient> missingIngredients : missingIngredientsPerRecipe.values()) {
+				if (!missingIngredients.isEmpty()) {
+					return false;
+				}
+			}
+		}
+
+		return true;
 	};
 
 	public CraftingSystem setItemsToCraft(HashMap<Item, Integer> items) {

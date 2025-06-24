@@ -196,7 +196,63 @@ class CraftingSystemTests {
 		assertEquals(expected, received);
 	}
 
-	// TODO: test canCraft()
+	@Test
+	void canCraft__noMissingIngredients() {
+		// Arrange
+		Item stone = new Item("stone");
+		Item woodCraftingTable = new Item("wood crafting table");
+
+		List<Ingredient> furnaceRecipeIngredients = List.of(new Ingredient(stone, 8));
+		Recipe furnaceRecipe = new Recipe(furnaceRecipeIngredients, 1250, 1, woodCraftingTable);
+
+		Item furnace = new Item("furnace", List.of(furnaceRecipe));
+
+		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
+
+		inventoryItems.put(stone, 8);
+		inventoryItems.put(woodCraftingTable, 1);
+
+		Inventory inventory = new Inventory(inventoryItems);
+		CraftingSystem craftingSystem = new CraftingSystem(inventory);
+
+		HashMap<Item, Integer> itemsToCraft = new HashMap<Item, Integer>();
+
+		itemsToCraft.put(furnace, 1);
+
+		craftingSystem.setItemsToCraft(itemsToCraft);
+
+		// Act within assert
+		assertTrue(craftingSystem.canCraft());
+	}
+
+	@Test
+	void canCraft__missingIngredients() {
+		// Arrange
+		Item stone = new Item("stone");
+		Item woodCraftingTable = new Item("wood crafting table");
+
+		List<Ingredient> furnaceRecipeIngredients = List.of(new Ingredient(stone, 8));
+		Recipe furnaceRecipe = new Recipe(furnaceRecipeIngredients, 1250, 1, woodCraftingTable);
+
+		Item furnace = new Item("furnace", List.of(furnaceRecipe));
+
+		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
+
+		inventoryItems.put(stone, 8);
+
+		Inventory inventory = new Inventory(inventoryItems);
+		CraftingSystem craftingSystem = new CraftingSystem(inventory);
+
+		HashMap<Item, Integer> itemsToCraft = new HashMap<Item, Integer>();
+
+		itemsToCraft.put(furnace, 1);
+
+		craftingSystem.setItemsToCraft(itemsToCraft);
+
+		// Act within assert
+		assertFalse(craftingSystem.canCraft());
+	}
+
 	// TODO: test craftItems()
 	// TODO: test undoLastCraft()
 }
