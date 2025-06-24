@@ -221,7 +221,7 @@ direction TB
         +HashMap~Item, HashMap~Recipe, List~Ingredient~~~ getMissingBaseIngredients()
         -HashMap~~Item, HashMap~Recipe, List~Ingredient~~~ getMissingIngredients()
 	    +HashMap~Item, HashMap~Recipe, List~Ingredient~~~ getRequiredIngredients()
-        +HashMap~Item, HashMap~Recipe, List<Ingredient~~~ getRequiredBaseIngredients()
+        +HashMap~Item, HashMap~Recipe, List~Ingredient~~~ getRequiredBaseIngredients()
         -List~Ingredient~ getBaseIngredientsRecursive(Recipe recipe, int totalToCraft)
 	    +bool canCraft()
 	    +CraftingSystem setItemsToCraft(HashMap~Item, Integer~ items)
