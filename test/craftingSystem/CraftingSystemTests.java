@@ -98,22 +98,24 @@ class CraftingSystemTests {
 		Inventory inventory = new Inventory(itemsInInventory);
 		CraftingSystem craftingSystem = new CraftingSystem(inventory);
 
-		Item itemBase01 = new Item("Item base 01");
-		Item itemBase02 = new Item("Item base 02");
-		Item itemBase03 = new Item("Item base 03");
-		Item itemBase04 = new Item("Item base 04");
+		Item item01 = new Item("Item base 01");
+		Item item02 = new Item("Item base 02");
+		Item item03 = new Item("Item base 03");
+		Item item04 = new Item("Item base 04");
+		
+		Item craftingTable = new Item("Crafting table");
 
-		Ingredient ingredient01 = new Ingredient(itemBase01, 1);
-		Ingredient ingredient02 = new Ingredient(itemBase02, 2);
+		Ingredient ingredient01 = new Ingredient(item01, 1);
+		Ingredient ingredient02 = new Ingredient(item02, 2);
 
-		Ingredient ingredient03 = new Ingredient(itemBase03, 3);
-		Ingredient ingredient04 = new Ingredient(itemBase04, 5);
+		Ingredient ingredient03 = new Ingredient(item03, 3);
+		Ingredient ingredient04 = new Ingredient(item04, 5);
 
 		List<Ingredient> ingredientsRecipe01 = List.of(ingredient01, ingredient02);
 		List<Ingredient> ingredientsRecipe02 = List.of(ingredient03, ingredient04);
 
 		Recipe recipe01 = new Recipe(ingredientsRecipe01, 1000, 2);
-		Recipe recipe02 = new Recipe(ingredientsRecipe02, 1250, 4);
+		Recipe recipe02 = new Recipe(ingredientsRecipe02, 1250, 4, craftingTable);
 
 		Item itemToCraft01 = new Item("Item A01", List.of(recipe01));
 		Item itemToCraft02 = new Item("Item A02", List.of(recipe02));
@@ -131,12 +133,19 @@ class CraftingSystemTests {
 			itemToCraft01,
 			Map.of(
 				recipe01,
-				List.of(new Ingredient(itemBase01, 1), new Ingredient(itemBase02, 2))
+				List.of(
+					new Ingredient(item01, 1),
+					new Ingredient(item02, 2)
+				)
 			),
 			itemToCraft02,
 			Map.of(
 				recipe02,
-				List.of(new Ingredient(itemBase03, 3 * 2), new Ingredient(itemBase04, 5 * 2))
+				List.of(
+					new Ingredient(item03, 3 * 2),
+					new Ingredient(item04, 5 * 2),
+					new Ingredient(craftingTable, 1)
+				)
 			)
 		);
 		// @formatter:on
@@ -153,15 +162,17 @@ class CraftingSystemTests {
 		Item wood = new Item("wood");
 		Item iron = new Item("iron");
 
+		Item woodCraftingTable = new Item("wood crafting table");
+
 		List<Ingredient> stickRecipeIngredients = List.of(new Ingredient(wood, 2));
-		Recipe stickRecipe = new Recipe(stickRecipeIngredients, 1400, 4);
+		Recipe stickRecipe = new Recipe(stickRecipeIngredients, 1400, 4, woodCraftingTable);
 		List<Recipe> stickRecipes = List.of(stickRecipe);
 
 		Item stick = new Item("stick", stickRecipes);
 
 		List<Ingredient> swordRecipeIngredients = List.of(new Ingredient(stick, 1), new Ingredient(wood, 10),
 				new Ingredient(iron, 3));
-		Recipe swordRecipe = new Recipe(swordRecipeIngredients, 2100, 1);
+		Recipe swordRecipe = new Recipe(swordRecipeIngredients, 2100, 1, woodCraftingTable);
 		List<Recipe> swordRecipes = List.of(swordRecipe);
 
 		Item sword = new Item("sword", swordRecipes);
@@ -184,6 +195,7 @@ class CraftingSystemTests {
 			Map.of(
 				swordRecipe,
 				List.of(
+					new Ingredient(woodCraftingTable, 1),
 					new Ingredient(iron, 6),
 					new Ingredient(wood, 22)
 				)

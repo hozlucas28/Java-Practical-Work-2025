@@ -110,6 +110,13 @@ public class CraftingSystem {
 					realRecipeIngredients.add(realIngredient);
 				}
 
+				Optional<Item> craftingTable = recipe.getCraftingTable();
+
+				if (craftingTable.isPresent()) {
+					Ingredient table = new Ingredient(craftingTable.get(), 1);
+					realRecipeIngredients.add(table);
+				}
+
 				ingredientsPerRecipe.put(recipe, realRecipeIngredients);
 			}
 
@@ -166,6 +173,13 @@ public class CraftingSystem {
 					baseCount.put(baseItem, baseCount.getOrDefault(baseItem, 0) + baseItemQuantity);
 				}
 			}
+		}
+
+		Optional<Item> craftingTable = recipe.getCraftingTable();
+		
+		if (craftingTable.isPresent()) {
+			Item table = craftingTable.get();
+			baseCount.put(table, 1);
 		}
 
 		for (Map.Entry<Item, Integer> entry : baseCount.entrySet()) {
