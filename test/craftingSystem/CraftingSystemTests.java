@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import exceptions.ItemNotFoundException;
 import exceptions.NonCraftableItemException;
 import inventory.Inventory;
 import inventory.Item;
@@ -337,5 +338,63 @@ class CraftingSystemTests {
 		assertThrows(NonCraftableItemException.class, () -> craftingSystem.craftItems());
 	}
 
-	// TODO: test undoLastCraft()
+	@Test
+	void undoLastCraft() {
+		// Arrange
+		Item iron = new Item("iron");
+		Item stick = new Item("stick");
+		Item woodCraftingTable = new Item("wood crafting table");
+
+		List<Ingredient> swordRecipeIngredients = List.of(new Ingredient(iron, 2), new Ingredient(stick, 1));
+		Recipe swordRecipe = new Recipe(swordRecipeIngredients, 2100, 2, woodCraftingTable);
+
+		Item sword = new Item("sword", List.of(swordRecipe));
+
+		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
+
+		inventoryItems.put(iron, 5);
+		inventoryItems.put(stick, 2);
+		inventoryItems.put(woodCraftingTable, 2);
+
+		Inventory inventory = new Inventory(inventoryItems);
+		CraftingSystem craftingSystem = new CraftingSystem(inventory);
+
+		HashMap<Item, Integer> itemsToCraft = new HashMap<Item, Integer>();
+
+		itemsToCraft.put(sword, 1);
+
+		craftingSystem.setItemsToCraft(itemsToCraft);
+
+		// Act within assert
+		assertDoesNotThrow(() -> {
+			craftingSystem.craftItems();
+			craftingSystem.undoLastCraft();
+		});
+
+		// Assert
+		HashMap<Item, Integer> expectedInventoryItems = new HashMap<Item, Integer>();
+
+		expectedInventoryItems.put(iron, 5);
+		expectedInventoryItems.put(stick, 2);
+		expectedInventoryItems.put(woodCraftingTable, 2);
+
+		Inventory expectedInventory = new Inventory(expectedInventoryItems);
+		Inventory receivedInventory = inventory;
+
+		assertEquals(expectedInventory, receivedInventory);
+	}
+
+	@Test
+	void undoLastCraft_ItemNotFoundException() {
+		// Arrange
+		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
+
+		Inventory inventory = new Inventory(inventoryItems);
+		CraftingSystem craftingSystem = new CraftingSystem(inventory);
+
+		// Act within assert
+		assertThrows(ItemNotFoundException.class, () -> {
+			craftingSystem.undoLastCraft();
+		});
+	}
 }

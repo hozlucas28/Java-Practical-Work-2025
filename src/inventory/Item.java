@@ -48,7 +48,7 @@ public class Item {
 			return false;
 		}
 
-		if (getClass() != obj.getClass()) {
+		if (!(obj instanceof Item)) {
 			return false;
 		}
 
