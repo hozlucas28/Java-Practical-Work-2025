@@ -137,17 +137,6 @@ public class ItemsRepository {
 
 		ItemsRepository other = (ItemsRepository) obj;
 
-		if (this.items.size() != other.items.size()) {
-			return false;
-		}
-
-		for (String itemName : this.items.keySet()) {
-			if (!other.items.containsKey(itemName)
-					|| !Objects.equals(this.items.get(itemName), other.items.get(itemName))) {
-				return false;
-			}
-		}
-
-		return true;
+		return Objects.equals(this.items, other.items);
 	}
 }
