@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -116,5 +117,29 @@ public class Inventory {
 		Inventory inventory = new Inventory(items);
 
 		return inventory;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(items);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (obj == null) {
+			return false;
+		}
+
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		
+		Inventory other = (Inventory) obj;
+		
+		return Objects.equals(this.items, other.items);
 	}
 }

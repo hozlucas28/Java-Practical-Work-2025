@@ -34,6 +34,11 @@ public class CraftingHistory {
 		this.items.add(craftedItem);
 	}
 
+	public void addItem(Item item, Recipe usedRecipe, int quantityCrafted) {
+		CraftedItem craftedItem = new CraftedItem(item.getName(), item.getRecipes(), usedRecipe, quantityCrafted);
+		this.items.add(craftedItem);
+	}
+
 	public CraftedItem removeLastItem() throws ItemNotFoundException {
 		final int lastIndex = this.items.size() - 1;
 

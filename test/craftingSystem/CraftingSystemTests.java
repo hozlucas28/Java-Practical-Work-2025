@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import exceptions.NonCraftableItemException;
 import inventory.Inventory;
 import inventory.Item;
 import recipe.Ingredient;
@@ -102,7 +103,7 @@ class CraftingSystemTests {
 		Item item02 = new Item("Item base 02");
 		Item item03 = new Item("Item base 03");
 		Item item04 = new Item("Item base 04");
-		
+
 		Item craftingTable = new Item("Crafting table");
 
 		Ingredient ingredient01 = new Ingredient(item01, 1);
@@ -266,6 +267,75 @@ class CraftingSystemTests {
 		assertFalse(craftingSystem.canCraft());
 	}
 
-	// TODO: test craftItems()
+	@Test
+	void craftItems() {
+		// Arrange
+		Item stone = new Item("stone");
+		Item woodCraftingTable = new Item("wood crafting table");
+
+		List<Ingredient> furnaceRecipeIngredients = List.of(new Ingredient(stone, 8));
+		Recipe furnaceRecipe = new Recipe(furnaceRecipeIngredients, 1250, 1, woodCraftingTable);
+
+		Item furnace = new Item("furnace", List.of(furnaceRecipe));
+
+		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
+
+		inventoryItems.put(stone, 12);
+		inventoryItems.put(woodCraftingTable, 2);
+
+		Inventory inventory = new Inventory(inventoryItems);
+		CraftingSystem craftingSystem = new CraftingSystem(inventory);
+
+		HashMap<Item, Integer> itemsToCraft = new HashMap<Item, Integer>();
+
+		itemsToCraft.put(furnace, 1);
+
+		craftingSystem.setItemsToCraft(itemsToCraft);
+
+		// Act within assert
+		assertDoesNotThrow(() -> craftingSystem.craftItems());
+
+		// Assert
+		HashMap<Item, Integer> expectedInventoryItems = new HashMap<Item, Integer>();
+
+		expectedInventoryItems.put(stone, 12 - 8);
+		expectedInventoryItems.put(woodCraftingTable, 2);
+		expectedInventoryItems.put(furnace, 1);
+
+		Inventory expectedInventory = new Inventory(expectedInventoryItems);
+		Inventory receivedInventory = inventory;
+
+		assertEquals(expectedInventory, receivedInventory);
+	}
+
+	@Test
+	void craftItems_NonCraftableItemException() {
+		// Arrange
+		Item stone = new Item("stone");
+		Item woodCraftingTable = new Item("wood crafting table");
+
+		List<Ingredient> furnaceRecipeIngredients = List.of(new Ingredient(stone, 8));
+		Recipe furnaceRecipe = new Recipe(furnaceRecipeIngredients, 1250, 1, woodCraftingTable);
+
+		Item furnace = new Item("furnace", List.of(furnaceRecipe));
+
+		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
+
+		inventoryItems.put(stone, 6);
+		inventoryItems.put(woodCraftingTable, 2);
+
+		Inventory inventory = new Inventory(inventoryItems);
+		CraftingSystem craftingSystem = new CraftingSystem(inventory);
+
+		HashMap<Item, Integer> itemsToCraft = new HashMap<Item, Integer>();
+
+		itemsToCraft.put(furnace, 1);
+
+		craftingSystem.setItemsToCraft(itemsToCraft);
+
+		// Act within assert
+		assertThrows(NonCraftableItemException.class, () -> craftingSystem.craftItems());
+	}
+
 	// TODO: test undoLastCraft()
 }

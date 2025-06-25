@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import exceptions.ItemNotFoundException;
+import exceptions.NonCraftableItemException;
 import exceptions.OutOfRangeException;
 import inventory.Inventory;
 import inventory.Item;
@@ -212,8 +213,66 @@ public class CraftingSystem {
 		return this;
 	}
 
-	public void craftItems() {
-		// TODO
+	public void craftItems() throws NonCraftableItemException {
+		HashMap<Item, HashMap<Recipe, List<Ingredient>>> missingIngredientsPerItem = this.getMissingIngredients();
+
+		HashMap<Item, Recipe> recipesToCraftPerItem = new HashMap<Item, Recipe>();
+
+		for (Map.Entry<Item, HashMap<Recipe, List<Ingredient>>> itemEntry : missingIngredientsPerItem.entrySet()) {
+			Item itemToCraft = itemEntry.getKey();
+			HashMap<Recipe, List<Ingredient>> recipes = itemEntry.getValue();
+
+			Recipe firstEmptyRecipe = null;
+
+			for (Map.Entry<Recipe, List<Ingredient>> recipeEntry : recipes.entrySet()) {
+				Recipe recipe = recipeEntry.getKey();
+				List<Ingredient> missingIngredients = recipeEntry.getValue();
+
+				if (missingIngredients.isEmpty()) {
+					firstEmptyRecipe = recipe;
+					break;
+				}
+			}
+
+			if (firstEmptyRecipe == null) {
+				String errorMessage = String.format(
+						"Inventory doesn not have the necessary ingredients to craft %d of \"%s\" items with any recipe.",
+						this.itemsToCraft.get(itemToCraft), itemToCraft.getName());
+
+				throw new NonCraftableItemException(errorMessage);
+			}
+
+			recipesToCraftPerItem.put(itemToCraft, firstEmptyRecipe);
+		}
+
+		for (Map.Entry<Item, Recipe> entry : recipesToCraftPerItem.entrySet()) {
+			Item itemToCraft = entry.getKey();
+			Recipe recipeToCraft = entry.getValue();
+
+			List<Ingredient> ingredientsToRemove = recipeToCraft.getBaseIngredients();
+
+			for (Ingredient ingredient : ingredientsToRemove) {
+				Item itemToRemove = ingredient.getItem();
+				int quantityToRemove = ingredient.getQuantity();
+
+				try {
+					this.inventory.removeItem(itemToRemove, quantityToRemove);
+				} catch (ItemNotFoundException | OutOfRangeException e) {
+					// TODO
+				}
+			}
+
+			int quantityToCraft = recipeToCraft.getQuantityToCraft()
+					* (int) Math.ceil(this.itemsToCraft.get(itemToCraft) / (double) recipeToCraft.getQuantityToCraft());
+
+			try {
+				this.inventory.addItem(itemToCraft, quantityToCraft);
+			} catch (OutOfRangeException e) {
+				// TODO
+			}
+
+			this.history.addItem(itemToCraft, recipeToCraft, quantityToCraft);
+		}
 	}
 
 	public void undoLastCraft() throws ItemNotFoundException {
