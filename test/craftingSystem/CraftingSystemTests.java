@@ -400,18 +400,26 @@ class CraftingSystemTests {
 	void undoLastCraft() {
 		// Arrange
 		Item iron = new Item("iron");
+		Item coal = new Item("coal");
 		Item stick = new Item("stick");
+
 		Item woodCraftingTable = new Item("wood crafting table");
 
 		List<Ingredient> swordRecipeIngredients = List.of(new Ingredient(iron, 2), new Ingredient(stick, 1));
-		Recipe swordRecipe = new Recipe(swordRecipeIngredients, 2100, 2, woodCraftingTable);
+		Recipe swordRecipe = new Recipe(swordRecipeIngredients, 2100, 1, woodCraftingTable);
 
 		Item sword = new Item("sword", List.of(swordRecipe));
+
+		List<Ingredient> torchRecipeIngredients = List.of(new Ingredient(coal, 1), new Ingredient(stick, 1));
+		Recipe torchRecipe = new Recipe(torchRecipeIngredients, 750, 4);
+
+		Item torch = new Item("torch", List.of(torchRecipe));
 
 		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
 
 		inventoryItems.put(iron, 5);
-		inventoryItems.put(stick, 2);
+		inventoryItems.put(coal, 3);
+		inventoryItems.put(stick, 3);
 		inventoryItems.put(woodCraftingTable, 2);
 
 		Inventory inventory = new Inventory(inventoryItems);
@@ -420,6 +428,7 @@ class CraftingSystemTests {
 		HashMap<Item, Integer> itemsToCraft = new HashMap<Item, Integer>();
 
 		itemsToCraft.put(sword, 1);
+		itemsToCraft.put(torch, 2);
 
 		craftingSystem.setItemsToCraft(itemsToCraft);
 
@@ -432,7 +441,10 @@ class CraftingSystemTests {
 		// Assert
 		HashMap<Item, Integer> expectedInventoryItems = new HashMap<Item, Integer>();
 
-		expectedInventoryItems.put(iron, 5);
+		expectedInventoryItems.put(sword, 1);
+
+		expectedInventoryItems.put(iron, 3);
+		expectedInventoryItems.put(coal, 3);
 		expectedInventoryItems.put(stick, 2);
 		expectedInventoryItems.put(woodCraftingTable, 2);
 
