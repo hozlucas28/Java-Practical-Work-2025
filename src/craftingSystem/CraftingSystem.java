@@ -277,10 +277,10 @@ public class CraftingSystem {
 
 	public void undoLastCraft() throws ItemNotFoundException {
 		CraftedItem lastCraftedItem = this.history.getLastItem();
-		int craftedItems = lastCraftedItem.getCraftedItems();
+		int quantityCrafted = lastCraftedItem.getQuantityCrafted();
 
 		try {
-			this.inventory.removeItem(lastCraftedItem, craftedItems);
+			this.inventory.removeItem(lastCraftedItem, quantityCrafted);
 		} catch (ItemNotFoundException e) {
 			throw new ItemNotFoundException("The last crafted item was not found in the inventory");
 		} catch (OutOfRangeException e) {

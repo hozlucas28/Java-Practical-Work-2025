@@ -10,28 +10,22 @@ import recipe.Recipe;
 public class CraftedItem extends Item {
 	private final ZonedDateTime date;
 	private final Recipe usedRecipe;
-	private final int craftedItems;
+	private final int quantityCrafted;
 
 	public CraftedItem(String name, List<Recipe> recipes, Recipe usedRecipe) {
 		super(name, recipes);
+
 		this.date = ZonedDateTime.now();
 		this.usedRecipe = usedRecipe;
-		this.craftedItems = 1;
+		this.quantityCrafted = 1;
 	}
 
-	public CraftedItem(String name, List<Recipe> recipes, Recipe usedRecipe, int craftedItems)
-			throws OutOfRangeException {
+	public CraftedItem(String name, List<Recipe> recipes, Recipe usedRecipe, int quantityCrafted) {
 		super(name, recipes);
-
-		if (craftedItems < 1) {
-			String errorMessage = String.format("Received %d as craftedItems, but expect it greater than or equal to %d",
-					craftedItems, 1);
-			throw new OutOfRangeException(errorMessage);
-		}
 
 		this.date = ZonedDateTime.now();
 		this.usedRecipe = usedRecipe;
-		this.craftedItems = craftedItems;
+		this.quantityCrafted = quantityCrafted;
 	}
 
 	public ZonedDateTime getDate() {
@@ -42,7 +36,7 @@ public class CraftedItem extends Item {
 		return this.usedRecipe;
 	}
 
-	public int getCraftedItems() {
-		return this.craftedItems;
+	public int getQuantityCrafted() {
+		return this.quantityCrafted;
 	}
 }
