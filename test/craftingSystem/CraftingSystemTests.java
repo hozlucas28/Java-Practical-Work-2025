@@ -17,7 +17,65 @@ import recipe.Recipe;
 
 class CraftingSystemTests {
 
-	// TODO: test getCraftedItems()
+	@Test
+	void getCraftedItems() {
+		// Arrange
+		Item iron = new Item("iron");
+		Item stick = new Item("stick");
+		Item stone = new Item("stone");
+
+		Item woodCraftingTable = new Item("wood crafting table");
+
+		List<Ingredient> furnaceRecipeIngredients = List.of(new Ingredient(stone, 8));
+		Recipe furnaceRecipe = new Recipe(furnaceRecipeIngredients, 1250, 1, woodCraftingTable);
+
+		Item furnace = new Item("furnace", List.of(furnaceRecipe));
+
+		List<Ingredient> swordRecipeIngredients = List.of(new Ingredient(iron, 4), new Ingredient(stick, 2));
+		Recipe swordRecipe = new Recipe(swordRecipeIngredients, 1750, 2, woodCraftingTable);
+
+		Item sword = new Item("sword", List.of(swordRecipe));
+
+		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
+
+		inventoryItems.put(iron, 6);
+		inventoryItems.put(stick, 2);
+		inventoryItems.put(stone, 12);
+		inventoryItems.put(woodCraftingTable, 2);
+
+		Inventory inventory = new Inventory(inventoryItems);
+		CraftingSystem craftingSystem = new CraftingSystem(inventory);
+
+		HashMap<Item, Integer> itemsToCraft = new HashMap<Item, Integer>();
+
+		itemsToCraft.put(sword, 2);
+		itemsToCraft.put(furnace, 1);
+
+		craftingSystem.setItemsToCraft(itemsToCraft);
+
+		// Act within assert
+		assertDoesNotThrow(() -> craftingSystem.craftItems());
+
+		// Assert
+		// @formatter:off
+		List<CraftedItem> expected = List.of(
+			new CraftedItem(sword.getName(), sword.getRecipes(), swordRecipe, 2),
+			new CraftedItem(furnace.getName(), furnace.getRecipes(), furnaceRecipe)
+		);
+		// @formatter:on
+
+		List<CraftedItem> received = craftingSystem.getCraftedItems();
+
+		assertTrue(expected.size() == received.size());
+
+		for (int i = 0; i < expected.size(); i++) {
+			CraftedItem expectedCraftedItem = expected.get(i);
+			CraftedItem receivedCraftedItem = received.get(i);
+
+			assertTrue(receivedCraftedItem.softEquals(expectedCraftedItem));
+		}
+	}
+
 	// TODO: test getCraftableUnits()
 
 	@Test

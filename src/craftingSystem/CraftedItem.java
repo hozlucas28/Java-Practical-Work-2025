@@ -2,6 +2,7 @@ package craftingSystem;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import exceptions.OutOfRangeException;
 import inventory.Item;
@@ -38,5 +39,23 @@ public class CraftedItem extends Item {
 
 	public int getQuantityCrafted() {
 		return this.quantityCrafted;
+	}
+
+	public boolean softEquals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (!super.equals(obj)) {
+			return false;
+		}
+
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+
+		CraftedItem other = (CraftedItem) obj;
+
+		return Objects.equals(this.usedRecipe, other.usedRecipe) && this.quantityCrafted == other.quantityCrafted;
 	}
 }
