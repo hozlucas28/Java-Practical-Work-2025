@@ -77,10 +77,10 @@ public class ItemsRepository {
 					}
 
 					// Get time to craft in milliseconds
-					int timeToCraftInMilliseconds = jsonItemElementRecipeAsObj.get("quantity_to_craft").getAsInt();
+					int timeToCraftInMilliseconds = jsonItemElementRecipeAsObj.get("time_to_craft").getAsInt();
 
 					// Get items to craft
-					int quantityToCraft = jsonItemElementRecipeAsObj.get("items_to_craft").getAsInt();
+					int quantityToCraft = jsonItemElementRecipeAsObj.get("quantity_to_craft").getAsInt();
 
 					// Get crafting table if it's exists
 					Item craftingTable = null;
