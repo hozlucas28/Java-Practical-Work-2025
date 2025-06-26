@@ -1,6 +1,5 @@
 package inventory;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -13,7 +12,7 @@ public class Item {
 
 	public Item(String name) {
 		this.name = name;
-		this.recipes = new ArrayList<Recipe>();
+		this.recipes = null;
 	}
 
 	public Item(String name, List<Recipe> recipes) {
@@ -30,7 +29,7 @@ public class Item {
 	}
 
 	public boolean isBase() {
-		return this.recipes.isEmpty();
+		return this.recipes == null;
 	}
 
 	@Override

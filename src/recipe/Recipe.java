@@ -53,11 +53,13 @@ public class Recipe {
 
 		for (Ingredient ingredient : this.ingredients) {
 			Item item = ingredient.getItem();
-			List<Recipe> ingredientRecipes = item.getRecipes();
 
 			if (item.isBase()) {
 				baseIngredientsMap.put(ingredient, baseIngredientsMap.getOrDefault(ingredient, 0) + 1);
+				break;
 			}
+
+			List<Recipe> ingredientRecipes = item.getRecipes();
 
 			for (Recipe itemRecipe : ingredientRecipes) {
 				List<Ingredient> baseIngredients = itemRecipe.getBaseIngredients();
