@@ -107,7 +107,7 @@ class CraftingHistoryTests {
 	}
 
 	@Test
-	void removeLastItem_ItemNotFoundException() {
+	void removeLastItem__ItemNotFoundException() {
 		// Assert
 		assertThrows(ItemNotFoundException.class, () -> {
 			// Arrange

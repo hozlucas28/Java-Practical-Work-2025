@@ -417,7 +417,7 @@ class CraftingSystemTests {
 	}
 
 	@Test
-	void craftItems_NonCraftableItemException() {
+	void craftItems__NonCraftableItemException() {
 		// Arrange
 		Item stone = new Item("stone");
 		Item woodCraftingTable = new Item("wood crafting table");
@@ -504,7 +504,7 @@ class CraftingSystemTests {
 	}
 
 	@Test
-	void undoLastCraft_ItemNotFoundException() {
+	void undoLastCraft__ItemNotFoundException() {
 		// Arrange
 		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
 
