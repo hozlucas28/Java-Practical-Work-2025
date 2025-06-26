@@ -13,11 +13,11 @@ class CraftingHistory {
 
 	public CraftingHistory() {
 		this.items = new ArrayList<CraftedItem>();
-	};
+	}
 
 	public List<CraftedItem> getItems() {
 		return Collections.unmodifiableList(this.items);
-	};
+	}
 
 	public CraftedItem getLastItem() throws ItemNotFoundException {
 		final int lastIndex = this.items.size() - 1;
@@ -27,7 +27,7 @@ class CraftingHistory {
 		}
 
 		return this.items.get(lastIndex);
-	};
+	}
 
 	public void addItem(Item item, Recipe usedRecipe) {
 		CraftedItem craftedItem = new CraftedItem(item, usedRecipe);

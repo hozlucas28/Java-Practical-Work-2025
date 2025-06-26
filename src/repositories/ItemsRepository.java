@@ -26,7 +26,7 @@ public class ItemsRepository {
 
 	public ItemsRepository(HashMap<String, Item> items) {
 		this.items = items;
-	};
+	}
 
 	public HashMap<String, Item> getItems() {
 		return this.items;
