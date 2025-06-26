@@ -30,12 +30,12 @@ public class CraftingHistory {
 	};
 
 	public void addItem(Item item, Recipe usedRecipe) {
-		CraftedItem craftedItem = new CraftedItem(item.getName(), item.getRecipes(), usedRecipe);
+		CraftedItem craftedItem = new CraftedItem(item, usedRecipe);
 		this.items.add(craftedItem);
 	}
 
 	public void addItem(Item item, Recipe usedRecipe, int quantityCrafted) {
-		CraftedItem craftedItem = new CraftedItem(item.getName(), item.getRecipes(), usedRecipe, quantityCrafted);
+		CraftedItem craftedItem = new CraftedItem(item, usedRecipe, quantityCrafted);
 		this.items.add(craftedItem);
 	}
 

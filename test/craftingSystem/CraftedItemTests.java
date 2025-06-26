@@ -30,7 +30,7 @@ class CraftedItemTests {
 
 		craftedItemRecipes.add(craftedItemRecipe);
 
-		CraftedItem craftedItem = new CraftedItem("My item B", craftedItemRecipes, craftedItemRecipes.get(0));
+		CraftedItem craftedItem = new CraftedItem(new Item("My item B", craftedItemRecipes), craftedItemRecipes.get(0));
 
 		// Act
 		ZonedDateTime expected = ZonedDateTime.now();
@@ -56,7 +56,7 @@ class CraftedItemTests {
 
 			craftedItemRecipes.add(craftedItemRecipe);
 
-			CraftedItem craftedItem = new CraftedItem("My item B", craftedItemRecipes, craftedItemRecipes.get(0));
+			CraftedItem craftedItem = new CraftedItem(new Item("My item B", craftedItemRecipes), craftedItemRecipes.get(0));
 
 			// Act
 			Recipe expected = craftedItemRecipes.get(0);

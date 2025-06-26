@@ -59,8 +59,8 @@ class CraftingSystemTests {
 		// Assert
 		// @formatter:off
 		List<CraftedItem> expected = List.of(
-			new CraftedItem(sword.getName(), sword.getRecipes(), swordRecipe, 2),
-			new CraftedItem(furnace.getName(), furnace.getRecipes(), furnaceRecipe)
+			new CraftedItem(sword, swordRecipe, 2),
+			new CraftedItem(furnace, furnaceRecipe)
 		);
 		// @formatter:on
 
@@ -116,14 +116,14 @@ class CraftingSystemTests {
 		itemsToCraft.put(torch, 2);
 
 		craftingSystem.setItemsToCraft(itemsToCraft);
-		
+
 		// Act
 		HashMap<Item, Integer> craftableUnits = craftingSystem.getCraftableUnits();
 
 		// Assert
 		Map<Item, Integer> expected = Map.of(sword, 2, torch, 12);
 		HashMap<Item, Integer> received = craftableUnits;
-		
+
 		assertEquals(expected, received);
 	}
 
