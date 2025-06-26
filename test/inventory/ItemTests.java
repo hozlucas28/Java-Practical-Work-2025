@@ -24,7 +24,7 @@ class ItemTests {
 		String received = item.getName();
 
 		// Assert
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should return the item name");
 	}
 
 	@Test
@@ -64,7 +64,7 @@ class ItemTests {
 		List<Recipe> received = item.getRecipes();
 
 		// Assert
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should return item recipes");
 	}
 
 	@Test
@@ -78,6 +78,6 @@ class ItemTests {
 		boolean received = item.isBase();
 
 		// Assert
-		assertTrue(received);
+		assertTrue(received, "Should return true if it is a base item");
 	}
 }

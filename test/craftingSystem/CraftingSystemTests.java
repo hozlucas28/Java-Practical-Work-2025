@@ -54,7 +54,8 @@ class CraftingSystemTests {
 		craftingSystem.setItemsToCraft(itemsToCraft);
 
 		// Act within assert
-		assertDoesNotThrow(() -> craftingSystem.craftItems());
+		assertDoesNotThrow(() -> craftingSystem.craftItems(),
+				"Should not throw an exception if it craft craftable items");
 
 		// Assert
 		// @formatter:off
@@ -66,13 +67,15 @@ class CraftingSystemTests {
 
 		List<CraftedItem> received = craftingSystem.getCraftedItems();
 
-		assertTrue(expected.size() == received.size());
+		assertTrue(expected.size() == received.size(),
+				"List of expected and received crafted items should have the same length");
 
 		for (int i = 0; i < expected.size(); i++) {
 			CraftedItem expectedCraftedItem = expected.get(i);
 			CraftedItem receivedCraftedItem = received.get(i);
 
-			assertTrue(receivedCraftedItem.softEquals(expectedCraftedItem));
+			assertTrue(receivedCraftedItem.softEquals(expectedCraftedItem),
+					"Each expected crafted item should match the received one");
 		}
 	}
 
@@ -124,7 +127,7 @@ class CraftingSystemTests {
 		Map<Item, Integer> expected = Map.of(sword, 2, torch, 12);
 		HashMap<Item, Integer> received = craftableUnits;
 
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should return the correct craftable units for each item");
 	}
 
 	@Test
@@ -167,7 +170,7 @@ class CraftingSystemTests {
 			inventory.addItem(itemBase01, 1);
 			inventory.addItem(itemBase02, 1);
 			inventory.addItem(itemBase04, 4);
-		});
+		}, "Should not throw an exception if it craft craftable items");
 
 		// Act
 		// @formatter:off
@@ -194,7 +197,7 @@ class CraftingSystemTests {
 		HashMap<Item, HashMap<Recipe, List<Ingredient>>> received = craftingSystem.getMissingIngredients();
 
 		// Assert
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should return the missing ingredients to craft the requested ones");
 	}
 
 	// TODO: test getMissingBaseIngredients() X
@@ -261,7 +264,7 @@ class CraftingSystemTests {
 		HashMap<Item, HashMap<Recipe, List<Ingredient>>> received = craftingSystem.getRequiredIngredients();
 
 		// Assert
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should return the required ingredients to craft the requested ones");
 	}
 
 	@Test
@@ -314,7 +317,7 @@ class CraftingSystemTests {
 		HashMap<Item, HashMap<Recipe, List<Ingredient>>> received = craftingSystem.getRequiredBaseIngredients();
 
 		// Assert
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should return the required base ingredients to craft the requested ones");
 	}
 
 	@Test
@@ -343,7 +346,7 @@ class CraftingSystemTests {
 		craftingSystem.setItemsToCraft(itemsToCraft);
 
 		// Act within assert
-		assertTrue(craftingSystem.canCraft());
+		assertTrue(craftingSystem.canCraft(), "Should be true on can craft requested items");
 	}
 
 	@Test
@@ -371,7 +374,8 @@ class CraftingSystemTests {
 		craftingSystem.setItemsToCraft(itemsToCraft);
 
 		// Act within assert
-		assertFalse(craftingSystem.canCraft());
+		assertFalse(craftingSystem.canCraft(),
+				"Should be false, if crafting system can not craft requested items because it missing ingredients within inventory");
 	}
 
 	@Test
@@ -400,7 +404,7 @@ class CraftingSystemTests {
 		craftingSystem.setItemsToCraft(itemsToCraft);
 
 		// Act within assert
-		assertDoesNotThrow(() -> craftingSystem.craftItems());
+		assertDoesNotThrow(() -> craftingSystem.craftItems(), "craftItems() should not throw with valid items");
 
 		// Assert
 		HashMap<Item, Integer> expectedInventoryItems = new HashMap<Item, Integer>();
@@ -412,7 +416,8 @@ class CraftingSystemTests {
 		Inventory expectedInventory = new Inventory(expectedInventoryItems);
 		Inventory receivedInventory = inventory;
 
-		assertEquals(expectedInventory, receivedInventory);
+		assertEquals(expectedInventory, receivedInventory,
+				"Inventory should have the crafted items, minus used ingredients to craft those");
 	}
 
 	@Test
@@ -441,7 +446,8 @@ class CraftingSystemTests {
 		craftingSystem.setItemsToCraft(itemsToCraft);
 
 		// Act within assert
-		assertThrows(NonCraftableItemException.class, () -> craftingSystem.craftItems());
+		assertThrows(NonCraftableItemException.class, () -> craftingSystem.craftItems(),
+				"Should throw `NonCraftableItemException` on try to craft an item without the required ingredients within inventory");
 	}
 
 	@Test
@@ -484,7 +490,7 @@ class CraftingSystemTests {
 		assertDoesNotThrow(() -> {
 			craftingSystem.craftItems();
 			craftingSystem.undoLastCraft();
-		});
+		}, "Should not throw an exception if it craft items and undo last one");
 
 		// Assert
 		HashMap<Item, Integer> expectedInventoryItems = new HashMap<Item, Integer>();
@@ -499,7 +505,8 @@ class CraftingSystemTests {
 		Inventory expectedInventory = new Inventory(expectedInventoryItems);
 		Inventory receivedInventory = inventory;
 
-		assertEquals(expectedInventory, receivedInventory);
+		assertEquals(expectedInventory, receivedInventory,
+				"Inventory should have the ingredients of last crafted item, minus crafted one");
 	}
 
 	@Test
@@ -511,6 +518,7 @@ class CraftingSystemTests {
 		CraftingSystem craftingSystem = new CraftingSystem(inventory);
 
 		// Act within assert
-		assertThrows(ItemNotFoundException.class, () -> craftingSystem.undoLastCraft());
+		assertThrows(ItemNotFoundException.class, () -> craftingSystem.undoLastCraft(),
+				"Should throw `ItemNotFoundException` on try to undo last crafted without crafted items");
 	}
 }

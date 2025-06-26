@@ -21,7 +21,7 @@ class IngredientTests {
 		Item received = ingredient.getItem();
 
 		// Assert
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should return the necessary item for the ingredient");
 	}
 
 	@Test
@@ -37,6 +37,6 @@ class IngredientTests {
 		int received = ingredient.getQuantity();
 
 		// Assert
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should return ingredient quantity");
 	}
 }

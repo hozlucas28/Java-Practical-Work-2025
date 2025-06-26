@@ -36,7 +36,7 @@ class ItemsRepositoryTests {
 		Item received = itemsRepository.getItem(item03.getName());
 
 		// Assert
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should return the item from the repository");
 	}
 
 	@Test
@@ -74,12 +74,13 @@ class ItemsRepositoryTests {
 
 		// Act
 		String jsonPath = Paths.get("test", "assets", "recipes.json").toString();
-		ItemsRepository itemsRepository = assertDoesNotThrow(() -> ItemsRepository.loadFromJSON(jsonPath));
+		ItemsRepository itemsRepository = assertDoesNotThrow(() -> ItemsRepository.loadFromJSON(jsonPath),
+				"Should not throw an exception for a valid JSON file");
 
 		// Assert
 		ItemsRepository expected = new ItemsRepository(repositoryItems);
 		ItemsRepository received = itemsRepository;
 
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Expected items and loaded one from the json file should be the same");
 	}
 }

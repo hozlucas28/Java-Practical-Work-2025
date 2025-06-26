@@ -58,7 +58,7 @@ class CraftingHistoryTests {
 		List<CraftedItem> received = craftingHistory.getItems();
 
 		// Assert
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should add crafted items to the crafting history");
 	}
 
 	@Test
@@ -101,7 +101,7 @@ class CraftingHistoryTests {
 		CraftedItem received = assertDoesNotThrow(() -> craftingHistory.removeLastItem());
 
 		// Assert
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should remove and return the last crafted item");
 	}
 
 	@Test
@@ -110,6 +110,7 @@ class CraftingHistoryTests {
 		CraftingHistory craftingHistory = new CraftingHistory();
 
 		// Act within assert
-		assertThrows(ItemNotFoundException.class, () -> craftingHistory.removeLastItem());
+		assertThrows(ItemNotFoundException.class, () -> craftingHistory.removeLastItem(),
+				"Should throw `ItemNotFoundException` when the crafting history is empty");
 	}
 }

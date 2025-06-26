@@ -37,7 +37,7 @@ class CraftedItemTests {
 		ZonedDateTime received = craftedItem.getDate();
 
 		// Assert
-		assertEquals(0, ChronoUnit.SECONDS.between(expected, received));
+		assertEquals(0, ChronoUnit.SECONDS.between(expected, received), "Should return the current time");
 	}
 
 	@Test
@@ -62,6 +62,6 @@ class CraftedItemTests {
 		Recipe received = craftedItem.getUsedRecipe();
 
 		// Assert
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should return the recipe used to craft the item");
 	}
 }

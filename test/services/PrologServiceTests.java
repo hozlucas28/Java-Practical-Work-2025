@@ -60,7 +60,8 @@ class PrologServiceTests {
 				.setItemsRepository(itemsRepository).setInventory(inventory).build();
 
 		// Act
-		HashMap<Item, Integer> craftableItems = assertDoesNotThrow(() -> prologService.craftableItems());
+		HashMap<Item, Integer> craftableItems = assertDoesNotThrow(() -> prologService.craftableItems(),
+				"Should not throw an exception for a valid Prolog file");
 
 		// Assert
 		HashMap<Item, Integer> expected = new HashMap<Item, Integer>();
@@ -70,6 +71,7 @@ class PrologServiceTests {
 
 		HashMap<Item, Integer> received = craftableItems;
 
-		assertEquals(expected, received);
+		assertEquals(expected, received,
+				"Should match the craftable items and quantities loaded from prolog query to expected ones");
 	}
 }

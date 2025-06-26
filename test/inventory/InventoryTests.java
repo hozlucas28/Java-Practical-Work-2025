@@ -40,7 +40,7 @@ class InventoryTests {
 		HashMap<Item, Integer> received = inventory.getItems();
 
 		// Assert
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should return the correct items and quantities within inventory");
 	}
 
 	@Test
@@ -61,7 +61,7 @@ class InventoryTests {
 		int received = inventory.getItemQuantity(item);
 
 		// Assert
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should return the correct quantity of the stored item");
 	}
 
 	@Test
@@ -82,8 +82,8 @@ class InventoryTests {
 			int received = inventory.getItemQuantity(item);
 
 			// Assert
-			assertEquals(expected, received);
-		});
+			assertEquals(expected, received, "Should add the correct quantity to inventory");
+		}, "Should not throw an exception with a valid item quantity to add");
 	}
 
 	@Test
@@ -97,7 +97,8 @@ class InventoryTests {
 		int itemQuantity = 0;
 
 		// Act within assert
-		assertThrows(OutOfRangeException.class, () -> inventory.addItem(item, itemQuantity));
+		assertThrows(OutOfRangeException.class, () -> inventory.addItem(item, itemQuantity),
+				"Should throw `OutOfRangeException` on add zero item to inventory");
 	}
 
 	@Test
@@ -115,13 +116,14 @@ class InventoryTests {
 
 		// Act
 		int quantityToRemove = 1;
-		assertDoesNotThrow(() -> inventory.removeItem(item, quantityToRemove));
+		assertDoesNotThrow(() -> inventory.removeItem(item, quantityToRemove),
+				"Should not throw an exception with a valid item quantity to remove");
 
 		int expected = itemQuantity - quantityToRemove;
 		int received = inventory.getItemQuantity(item);
 
 		// Assert
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should decrease the quantity of the stored item");
 	}
 
 	@Test
@@ -133,7 +135,8 @@ class InventoryTests {
 		Inventory inventory = new Inventory(items);
 
 		// Act within assert
-		assertThrows(ItemNotFoundException.class, () -> inventory.removeItem(item, 1));
+		assertThrows(ItemNotFoundException.class, () -> inventory.removeItem(item, 1),
+				"Should throw `ItemNotFoundException` on try to remove a missing item within inventory");
 	}
 
 	@Test
@@ -150,7 +153,8 @@ class InventoryTests {
 		Inventory inventory = new Inventory(items);
 
 		// Act within assert
-		assertThrows(OutOfRangeException.class, () -> inventory.removeItem(item, 10));
+		assertThrows(OutOfRangeException.class, () -> inventory.removeItem(item, 10),
+				"Should throw `OutOfRangeException` on try to remove an item above the stored quantity");
 	}
 
 	@Test
@@ -195,11 +199,12 @@ class InventoryTests {
 			// Assert
 			Inventory savedInventory = Inventory.loadFromJSON(tempFilePath, itemsRepository);
 
-			assertEquals(inventory.getItems(), savedInventory.getItems());
+			assertEquals(inventory.getItems(), savedInventory.getItems(),
+					"Stored inventory and loaded one from the generated json should be the same");
 
 			// After
 			tempFile.delete();
-		});
+		}, "Should not throw an exception on store/load the inventory in/from a JSON file");
 	}
 
 	@Test
@@ -223,12 +228,13 @@ class InventoryTests {
 
 		// Act
 		String jsonPath = Paths.get("test", "assets", "inventory.json").toString();
-		Inventory inventory = assertDoesNotThrow(() -> Inventory.loadFromJSON(jsonPath, itemsRepository));
+		Inventory inventory = assertDoesNotThrow(() -> Inventory.loadFromJSON(jsonPath, itemsRepository),
+				"Should not throw an exception for a valid JSON file");
 
 		// Assert
 		Map<Item, Integer> expected = Map.of(wood, 2, iron, 7, woodCraftingTable, 1);
 		HashMap<Item, Integer> received = inventory.getItems();
 
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Expected inventory and loaded one from the json file should be the same");
 	}
 }

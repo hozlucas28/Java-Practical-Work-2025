@@ -26,7 +26,7 @@ class RecipeTests {
 		Item received = recipe.getCraftingTable();
 
 		// Assert
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should return the crafting table");
 	}
 
 	@Test
@@ -43,7 +43,7 @@ class RecipeTests {
 		List<Ingredient> received = recipe.getIngredients();
 
 		// Assert
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should return the list of ingredients");
 	}
 
 	@Test
@@ -60,7 +60,7 @@ class RecipeTests {
 		int received = recipe.getTimeToCraftInMilliseconds();
 
 		// Assert
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should return the crafting time in milliseconds");
 	}
 
 	@Test
@@ -77,7 +77,7 @@ class RecipeTests {
 		int received = recipe.getQuantityToCraft();
 
 		// Assert
-		assertEquals(expected, received);
+		assertEquals(expected, received, "Should return the quantity to craft");
 	}
 
 	@Test
@@ -102,7 +102,9 @@ class RecipeTests {
 		List<Ingredient> expected = List.of(new Ingredient(wood, 2), new Ingredient(iron, 3));
 		List<Ingredient> received = baseIngredients;
 
-		assertTrue(received.size() == expected.size());
-		assertTrue(received.containsAll(expected));
+		assertTrue(received.size() == expected.size(),
+				"List of expected and received base ingredients should have the same length");
+		assertTrue(received.containsAll(expected),
+				"Received base ingredients should contain all expected base ingredients");
 	}
 }
