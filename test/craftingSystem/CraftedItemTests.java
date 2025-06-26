@@ -42,28 +42,26 @@ class CraftedItemTests {
 
 	@Test
 	void getUsedRecipe() {
-		assertDoesNotThrow(() -> {
-			// Arrange
-			Item item = new Item("My item A");
+		// Arrange
+		Item item = new Item("My item A");
 
-			Ingredient ingredient = new Ingredient(item, 1);
-			List<Ingredient> ingredients = new ArrayList<Ingredient>();
+		Ingredient ingredient = new Ingredient(item, 1);
+		List<Ingredient> ingredients = new ArrayList<Ingredient>();
 
-			ingredients.add(ingredient);
+		ingredients.add(ingredient);
 
-			Recipe craftedItemRecipe = new Recipe(ingredients, 1000, 1);
-			List<Recipe> craftedItemRecipes = new ArrayList<Recipe>();
+		Recipe craftedItemRecipe = new Recipe(ingredients, 1000, 1);
+		List<Recipe> craftedItemRecipes = new ArrayList<Recipe>();
 
-			craftedItemRecipes.add(craftedItemRecipe);
+		craftedItemRecipes.add(craftedItemRecipe);
 
-			CraftedItem craftedItem = new CraftedItem(new Item("My item B", craftedItemRecipes), craftedItemRecipes.get(0));
+		CraftedItem craftedItem = new CraftedItem(new Item("My item B", craftedItemRecipes), craftedItemRecipes.get(0));
 
-			// Act
-			Recipe expected = craftedItemRecipes.get(0);
-			Recipe received = craftedItem.getUsedRecipe();
+		// Act
+		Recipe expected = craftedItemRecipes.get(0);
+		Recipe received = craftedItem.getUsedRecipe();
 
-			// Assert
-			assertEquals(expected, received);
-		});
+		// Assert
+		assertEquals(expected, received);
 	}
 }

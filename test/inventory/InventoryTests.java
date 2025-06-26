@@ -113,17 +113,15 @@ class InventoryTests {
 
 		Inventory inventory = new Inventory(items);
 
-		assertDoesNotThrow(() -> {
-			// Act
-			int quantityToRemove = 1;
-			inventory.removeItem(item, quantityToRemove);
+		// Act
+		int quantityToRemove = 1;
+		assertDoesNotThrow(() -> inventory.removeItem(item, quantityToRemove));
 
-			int expected = itemQuantity - quantityToRemove;
-			int received = inventory.getItemQuantity(item);
+		int expected = itemQuantity - quantityToRemove;
+		int received = inventory.getItemQuantity(item);
 
-			// Assert
-			assertEquals(expected, received);
-		});
+		// Assert
+		assertEquals(expected, received);
 	}
 
 	@Test
@@ -134,12 +132,8 @@ class InventoryTests {
 		HashMap<Item, Integer> items = new HashMap<Item, Integer>();
 		Inventory inventory = new Inventory(items);
 
-		// Assert
-		assertThrows(ItemNotFoundException.class, () -> {
-			// Act
-			int quantityToRemove = 1;
-			inventory.removeItem(item, quantityToRemove);
-		});
+		// Act within assert
+		assertThrows(ItemNotFoundException.class, () -> inventory.removeItem(item, 1));
 	}
 
 	@Test
@@ -155,46 +149,43 @@ class InventoryTests {
 
 		Inventory inventory = new Inventory(items);
 
-		// Assert
-		assertThrows(OutOfRangeException.class, () -> {
-			// Act
-			int quantityToRemove = 10;
-			inventory.removeItem(item, quantityToRemove);
-		});
+		// Act within assert
+		assertThrows(OutOfRangeException.class, () -> inventory.removeItem(item, 10));
 	}
 
 	@Test
 	void storeOnJSON() {
+
+		// Arrange
+		Item itemA = new Item("Item A");
+		Item itemB = new Item("Item B");
+		Item itemC = new Item("Item C");
+		Item itemD = new Item("Item D");
+
+		int itemAQuantity = 2;
+		int itemBQuantity = 5;
+		int itemCQuantity = 9;
+		int itemDQuantity = 1;
+
+		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
+
+		inventoryItems.put(itemA, itemAQuantity);
+		inventoryItems.put(itemB, itemBQuantity);
+		inventoryItems.put(itemC, itemCQuantity);
+		inventoryItems.put(itemD, itemDQuantity);
+
+		Inventory inventory = new Inventory(inventoryItems);
+
+		HashMap<String, Item> repositoryItems = new HashMap<String, Item>();
+
+		repositoryItems.put(itemA.getName(), itemA);
+		repositoryItems.put(itemB.getName(), itemB);
+		repositoryItems.put(itemC.getName(), itemC);
+		repositoryItems.put(itemD.getName(), itemD);
+
+		ItemsRepository itemsRepository = new ItemsRepository(repositoryItems);
+
 		assertDoesNotThrow(() -> {
-			// Arrange
-			Item itemA = new Item("Item A");
-			Item itemB = new Item("Item B");
-			Item itemC = new Item("Item C");
-			Item itemD = new Item("Item D");
-
-			int itemAQuantity = 2;
-			int itemBQuantity = 5;
-			int itemCQuantity = 9;
-			int itemDQuantity = 1;
-
-			HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
-
-			inventoryItems.put(itemA, itemAQuantity);
-			inventoryItems.put(itemB, itemBQuantity);
-			inventoryItems.put(itemC, itemCQuantity);
-			inventoryItems.put(itemD, itemDQuantity);
-
-			Inventory inventory = new Inventory(inventoryItems);
-
-			HashMap<String, Item> repositoryItems = new HashMap<String, Item>();
-
-			repositoryItems.put(itemA.getName(), itemA);
-			repositoryItems.put(itemB.getName(), itemB);
-			repositoryItems.put(itemC.getName(), itemC);
-			repositoryItems.put(itemD.getName(), itemD);
-
-			ItemsRepository itemsRepository = new ItemsRepository(repositoryItems);
-
 			// Act
 			File tempFile = File.createTempFile("inventoryTests__storeOnJSON", ".tmp.json");
 			String tempFilePath = tempFile.getAbsolutePath().replace("\\", "/");
@@ -213,34 +204,31 @@ class InventoryTests {
 
 	@Test
 	void loadFromJSON() {
-		assertDoesNotThrow(() -> {
-			// Arrange
-			Item coal = new Item("coal");
-			Item wood = new Item("wood");
-			Item iron = new Item("iron");
-			Item stick = new Item("stick");
-			Item woodCraftingTable = new Item("wood crafting table");
+		// Arrange
+		Item coal = new Item("coal");
+		Item wood = new Item("wood");
+		Item iron = new Item("iron");
+		Item stick = new Item("stick");
+		Item woodCraftingTable = new Item("wood crafting table");
 
-			HashMap<String, Item> repositoryItems = new HashMap<String, Item>();
+		HashMap<String, Item> repositoryItems = new HashMap<String, Item>();
 
-			repositoryItems.put(coal.getName(), coal);
-			repositoryItems.put(wood.getName(), wood);
-			repositoryItems.put(iron.getName(), iron);
-			repositoryItems.put(stick.getName(), stick);
-			repositoryItems.put(woodCraftingTable.getName(), woodCraftingTable);
+		repositoryItems.put(coal.getName(), coal);
+		repositoryItems.put(wood.getName(), wood);
+		repositoryItems.put(iron.getName(), iron);
+		repositoryItems.put(stick.getName(), stick);
+		repositoryItems.put(woodCraftingTable.getName(), woodCraftingTable);
 
-			ItemsRepository itemsRepository = new ItemsRepository(repositoryItems);
+		ItemsRepository itemsRepository = new ItemsRepository(repositoryItems);
 
-			// Act
-			String jsonPath = Paths.get("test", "assets", "inventory.json").toString();
-			Inventory inventory = Inventory.loadFromJSON(jsonPath, itemsRepository);
+		// Act
+		String jsonPath = Paths.get("test", "assets", "inventory.json").toString();
+		Inventory inventory = assertDoesNotThrow(() -> Inventory.loadFromJSON(jsonPath, itemsRepository));
 
-			// Assert
-			Map<Item, Integer> expected = Map.of(wood, 2, iron, 7, woodCraftingTable, 1);
-			HashMap<Item, Integer> received = inventory.getItems();
+		// Assert
+		Map<Item, Integer> expected = Map.of(wood, 2, iron, 7, woodCraftingTable, 1);
+		HashMap<Item, Integer> received = inventory.getItems();
 
-			assertEquals(expected, received);
-		});
+		assertEquals(expected, received);
 	}
-
 }

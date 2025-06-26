@@ -41,47 +41,45 @@ class ItemsRepositoryTests {
 
 	@Test
 	void loadFromJSON() {
-		assertDoesNotThrow(() -> {
-			// Arrange
-			Item coal = new Item("coal");
-			Item wood = new Item("wood");
-			Item stick = new Item("stick");
-			Item furnace = new Item("furnace");
-			Item woodCraftingTable = new Item("wood crafting table");
+		// Arrange
+		Item coal = new Item("coal");
+		Item wood = new Item("wood");
+		Item stick = new Item("stick");
+		Item furnace = new Item("furnace");
+		Item woodCraftingTable = new Item("wood crafting table");
 
-			List<Ingredient> charcoalRecipeIngredients = List.of(new Ingredient(wood, 1));
-			Recipe charcoalRecipe = new Recipe(furnace, charcoalRecipeIngredients, 1, 1600);
+		List<Ingredient> charcoalRecipeIngredients = List.of(new Ingredient(wood, 1));
+		Recipe charcoalRecipe = new Recipe(furnace, charcoalRecipeIngredients, 1, 1600);
 
-			Item charcoal = new Item("charcoal", List.of(charcoalRecipe));
+		Item charcoal = new Item("charcoal", List.of(charcoalRecipe));
 
-			List<Ingredient> torchRecipe01Ingredients = List.of(new Ingredient(coal, 1), new Ingredient(stick, 1));
-			Recipe torchRecipe01 = new Recipe(woodCraftingTable, torchRecipe01Ingredients, 3, 1300);
+		List<Ingredient> torchRecipe01Ingredients = List.of(new Ingredient(coal, 1), new Ingredient(stick, 1));
+		Recipe torchRecipe01 = new Recipe(woodCraftingTable, torchRecipe01Ingredients, 3, 1300);
 
-			List<Ingredient> torchRecipe02Ingredients = List.of(new Ingredient(charcoal, 1), new Ingredient(stick, 1));
-			Recipe torchRecipe02 = new Recipe(torchRecipe02Ingredients, 3, 1400);
+		List<Ingredient> torchRecipe02Ingredients = List.of(new Ingredient(charcoal, 1), new Ingredient(stick, 1));
+		Recipe torchRecipe02 = new Recipe(torchRecipe02Ingredients, 3, 1400);
 
-			Item torch = new Item("torch", List.of(torchRecipe01, torchRecipe02));
+		Item torch = new Item("torch", List.of(torchRecipe01, torchRecipe02));
 
-			HashMap<String, Item> repositoryItems = new HashMap<String, Item>();
+		HashMap<String, Item> repositoryItems = new HashMap<String, Item>();
 
-			repositoryItems.put(coal.getName(), coal);
-			repositoryItems.put(wood.getName(), wood);
-			repositoryItems.put(stick.getName(), stick);
-			repositoryItems.put(furnace.getName(), furnace);
-			repositoryItems.put(woodCraftingTable.getName(), woodCraftingTable);
+		repositoryItems.put(coal.getName(), coal);
+		repositoryItems.put(wood.getName(), wood);
+		repositoryItems.put(stick.getName(), stick);
+		repositoryItems.put(furnace.getName(), furnace);
+		repositoryItems.put(woodCraftingTable.getName(), woodCraftingTable);
 
-			repositoryItems.put(charcoal.getName(), charcoal);
-			repositoryItems.put(torch.getName(), torch);
+		repositoryItems.put(charcoal.getName(), charcoal);
+		repositoryItems.put(torch.getName(), torch);
 
-			// Act
-			String jsonPath = Paths.get("test", "assets", "recipes.json").toString();
-			ItemsRepository itemsRepository = ItemsRepository.loadFromJSON(jsonPath);
+		// Act
+		String jsonPath = Paths.get("test", "assets", "recipes.json").toString();
+		ItemsRepository itemsRepository = assertDoesNotThrow(() -> ItemsRepository.loadFromJSON(jsonPath));
 
-			// Assert
-			ItemsRepository expected = new ItemsRepository(repositoryItems);
-			ItemsRepository received = itemsRepository;
+		// Assert
+		ItemsRepository expected = new ItemsRepository(repositoryItems);
+		ItemsRepository received = itemsRepository;
 
-			assertEquals(expected, received);
-		});
+		assertEquals(expected, received);
 	}
 }

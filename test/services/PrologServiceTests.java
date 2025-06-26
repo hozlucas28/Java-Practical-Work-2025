@@ -17,61 +17,59 @@ class PrologServiceTests {
 
 	@Test
 	void craftableItems() {
-		assertDoesNotThrow(() -> {
-			// Arrange
-			Item wood = new Item("wood");
-			Item iron = new Item("iron");
-			Item woodCraftingTable = new Item("wood crafting table");
+		// Arrange
+		Item wood = new Item("wood");
+		Item iron = new Item("iron");
+		Item woodCraftingTable = new Item("wood crafting table");
 
-			List<Ingredient> stickRecipeIngredients = List.of(new Ingredient(wood, 2));
-			Recipe stickRecipe = new Recipe(stickRecipeIngredients, 1400, 1);
-			List<Recipe> stickRecipes = List.of(stickRecipe);
+		List<Ingredient> stickRecipeIngredients = List.of(new Ingredient(wood, 2));
+		Recipe stickRecipe = new Recipe(stickRecipeIngredients, 1400, 1);
+		List<Recipe> stickRecipes = List.of(stickRecipe);
 
-			Item stick = new Item("stick", stickRecipes);
+		Item stick = new Item("stick", stickRecipes);
 
-			List<Ingredient> swordRecipeIngredients = List.of(new Ingredient(stick, 1), new Ingredient(iron, 3));
-			Recipe swordRecipe = new Recipe(woodCraftingTable, swordRecipeIngredients, 2100, 1);
-			List<Recipe> swordRecipes = List.of(swordRecipe);
+		List<Ingredient> swordRecipeIngredients = List.of(new Ingredient(stick, 1), new Ingredient(iron, 3));
+		Recipe swordRecipe = new Recipe(woodCraftingTable, swordRecipeIngredients, 2100, 1);
+		List<Recipe> swordRecipes = List.of(swordRecipe);
 
-			Item sword = new Item("sword", swordRecipes);
+		Item sword = new Item("sword", swordRecipes);
 
-			HashMap<String, Item> repositoryItems = new HashMap<String, Item>();
+		HashMap<String, Item> repositoryItems = new HashMap<String, Item>();
 
-			repositoryItems.put(wood.getName(), wood);
-			repositoryItems.put(iron.getName(), iron);
-			repositoryItems.put(woodCraftingTable.getName(), woodCraftingTable);
+		repositoryItems.put(wood.getName(), wood);
+		repositoryItems.put(iron.getName(), iron);
+		repositoryItems.put(woodCraftingTable.getName(), woodCraftingTable);
 
-			repositoryItems.put(stick.getName(), stick);
-			repositoryItems.put(sword.getName(), sword);
+		repositoryItems.put(stick.getName(), stick);
+		repositoryItems.put(sword.getName(), sword);
 
-			ItemsRepository itemsRepository = new ItemsRepository(repositoryItems);
+		ItemsRepository itemsRepository = new ItemsRepository(repositoryItems);
 
-			HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
+		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
 
-			inventoryItems.put(wood, 2);
-			inventoryItems.put(iron, 6);
-			inventoryItems.put(woodCraftingTable, 1);
+		inventoryItems.put(wood, 2);
+		inventoryItems.put(iron, 6);
+		inventoryItems.put(woodCraftingTable, 1);
 
-			Inventory inventory = new Inventory(inventoryItems);
+		Inventory inventory = new Inventory(inventoryItems);
 
-			PrologServiceBuilder prologServiceBuilder = new PrologServiceBuilder();
+		PrologServiceBuilder prologServiceBuilder = new PrologServiceBuilder();
 
-			PrologService prologService = prologServiceBuilder.setBaseItemFactName("base_item")
-					.setIngredientFactName("ingredient").setItemInInventoryFactName("have")
-					.setItemsRepository(itemsRepository).setInventory(inventory).build();
+		PrologService prologService = prologServiceBuilder.setBaseItemFactName("base_item")
+				.setIngredientFactName("ingredient").setItemInInventoryFactName("have")
+				.setItemsRepository(itemsRepository).setInventory(inventory).build();
 
-			// Act
-			HashMap<Item, Integer> craftableItems = prologService.craftableItems();
+		// Act
+		HashMap<Item, Integer> craftableItems = assertDoesNotThrow(() -> prologService.craftableItems());
 
-			// Assert
-			HashMap<Item, Integer> expected = new HashMap<Item, Integer>();
+		// Assert
+		HashMap<Item, Integer> expected = new HashMap<Item, Integer>();
 
-			expected.put(stick, 1);
-			expected.put(sword, 1);
+		expected.put(stick, 1);
+		expected.put(sword, 1);
 
-			HashMap<Item, Integer> received = craftableItems;
+		HashMap<Item, Integer> received = craftableItems;
 
-			assertEquals(expected, received);
-		});
+		assertEquals(expected, received);
 	}
 }

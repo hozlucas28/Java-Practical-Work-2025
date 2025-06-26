@@ -129,47 +129,48 @@ class CraftingSystemTests {
 
 	@Test
 	void getMissingIngredients() {
+		// Arrange
+		HashMap<Item, Integer> itemsInInventory = new HashMap<Item, Integer>();
+		Inventory inventory = new Inventory(itemsInInventory);
+		CraftingSystem craftingSystem = new CraftingSystem(inventory);
+
+		Item itemBase01 = new Item("Item base 01");
+		Item itemBase02 = new Item("Item base 02");
+		Item itemBase03 = new Item("Item base 03");
+		Item itemBase04 = new Item("Item base 04");
+
+		Item craftingTable = new Item("Crafting table");
+
+		Ingredient ingredient01 = new Ingredient(itemBase01, 1);
+		Ingredient ingredient02 = new Ingredient(itemBase02, 2);
+
+		Ingredient ingredient03 = new Ingredient(itemBase03, 3);
+		Ingredient ingredient04 = new Ingredient(itemBase04, 5);
+
+		List<Ingredient> ingredientsRecipe01 = List.of(ingredient01, ingredient02);
+		List<Ingredient> ingredientsRecipe02 = List.of(ingredient03, ingredient04);
+
+		Recipe recipe01 = new Recipe(ingredientsRecipe01, 1000, 2);
+		Recipe recipe02 = new Recipe(craftingTable, ingredientsRecipe02, 1250, 4);
+
+		Item itemToCraft01 = new Item("Item A01", List.of(recipe01));
+		Item itemToCraft02 = new Item("Item A02", List.of(recipe02));
+
+		HashMap<Item, Integer> itemsToCraft = new HashMap<Item, Integer>();
+
+		itemsToCraft.put(itemToCraft01, 1);
+		itemsToCraft.put(itemToCraft02, 5);
+
+		craftingSystem.setItemsToCraft(itemsToCraft);
+
 		assertDoesNotThrow(() -> {
-			// Arrange
-			HashMap<Item, Integer> itemsInInventory = new HashMap<Item, Integer>();
-			Inventory inventory = new Inventory(itemsInInventory);
-			CraftingSystem craftingSystem = new CraftingSystem(inventory);
-
-			Item itemBase01 = new Item("Item base 01");
-			Item itemBase02 = new Item("Item base 02");
-			Item itemBase03 = new Item("Item base 03");
-			Item itemBase04 = new Item("Item base 04");
-
-			Item craftingTable = new Item("Crafting table");
-
-			Ingredient ingredient01 = new Ingredient(itemBase01, 1);
-			Ingredient ingredient02 = new Ingredient(itemBase02, 2);
-
-			Ingredient ingredient03 = new Ingredient(itemBase03, 3);
-			Ingredient ingredient04 = new Ingredient(itemBase04, 5);
-
-			List<Ingredient> ingredientsRecipe01 = List.of(ingredient01, ingredient02);
-			List<Ingredient> ingredientsRecipe02 = List.of(ingredient03, ingredient04);
-
-			Recipe recipe01 = new Recipe(ingredientsRecipe01, 1000, 2);
-			Recipe recipe02 = new Recipe(craftingTable, ingredientsRecipe02, 1250, 4);
-
-			Item itemToCraft01 = new Item("Item A01", List.of(recipe01));
-			Item itemToCraft02 = new Item("Item A02", List.of(recipe02));
-
-			HashMap<Item, Integer> itemsToCraft = new HashMap<Item, Integer>();
-
-			itemsToCraft.put(itemToCraft01, 1);
-			itemsToCraft.put(itemToCraft02, 5);
-
-			craftingSystem.setItemsToCraft(itemsToCraft);
-
 			inventory.addItem(itemBase01, 1);
 			inventory.addItem(itemBase02, 1);
 			inventory.addItem(itemBase04, 4);
+		});
 
-			// Act
-			// @formatter:off
+		// Act
+		// @formatter:off
 			Map<Item, Map<Recipe, List<Ingredient>>> expected = Map.of(
 				itemToCraft01,
 				Map.of(
@@ -190,11 +191,10 @@ class CraftingSystemTests {
 			);
 			// @formatter:on
 
-			HashMap<Item, HashMap<Recipe, List<Ingredient>>> received = craftingSystem.getMissingIngredients();
+		HashMap<Item, HashMap<Recipe, List<Ingredient>>> received = craftingSystem.getMissingIngredients();
 
-			// Assert
-			assertEquals(expected, received);
-		});
+		// Assert
+		assertEquals(expected, received);
 	}
 
 	// TODO: test getMissingBaseIngredients() X
@@ -511,8 +511,6 @@ class CraftingSystemTests {
 		CraftingSystem craftingSystem = new CraftingSystem(inventory);
 
 		// Act within assert
-		assertThrows(ItemNotFoundException.class, () -> {
-			craftingSystem.undoLastCraft();
-		});
+		assertThrows(ItemNotFoundException.class, () -> craftingSystem.undoLastCraft());
 	}
 }
