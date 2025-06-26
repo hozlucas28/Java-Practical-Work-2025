@@ -139,28 +139,30 @@ public class CraftingSystem {
 			List<Recipe> recipes = item.getRecipes();
 			HashMap<Recipe, List<Ingredient>> ingredientsPerRecipe = new HashMap<Recipe, List<Ingredient>>();
 
-			for (Recipe recipe : recipes) {
-				List<Ingredient> recipeIngredients = recipe.getIngredients();
-				int recipeQuantityToCraft = recipe.getQuantityToCraft();
+			if (quantityToCraft > 0) {
+				for (Recipe recipe : recipes) {
+					List<Ingredient> recipeIngredients = recipe.getIngredients();
+					int recipeQuantityToCraft = recipe.getQuantityToCraft();
 
-				List<Ingredient> realRecipeIngredients = new ArrayList<Ingredient>();
+					List<Ingredient> realRecipeIngredients = new ArrayList<Ingredient>();
 
-				for (Ingredient ingredient : recipeIngredients) {
-					int realQuantity = (int) Math.ceil(quantityToCraft / (double) recipeQuantityToCraft)
-							* ingredient.getQuantity();
-					Ingredient realIngredient = new Ingredient(ingredient.getItem(), realQuantity);
+					for (Ingredient ingredient : recipeIngredients) {
+						int realQuantity = (int) Math.ceil(quantityToCraft / (double) recipeQuantityToCraft)
+								* ingredient.getQuantity();
+						Ingredient realIngredient = new Ingredient(ingredient.getItem(), realQuantity);
 
-					realRecipeIngredients.add(realIngredient);
+						realRecipeIngredients.add(realIngredient);
+					}
+
+					Optional<Item> craftingTable = recipe.getCraftingTable();
+
+					if (craftingTable.isPresent()) {
+						Ingredient table = new Ingredient(craftingTable.get(), 1);
+						realRecipeIngredients.add(table);
+					}
+
+					ingredientsPerRecipe.put(recipe, realRecipeIngredients);
 				}
-
-				Optional<Item> craftingTable = recipe.getCraftingTable();
-
-				if (craftingTable.isPresent()) {
-					Ingredient table = new Ingredient(craftingTable.get(), 1);
-					realRecipeIngredients.add(table);
-				}
-
-				ingredientsPerRecipe.put(recipe, realRecipeIngredients);
 			}
 
 			requiredIngredients.put(item, ingredientsPerRecipe);
@@ -170,7 +172,7 @@ public class CraftingSystem {
 	}
 
 	public HashMap<Item, HashMap<Recipe, List<Ingredient>>> getRequiredBaseIngredients() {
-		HashMap<Item, HashMap<Recipe, List<Ingredient>>> requiredBaseIngredients = new HashMap<>();
+		HashMap<Item, HashMap<Recipe, List<Ingredient>>> requiredBaseIngredients = new HashMap<Item, HashMap<Recipe, List<Ingredient>>>();
 
 		for (Map.Entry<Item, Integer> entry : this.itemsToCraft.entrySet()) {
 			Item item = entry.getKey();
@@ -179,9 +181,11 @@ public class CraftingSystem {
 			List<Recipe> recipes = item.getRecipes();
 			HashMap<Recipe, List<Ingredient>> ingredientsPerRecipe = new HashMap<>();
 
-			for (Recipe recipe : recipes) {
-				List<Ingredient> baseIngredients = getBaseIngredientsRecursive(recipe, quantityToCraft);
-				ingredientsPerRecipe.put(recipe, baseIngredients);
+			if (quantityToCraft > 0) {
+				for (Recipe recipe : recipes) {
+					List<Ingredient> baseIngredients = getBaseIngredientsRecursive(recipe, quantityToCraft);
+					ingredientsPerRecipe.put(recipe, baseIngredients);
+				}
 			}
 
 			requiredBaseIngredients.put(item, ingredientsPerRecipe);
@@ -277,15 +281,17 @@ public class CraftingSystem {
 				}
 			}
 
-			if (firstEmptyRecipe == null) {
+			if (this.itemsToCraft.get(itemToCraft) > 0 && firstEmptyRecipe == null) {
 				String errorMessage = String.format(
-						"Inventory doesn not have the necessary ingredients to craft %d of \"%s\" items with any recipe.",
+						"Inventory does not have the necessary ingredients to craft %d of \"%s\" items with any recipe.",
 						this.itemsToCraft.get(itemToCraft), itemToCraft.getName());
 
 				throw new NonCraftableItemException(errorMessage);
 			}
 
-			recipesToCraftPerItem.put(itemToCraft, firstEmptyRecipe);
+			if (this.itemsToCraft.get(itemToCraft) > 0) {
+				recipesToCraftPerItem.put(itemToCraft, firstEmptyRecipe);
+			}
 		}
 
 		for (Map.Entry<Item, Recipe> entry : recipesToCraftPerItem.entrySet()) {
@@ -310,11 +316,10 @@ public class CraftingSystem {
 
 			try {
 				this.inventory.addItem(itemToCraft, quantityToCraft);
+				this.history.addItem(itemToCraft, recipeToCraft, quantityToCraft);
 			} catch (OutOfRangeException e) {
 				// TODO
 			}
-
-			this.history.addItem(itemToCraft, recipeToCraft, quantityToCraft);
 		}
 	}
 
