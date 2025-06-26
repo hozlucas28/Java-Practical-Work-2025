@@ -30,7 +30,7 @@ class PrologServiceTests {
 			Item stick = new Item("stick", stickRecipes);
 
 			List<Ingredient> swordRecipeIngredients = List.of(new Ingredient(stick, 1), new Ingredient(iron, 3));
-			Recipe swordRecipe = new Recipe(swordRecipeIngredients, 2100, 1, woodCraftingTable);
+			Recipe swordRecipe = new Recipe(woodCraftingTable, swordRecipeIngredients, 2100, 1);
 			List<Recipe> swordRecipes = List.of(swordRecipe);
 
 			Item sword = new Item("sword", swordRecipes);

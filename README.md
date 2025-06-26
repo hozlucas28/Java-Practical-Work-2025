@@ -155,29 +155,30 @@ direction TB
 
 	    +String getName()
 	    +List~Recipe~ getRecipes()
-	    +bool isBase()
+	    +boolean isBase()
     }
 
     class Recipe {
+	    -Item craftingTable
 	    -List~Ingredient~ ingredients
 	    -int timeToCraftInMilliseconds
 	    -int quantityToCraft
-	    -Optional~Item~ craftingTable
 
+	    +Item getCraftingTable()
 	    +List~Item~ getIngredients()
 	    +int getTimeToCraftInMilliseconds()
 	    +int getQuantityToCraft()
+	    +boolean needsCraftingTable()
 	    +List~Item~ getBaseIngredients()
-	    +Optional~Item~ getCraftingTable()
     }
 
     class JSONRecipe {
         << Adapter >>
 
+	    -Item craftingTable
 	    -HashMap~String, Integer~ ingredients
 	    -int timeToCraftInMilliseconds
 	    -int quantityToCraft
-	    -Optional~Item~ craftingTable
 
 	    +static void linkItemsWithRecipes(HashMap~String, Item~ items, HashMap~String, List~JSONRecipe~~ recipesPerItem)
     }
@@ -223,10 +224,10 @@ direction TB
 	    +HashMap~Item, HashMap~Recipe, List~Ingredient~~~ getRequiredIngredients()
         +HashMap~Item, HashMap~Recipe, List~Ingredient~~~ getRequiredBaseIngredients()
         -List~Ingredient~ getBaseIngredientsRecursive(Recipe recipe, int totalToCraft)
-	    +bool canCraft()
+	    +boolean canCraft()
 	    +CraftingSystem setItemsToCraft(HashMap~Item, Integer~ items)
 	    +void craftItems()
-	    +bool undoLastCraft()
+	    +boolean undoLastCraft()
     }
 
     class CraftingHistory {

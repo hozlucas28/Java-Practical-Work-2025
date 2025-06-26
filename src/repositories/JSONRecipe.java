@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import exceptions.ItemNotFoundException;
 import exceptions.OutOfRangeException;
@@ -13,24 +12,23 @@ import recipe.Ingredient;
 import recipe.Recipe;
 
 class JSONRecipe {
+	private Item craftingTable;
 	private HashMap<String, Integer> ingredients;
 	private int timeToCraftInMilliseconds;
 	private int quantityToCraft;
-	private Optional<Item> craftingTable;
 
 	public JSONRecipe(HashMap<String, Integer> ingredients, int timeToCraftInMilliseconds, int quantityToCraft) {
+		this.craftingTable = null;
 		this.ingredients = ingredients;
 		this.timeToCraftInMilliseconds = timeToCraftInMilliseconds;
 		this.quantityToCraft = quantityToCraft;
-		this.craftingTable = Optional.empty();
 	}
 
-	public JSONRecipe(HashMap<String, Integer> ingredients, int timeInMilliseconds, int quantityToCraft,
-			Item craftingTable) {
+	public JSONRecipe(Item craftingTable, HashMap<String, Integer> ingredients, int timeInMilliseconds, int quantityToCraft) {
+		this.craftingTable = craftingTable;
 		this.ingredients = ingredients;
 		this.timeToCraftInMilliseconds = timeInMilliseconds;
 		this.quantityToCraft = quantityToCraft;
-		this.craftingTable = Optional.ofNullable(craftingTable);
 	}
 
 	public static void linkItemsWithRecipes(HashMap<String, Item> items,
@@ -79,10 +77,9 @@ class JSONRecipe {
 				}
 
 				// Append recipe to item
-				Recipe recipe = jsonRecipe.craftingTable.isPresent()
-						? new Recipe(ingredients, jsonRecipe.timeToCraftInMilliseconds, jsonRecipe.quantityToCraft,
-								jsonRecipe.craftingTable.get())
-						: new Recipe(ingredients, jsonRecipe.timeToCraftInMilliseconds, jsonRecipe.quantityToCraft);
+				Recipe recipe = jsonRecipe.craftingTable == null
+						? new Recipe(ingredients, jsonRecipe.timeToCraftInMilliseconds, jsonRecipe.quantityToCraft)
+						: new Recipe(jsonRecipe.craftingTable, ingredients, jsonRecipe.timeToCraftInMilliseconds, jsonRecipe.quantityToCraft);
 
 				itemRecipes.add(recipe);
 			}

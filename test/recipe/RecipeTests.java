@@ -19,11 +19,11 @@ class RecipeTests {
 		int timeToCraftInMilliseconds = 1000;
 		int quantityToCraft = 2;
 
-		Recipe recipe = new Recipe(ingredients, timeToCraftInMilliseconds, quantityToCraft, craftingTable);
+		Recipe recipe = new Recipe(craftingTable, ingredients, timeToCraftInMilliseconds, quantityToCraft);
 
 		// Act
 		Item expected = craftingTable;
-		Item received = recipe.getCraftingTable().get();
+		Item received = recipe.getCraftingTable();
 
 		// Assert
 		assertEquals(expected, received);

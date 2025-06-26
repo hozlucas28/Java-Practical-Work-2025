@@ -50,12 +50,12 @@ class ItemsRepositoryTests {
 			Item woodCraftingTable = new Item("wood crafting table");
 
 			List<Ingredient> charcoalRecipeIngredients = List.of(new Ingredient(wood, 1));
-			Recipe charcoalRecipe = new Recipe(charcoalRecipeIngredients, 1, 1600, furnace);
+			Recipe charcoalRecipe = new Recipe(furnace, charcoalRecipeIngredients, 1, 1600);
 
 			Item charcoal = new Item("charcoal", List.of(charcoalRecipe));
 
 			List<Ingredient> torchRecipe01Ingredients = List.of(new Ingredient(coal, 1), new Ingredient(stick, 1));
-			Recipe torchRecipe01 = new Recipe(torchRecipe01Ingredients, 3, 1300, woodCraftingTable);
+			Recipe torchRecipe01 = new Recipe(woodCraftingTable, torchRecipe01Ingredients, 3, 1300);
 
 			List<Ingredient> torchRecipe02Ingredients = List.of(new Ingredient(charcoal, 1), new Ingredient(stick, 1));
 			Recipe torchRecipe02 = new Recipe(torchRecipe02Ingredients, 3, 1400);

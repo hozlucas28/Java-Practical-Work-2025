@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import exceptions.ItemNotFoundException;
 import exceptions.NonCraftableItemException;
@@ -42,7 +41,7 @@ public class CraftingSystem {
 				Recipe recipe = recipeEntry.getKey();
 				List<Ingredient> ingredients = recipeEntry.getValue();
 
-				Item recipeCraftingTable = recipe.getCraftingTable().orElseGet(() -> null);
+				Item recipeCraftingTable = recipe.getCraftingTable();
 				int recipeQuantityToCraft = recipe.getQuantityToCraft();
 
 				Integer possibleCraftableUnits = null;
@@ -113,13 +112,6 @@ public class CraftingSystem {
 					}
 				}
 
-				Optional<Item> craftingTable = recipe.getCraftingTable();
-
-				if (craftingTable.isPresent() && this.inventory.getItemQuantity(craftingTable.get()) < 1) {
-					Ingredient table = new Ingredient(craftingTable.get(), 1);
-					missingRecipeIngredients.add(table);
-				}
-
 				missingIngredientsPerRecipe.put(recipe, missingRecipeIngredients);
 			}
 
@@ -146,19 +138,17 @@ public class CraftingSystem {
 
 					List<Ingredient> realRecipeIngredients = new ArrayList<Ingredient>();
 
+					if (recipe.needsCraftingTable()) {
+						Ingredient table = new Ingredient(recipe.getCraftingTable(), 1);
+						realRecipeIngredients.add(table);
+					}
+
 					for (Ingredient ingredient : recipeIngredients) {
 						int realQuantity = (int) Math.ceil(quantityToCraft / (double) recipeQuantityToCraft)
 								* ingredient.getQuantity();
 						Ingredient realIngredient = new Ingredient(ingredient.getItem(), realQuantity);
 
 						realRecipeIngredients.add(realIngredient);
-					}
-
-					Optional<Item> craftingTable = recipe.getCraftingTable();
-
-					if (craftingTable.isPresent()) {
-						Ingredient table = new Ingredient(craftingTable.get(), 1);
-						realRecipeIngredients.add(table);
 					}
 
 					ingredientsPerRecipe.put(recipe, realRecipeIngredients);
@@ -202,6 +192,12 @@ public class CraftingSystem {
 
 		int craftsNeeded = (int) Math.ceil(totalToCraft / (double) recipe.getQuantityToCraft());
 
+		Item craftingTable = recipe.getCraftingTable();
+
+		if (recipe.needsCraftingTable()) {
+			baseCount.put(craftingTable, 1);
+		}
+
 		for (Ingredient ingredient : ingredients) {
 			Item item = ingredient.getItem();
 			int itemQuantityNeeded = ingredient.getQuantity() * craftsNeeded;
@@ -217,16 +213,11 @@ public class CraftingSystem {
 					Item baseItem = baseIngredient.getItem();
 					int baseItemQuantity = baseIngredient.getQuantity();
 
-					baseCount.put(baseItem, baseCount.getOrDefault(baseItem, 0) + baseItemQuantity);
+					if (baseItem != craftingTable) {
+						baseCount.put(baseItem, baseCount.getOrDefault(baseItem, 0) + baseItemQuantity);
+					}
 				}
 			}
-		}
-
-		Optional<Item> craftingTable = recipe.getCraftingTable();
-
-		if (craftingTable.isPresent()) {
-			Item table = craftingTable.get();
-			baseCount.put(table, 1);
 		}
 
 		for (Map.Entry<Item, Integer> entry : baseCount.entrySet()) {

@@ -5,28 +5,27 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import inventory.Item;
 
 public class Recipe {
+	private final Item craftingTable;
 	private final List<Ingredient> ingredients;
 	private final int timeToCraftInMilliseconds;
 	private final int quantityToCraft;
-	private final Optional<Item> craftingTable;
 
 	public Recipe(List<Ingredient> ingredients, int timeToCraftInMilliseconds, int quantityToCraft) {
+		this.craftingTable = null;
 		this.ingredients = ingredients;
 		this.timeToCraftInMilliseconds = timeToCraftInMilliseconds;
 		this.quantityToCraft = quantityToCraft;
-		this.craftingTable = Optional.empty();
 	}
 
-	public Recipe(List<Ingredient> ingredients, int timeInMilliseconds, int quantityToCraft, Item craftingTable) {
+	public Recipe(Item craftingTable, List<Ingredient> ingredients, int timeInMilliseconds, int quantityToCraft) {
+		this.craftingTable = craftingTable;
 		this.ingredients = ingredients;
 		this.timeToCraftInMilliseconds = timeInMilliseconds;
 		this.quantityToCraft = quantityToCraft;
-		this.craftingTable = Optional.ofNullable(craftingTable);
 	}
 
 	public List<Ingredient> getIngredients() {
@@ -41,8 +40,12 @@ public class Recipe {
 		return this.quantityToCraft;
 	}
 
-	public Optional<Item> getCraftingTable() {
+	public Item getCraftingTable() {
 		return this.craftingTable;
+	}
+
+	public boolean needsCraftingTable() {
+		return this.craftingTable != null;
 	}
 
 	public List<Ingredient> getBaseIngredients() {

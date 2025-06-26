@@ -3,7 +3,6 @@ package services;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.jpl7.Compound;
 import org.jpl7.Query;
@@ -116,6 +115,18 @@ public class PrologService {
 				int quantityToCraft = recipe.getQuantityToCraft();
 				List<Ingredient> ingredients = recipe.getIngredients();
 
+				// Crafting table to prolog if it's exists
+				if (recipe.needsCraftingTable()) {
+					Item craftingTable = recipe.getCraftingTable();
+					String craftingTableName = craftingTable.getName();
+					int craftingTableQuantity = 1;
+
+					prologLine = String.format("%s(\"%s\", %d, \"%s\", %d).", this.ingredientFactName, itemName,
+							quantityToCraft, craftingTableName, craftingTableQuantity);
+					prologIngredients = prologIngredients == null ? prologLine
+							: String.format("%s\n%s", prologIngredients, prologLine);
+				}
+
 				// Ingredient to prolog
 				for (Ingredient ingredient : ingredients) {
 					Item ingredientItem = ingredient.getItem();
@@ -126,19 +137,6 @@ public class PrologService {
 							quantityToCraft, ingredientName, ingredientQuantity);
 					prologIngredients = prologIngredients == null ? prologLine
 							: String.format("%s\n%s", prologIngredients, prologLine);
-				}
-
-				Optional<Item> craftingTable = recipe.getCraftingTable();
-
-				// Crafting table to prolog if it's exists
-				if (craftingTable.isPresent()) {
-					Item craftingTableItem = craftingTable.get();
-					String craftingTableName = craftingTableItem.getName();
-					int craftingTableQuantity = 1;
-
-					prologLine = String.format("%s(\"%s\", %d, \"%s\", %d).", this.ingredientFactName, itemName,
-							quantityToCraft, craftingTableName, craftingTableQuantity);
-					prologIngredients = String.format("%s\n%s", prologIngredients, prologLine);
 				}
 			}
 		}

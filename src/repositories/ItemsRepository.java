@@ -92,9 +92,7 @@ public class ItemsRepository {
 					}
 
 					// Append recipe to list
-					JSONRecipe jsonRecipe = craftingTable == null
-							? new JSONRecipe(ingredients, timeToCraftInMilliseconds, quantityToCraft)
-							: new JSONRecipe(ingredients, timeToCraftInMilliseconds, quantityToCraft, craftingTable);
+					JSONRecipe jsonRecipe = new JSONRecipe(craftingTable, ingredients, timeToCraftInMilliseconds, quantityToCraft);
 
 					jsonItemRecipes.add(jsonRecipe);
 				}

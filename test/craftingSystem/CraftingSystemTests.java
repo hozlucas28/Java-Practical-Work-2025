@@ -27,12 +27,12 @@ class CraftingSystemTests {
 		Item woodCraftingTable = new Item("wood crafting table");
 
 		List<Ingredient> furnaceRecipeIngredients = List.of(new Ingredient(stone, 8));
-		Recipe furnaceRecipe = new Recipe(furnaceRecipeIngredients, 1250, 1, woodCraftingTable);
+		Recipe furnaceRecipe = new Recipe(woodCraftingTable, furnaceRecipeIngredients, 1250, 1);
 
 		Item furnace = new Item("furnace", List.of(furnaceRecipe));
 
 		List<Ingredient> swordRecipeIngredients = List.of(new Ingredient(iron, 4), new Ingredient(stick, 2));
-		Recipe swordRecipe = new Recipe(swordRecipeIngredients, 1750, 2, woodCraftingTable);
+		Recipe swordRecipe = new Recipe(woodCraftingTable, swordRecipeIngredients, 1750, 2);
 
 		Item sword = new Item("sword", List.of(swordRecipe));
 
@@ -87,7 +87,7 @@ class CraftingSystemTests {
 		Item woodCraftingTable = new Item("wood crafting table");
 
 		List<Ingredient> swordRecipeIngredients = List.of(new Ingredient(iron, 2), new Ingredient(stick, 1));
-		Recipe swordRecipe = new Recipe(swordRecipeIngredients, 2100, 1, woodCraftingTable);
+		Recipe swordRecipe = new Recipe(woodCraftingTable, swordRecipeIngredients, 2100, 1);
 
 		Item sword = new Item("sword", List.of(swordRecipe));
 
@@ -140,7 +140,7 @@ class CraftingSystemTests {
 			Item itemBase03 = new Item("Item base 03");
 			Item itemBase04 = new Item("Item base 04");
 
-			Item craftingTable = new Item("Crating table");
+			Item craftingTable = new Item("Crafting table");
 
 			Ingredient ingredient01 = new Ingredient(itemBase01, 1);
 			Ingredient ingredient02 = new Ingredient(itemBase02, 2);
@@ -152,7 +152,7 @@ class CraftingSystemTests {
 			List<Ingredient> ingredientsRecipe02 = List.of(ingredient03, ingredient04);
 
 			Recipe recipe01 = new Recipe(ingredientsRecipe01, 1000, 2);
-			Recipe recipe02 = new Recipe(ingredientsRecipe02, 1250, 4, craftingTable);
+			Recipe recipe02 = new Recipe(craftingTable, ingredientsRecipe02, 1250, 4);
 
 			Item itemToCraft01 = new Item("Item A01", List.of(recipe01));
 			Item itemToCraft02 = new Item("Item A02", List.of(recipe02));
@@ -182,10 +182,9 @@ class CraftingSystemTests {
 				Map.of(
 					recipe02,
 					List.of(
-						new Ingredient(itemBase03, 3 * 2),
-						new Ingredient(itemBase04, (5 * 2) - 4),
 						new Ingredient(craftingTable, 1),
-						new Ingredient(craftingTable, 1)
+						new Ingredient(itemBase03, 3 * 2),
+						new Ingredient(itemBase04, (5 * 2) - 4)
 					)
 				)
 			);
@@ -224,7 +223,7 @@ class CraftingSystemTests {
 		List<Ingredient> ingredientsRecipe02 = List.of(ingredient03, ingredient04);
 
 		Recipe recipe01 = new Recipe(ingredientsRecipe01, 1000, 2);
-		Recipe recipe02 = new Recipe(ingredientsRecipe02, 1250, 4, craftingTable);
+		Recipe recipe02 = new Recipe(craftingTable, ingredientsRecipe02, 1250, 4);
 
 		Item itemToCraft01 = new Item("Item A01", List.of(recipe01));
 		Item itemToCraft02 = new Item("Item A02", List.of(recipe02));
@@ -251,9 +250,9 @@ class CraftingSystemTests {
 			Map.of(
 				recipe02,
 				List.of(
+					new Ingredient(craftingTable, 1),
 					new Ingredient(item03, 3 * 2),
-					new Ingredient(item04, 5 * 2),
-					new Ingredient(craftingTable, 1)
+					new Ingredient(item04, 5 * 2)
 				)
 			)
 		);
@@ -274,14 +273,14 @@ class CraftingSystemTests {
 		Item woodCraftingTable = new Item("wood crafting table");
 
 		List<Ingredient> stickRecipeIngredients = List.of(new Ingredient(wood, 2));
-		Recipe stickRecipe = new Recipe(stickRecipeIngredients, 1400, 4, woodCraftingTable);
+		Recipe stickRecipe = new Recipe(woodCraftingTable, stickRecipeIngredients, 1400, 4);
 		List<Recipe> stickRecipes = List.of(stickRecipe);
 
 		Item stick = new Item("stick", stickRecipes);
 
 		List<Ingredient> swordRecipeIngredients = List.of(new Ingredient(stick, 1), new Ingredient(wood, 10),
 				new Ingredient(iron, 3));
-		Recipe swordRecipe = new Recipe(swordRecipeIngredients, 2100, 1, woodCraftingTable);
+		Recipe swordRecipe = new Recipe(woodCraftingTable, swordRecipeIngredients, 2100, 1);
 		List<Recipe> swordRecipes = List.of(swordRecipe);
 
 		Item sword = new Item("sword", swordRecipes);
@@ -325,7 +324,7 @@ class CraftingSystemTests {
 		Item woodCraftingTable = new Item("wood crafting table");
 
 		List<Ingredient> furnaceRecipeIngredients = List.of(new Ingredient(stone, 8));
-		Recipe furnaceRecipe = new Recipe(furnaceRecipeIngredients, 1250, 1, woodCraftingTable);
+		Recipe furnaceRecipe = new Recipe(woodCraftingTable, furnaceRecipeIngredients, 1250, 1);
 
 		Item furnace = new Item("furnace", List.of(furnaceRecipe));
 
@@ -354,7 +353,7 @@ class CraftingSystemTests {
 		Item woodCraftingTable = new Item("wood crafting table");
 
 		List<Ingredient> furnaceRecipeIngredients = List.of(new Ingredient(stone, 8));
-		Recipe furnaceRecipe = new Recipe(furnaceRecipeIngredients, 1250, 1, woodCraftingTable);
+		Recipe furnaceRecipe = new Recipe(woodCraftingTable, furnaceRecipeIngredients, 1250, 1);
 
 		Item furnace = new Item("furnace", List.of(furnaceRecipe));
 
@@ -382,7 +381,7 @@ class CraftingSystemTests {
 		Item woodCraftingTable = new Item("wood crafting table");
 
 		List<Ingredient> furnaceRecipeIngredients = List.of(new Ingredient(stone, 8));
-		Recipe furnaceRecipe = new Recipe(furnaceRecipeIngredients, 1250, 1, woodCraftingTable);
+		Recipe furnaceRecipe = new Recipe(woodCraftingTable, furnaceRecipeIngredients, 1250, 1);
 
 		Item furnace = new Item("furnace", List.of(furnaceRecipe));
 
@@ -423,7 +422,7 @@ class CraftingSystemTests {
 		Item woodCraftingTable = new Item("wood crafting table");
 
 		List<Ingredient> furnaceRecipeIngredients = List.of(new Ingredient(stone, 8));
-		Recipe furnaceRecipe = new Recipe(furnaceRecipeIngredients, 1250, 1, woodCraftingTable);
+		Recipe furnaceRecipe = new Recipe(woodCraftingTable, furnaceRecipeIngredients, 1250, 1);
 
 		Item furnace = new Item("furnace", List.of(furnaceRecipe));
 
@@ -455,7 +454,7 @@ class CraftingSystemTests {
 		Item woodCraftingTable = new Item("wood crafting table");
 
 		List<Ingredient> swordRecipeIngredients = List.of(new Ingredient(iron, 2), new Ingredient(stick, 1));
-		Recipe swordRecipe = new Recipe(swordRecipeIngredients, 2100, 1, woodCraftingTable);
+		Recipe swordRecipe = new Recipe(woodCraftingTable, swordRecipeIngredients, 2100, 1);
 
 		Item sword = new Item("sword", List.of(swordRecipe));
 
