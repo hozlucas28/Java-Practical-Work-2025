@@ -46,14 +46,14 @@ class CraftingHistoryTests {
 		Recipe usedRecipeCraftedItem01 = recipesCraftedItem01.get(0);
 		Recipe usedRecipeCraftedItem02 = recipesCraftedItem02.get(0);
 
-		craftingHistory.addItem(craftedItem01, usedRecipeCraftedItem01);
-		craftingHistory.addItem(craftedItem02, usedRecipeCraftedItem02);
+		craftingHistory.addItem(craftedItem01, usedRecipeCraftedItem01, 1);
+		craftingHistory.addItem(craftedItem02, usedRecipeCraftedItem02, 1);
 
 		// Act
 		List<CraftedItem> expected = new ArrayList<CraftedItem>();
 
-		expected.add(new CraftedItem(craftedItem01, usedRecipeCraftedItem01));
 		expected.add(new CraftedItem(craftedItem02, usedRecipeCraftedItem02));
+		expected.add(new CraftedItem(craftedItem01, usedRecipeCraftedItem01));
 
 		List<CraftedItem> received = craftingHistory.getItems();
 
@@ -93,8 +93,8 @@ class CraftingHistoryTests {
 		Recipe usedRecipeCraftedItem01 = recipesCraftedItem01.get(0);
 		Recipe usedRecipeCraftedItem02 = recipesCraftedItem02.get(0);
 
-		craftingHistory.addItem(craftedItem01, usedRecipeCraftedItem01);
-		craftingHistory.addItem(craftedItem02, usedRecipeCraftedItem02);
+		craftingHistory.addItem(craftedItem01, usedRecipeCraftedItem01, 1);
+		craftingHistory.addItem(craftedItem02, usedRecipeCraftedItem02, 1);
 
 		// Act
 		CraftedItem expected = new CraftedItem(craftedItem02, usedRecipeCraftedItem02);

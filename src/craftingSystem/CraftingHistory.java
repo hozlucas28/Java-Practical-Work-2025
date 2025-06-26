@@ -20,33 +20,24 @@ class CraftingHistory {
 	}
 
 	public CraftedItem getLastItem() throws ItemNotFoundException {
-		final int lastIndex = this.items.size() - 1;
-
-		if (lastIndex < 0) {
+		if (this.items.isEmpty()) {
 			throw new ItemNotFoundException("There are no crafted items within the `CraftingHistory` instance");
 		}
 
-		return this.items.get(lastIndex);
-	}
-
-	public void addItem(Item item, Recipe usedRecipe) {
-		CraftedItem craftedItem = new CraftedItem(item, usedRecipe);
-		this.items.add(craftedItem);
+		return this.items.get(0);
 	}
 
 	public void addItem(Item item, Recipe usedRecipe, int quantityCrafted) {
 		CraftedItem craftedItem = new CraftedItem(item, usedRecipe, quantityCrafted);
-		this.items.add(craftedItem);
+		this.items.add(0, craftedItem);
 	}
 
 	public CraftedItem removeLastItem() throws ItemNotFoundException {
-		final int lastIndex = this.items.size() - 1;
-
-		if (lastIndex < 0) {
+		if (this.items.isEmpty()) {
 			throw new ItemNotFoundException("There are no crafted items within the `CraftingHistory` instance");
 		}
 
-		CraftedItem lastCraftedItem = this.items.remove(lastIndex);
+		CraftedItem lastCraftedItem = this.items.remove(0);
 
 		return lastCraftedItem;
 	}

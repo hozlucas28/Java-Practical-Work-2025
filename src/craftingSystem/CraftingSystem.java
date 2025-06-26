@@ -14,11 +14,14 @@ import recipe.Ingredient;
 import recipe.Recipe;
 
 public class CraftingSystem {
+	private Item itemToCraft;
+	private int quantityToCraft;
 	private final Inventory inventory;
-	private HashMap<Item, Integer> itemsToCraft;
 	private final CraftingHistory history;
 
 	public CraftingSystem(Inventory inventory) {
+		this.itemToCraft = null;
+		this.quantityToCraft = 0;
 		this.inventory = inventory;
 		this.history = new CraftingHistory();
 	}
@@ -27,161 +30,128 @@ public class CraftingSystem {
 		return this.history.getItems();
 	}
 
-	public HashMap<Item, Integer> getCraftableUnits() {
-		HashMap<Item, Integer> craftableUnits = new HashMap<Item, Integer>();
-		HashMap<Item, HashMap<Recipe, List<Ingredient>>> requiredIngredientsPerItem = this.getRequiredIngredients();
+	public int getCraftableUnits() {
+		HashMap<Recipe, List<Ingredient>> ingredientsPerRecipe = this.getRequiredIngredients();
 
-		for (Map.Entry<Item, Integer> itemEntry : this.itemsToCraft.entrySet()) {
-			Item itemToCraft = itemEntry.getKey();
+		int maxCraftableUnits = 0;
 
-			int itemCraftableUnits = 0;
-			HashMap<Recipe, List<Ingredient>> itemRecipes = requiredIngredientsPerItem.get(itemToCraft);
+		for (Map.Entry<Recipe, List<Ingredient>> recipeEntry : ingredientsPerRecipe.entrySet()) {
+			Recipe recipe = recipeEntry.getKey();
+			List<Ingredient> ingredients = recipeEntry.getValue();
 
-			for (Map.Entry<Recipe, List<Ingredient>> recipeEntry : itemRecipes.entrySet()) {
-				Recipe recipe = recipeEntry.getKey();
-				List<Ingredient> ingredients = recipeEntry.getValue();
+			Item recipeCraftingTable = recipe.getCraftingTable();
+			int recipeQuantityToCraft = recipe.getQuantityToCraft();
 
-				Item recipeCraftingTable = recipe.getCraftingTable();
-				int recipeQuantityToCraft = recipe.getQuantityToCraft();
+			Integer minCraftableUnits = null;
 
-				Integer possibleCraftableUnits = null;
+			for (Ingredient ingredient : ingredients) {
+				Item item = ingredient.getItem();
+				int quantity = ingredient.getQuantity();
+				int quantityInInventory = this.inventory.getItemQuantity(item);
 
-				for (Ingredient ingredient : ingredients) {
-					Item item = ingredient.getItem();
-					int quantity = ingredient.getQuantity();
-					int quantityInInventory = this.inventory.getItemQuantity(item);
-
+				if (item == recipeCraftingTable) {
+					if (quantityInInventory < 1) {
+						minCraftableUnits = 0;
+						break;
+					}
+				} else {
 					int ingredientUnits = quantityInInventory / quantity;
 
-					if (item == recipeCraftingTable) {
-						if (quantityInInventory < 1) {
-							possibleCraftableUnits = 0;
-							break;
-						}
-					} else {
-						possibleCraftableUnits = possibleCraftableUnits == null ? ingredientUnits
-								: Math.min(possibleCraftableUnits, ingredientUnits);
-					}
+					minCraftableUnits = minCraftableUnits == null ? ingredientUnits
+							: Math.min(minCraftableUnits, ingredientUnits);
 				}
-
-				int totalCraftable = possibleCraftableUnits == null ? 0
-						: possibleCraftableUnits * recipeQuantityToCraft;
-
-				itemCraftableUnits = Math.max(itemCraftableUnits, totalCraftable);
 			}
 
-			craftableUnits.put(itemToCraft, itemCraftableUnits);
+			int craftableRecipeUnits = minCraftableUnits == null ? 0 : minCraftableUnits * recipeQuantityToCraft;
+
+			maxCraftableUnits = Math.max(maxCraftableUnits, craftableRecipeUnits);
 		}
 
-		return craftableUnits;
+		return maxCraftableUnits;
 	}
 
-	public HashMap<Item, HashMap<Recipe, List<Ingredient>>> getMissingIngredients() {
+	public HashMap<Recipe, List<Ingredient>> getMissingIngredients() {
 		return this.getMissingIngredients(this.getRequiredIngredients());
 	}
 
-	public HashMap<Item, HashMap<Recipe, List<Ingredient>>> getMissingBaseIngredients() {
-		// TODO: add parameter to select which path of recipes the algorithm should follow
+	public HashMap<Recipe, List<Ingredient>> getMissingBaseIngredients() {
+		// TODO: add parameter to select which path of recipes the algorithm should
+		// follow, and if the inventory have all the required items return empty list
 		return this.getMissingIngredients(this.getRequiredBaseIngredients());
 	}
 
-	private HashMap<Item, HashMap<Recipe, List<Ingredient>>> getMissingIngredients(
-			HashMap<Item, HashMap<Recipe, List<Ingredient>>> ingredients) {
-		HashMap<Item, HashMap<Recipe, List<Ingredient>>> missingIngredients = new HashMap<Item, HashMap<Recipe, List<Ingredient>>>();
+	private HashMap<Recipe, List<Ingredient>> getMissingIngredients(HashMap<Recipe, List<Ingredient>> recipes) {
+		HashMap<Recipe, List<Ingredient>> missingIngredientsPerRecipe = new HashMap<Recipe, List<Ingredient>>();
 
-		for (Map.Entry<Item, HashMap<Recipe, List<Ingredient>>> entry01 : ingredients.entrySet()) {
-			Item item = entry01.getKey();
-			HashMap<Recipe, List<Ingredient>> itemRecipes = entry01.getValue();
+		for (Map.Entry<Recipe, List<Ingredient>> recipeEntry : recipes.entrySet()) {
+			Recipe recipe = recipeEntry.getKey();
+			List<Ingredient> recipeIngredients = recipeEntry.getValue();
 
-			HashMap<Recipe, List<Ingredient>> missingIngredientsPerRecipe = new HashMap<Recipe, List<Ingredient>>();
+			List<Ingredient> missingRecipeIngredients = new ArrayList<Ingredient>();
 
-			for (Map.Entry<Recipe, List<Ingredient>> entry02 : itemRecipes.entrySet()) {
-				Recipe recipe = entry02.getKey();
-				List<Ingredient> recipeIngredients = entry02.getValue();
+			for (Ingredient ingredient : recipeIngredients) {
+				Item ingredientItem = ingredient.getItem();
+				int ingredientQuantity = ingredient.getQuantity();
+				int missingQuantity = ingredientQuantity - this.inventory.getItemQuantity(ingredientItem);
 
-				List<Ingredient> missingRecipeIngredients = new ArrayList<Ingredient>();
+				if (missingQuantity > 0) {
+					Ingredient missingIngredient = new Ingredient(ingredientItem, missingQuantity);
+					missingRecipeIngredients.add(missingIngredient);
+				}
+			}
+
+			missingIngredientsPerRecipe.put(recipe, missingRecipeIngredients);
+		}
+
+		return missingIngredientsPerRecipe;
+	}
+
+	public HashMap<Recipe, List<Ingredient>> getRequiredIngredients() {
+		HashMap<Recipe, List<Ingredient>> ingredientsPerRecipe = new HashMap<Recipe, List<Ingredient>>();
+
+		if (this.quantityToCraft > 0) {
+			List<Recipe> recipes = this.itemToCraft.getRecipes();
+
+			for (Recipe recipe : recipes) {
+				List<Ingredient> recipeIngredients = recipe.getIngredients();
+				int recipeQuantityToCraft = recipe.getQuantityToCraft();
+
+				List<Ingredient> realRecipeIngredients = new ArrayList<Ingredient>();
+
+				if (recipe.needsCraftingTable()) {
+					Ingredient table = new Ingredient(recipe.getCraftingTable(), 1);
+					realRecipeIngredients.add(table);
+				}
 
 				for (Ingredient ingredient : recipeIngredients) {
-					Item ingredientItem = ingredient.getItem();
-					int ingredientQuantity = ingredient.getQuantity();
-					int missingQuantity = ingredientQuantity - this.inventory.getItemQuantity(ingredientItem);
+					int realQuantity = (int) Math.ceil(this.quantityToCraft / (double) recipeQuantityToCraft)
+							* ingredient.getQuantity();
 
-					if (missingQuantity > 0) {
-						Ingredient missingIngredient = new Ingredient(ingredientItem, missingQuantity);
-						missingRecipeIngredients.add(missingIngredient);
-					}
+					Ingredient realIngredient = new Ingredient(ingredient.getItem(), realQuantity);
+
+					realRecipeIngredients.add(realIngredient);
 				}
 
-				missingIngredientsPerRecipe.put(recipe, missingRecipeIngredients);
+				ingredientsPerRecipe.put(recipe, realRecipeIngredients);
 			}
-
-			missingIngredients.put(item, missingIngredientsPerRecipe);
 		}
 
-		return missingIngredients;
+		return ingredientsPerRecipe;
 	}
 
-	public HashMap<Item, HashMap<Recipe, List<Ingredient>>> getRequiredIngredients() {
-		HashMap<Item, HashMap<Recipe, List<Ingredient>>> requiredIngredients = new HashMap<Item, HashMap<Recipe, List<Ingredient>>>();
+	public HashMap<Recipe, List<Ingredient>> getRequiredBaseIngredients() {
+		HashMap<Recipe, List<Ingredient>> ingredientsPerRecipe = new HashMap<Recipe, List<Ingredient>>();
 
-		for (Map.Entry<Item, Integer> entry : this.itemsToCraft.entrySet()) {
-			Item item = entry.getKey();
-			int quantityToCraft = entry.getValue();
+		if (this.quantityToCraft > 0) {
+			List<Recipe> recipes = this.itemToCraft.getRecipes();
 
-			List<Recipe> recipes = item.getRecipes();
-			HashMap<Recipe, List<Ingredient>> ingredientsPerRecipe = new HashMap<Recipe, List<Ingredient>>();
-
-			if (quantityToCraft > 0) {
-				for (Recipe recipe : recipes) {
-					List<Ingredient> recipeIngredients = recipe.getIngredients();
-					int recipeQuantityToCraft = recipe.getQuantityToCraft();
-
-					List<Ingredient> realRecipeIngredients = new ArrayList<Ingredient>();
-
-					if (recipe.needsCraftingTable()) {
-						Ingredient table = new Ingredient(recipe.getCraftingTable(), 1);
-						realRecipeIngredients.add(table);
-					}
-
-					for (Ingredient ingredient : recipeIngredients) {
-						int realQuantity = (int) Math.ceil(quantityToCraft / (double) recipeQuantityToCraft)
-								* ingredient.getQuantity();
-						Ingredient realIngredient = new Ingredient(ingredient.getItem(), realQuantity);
-
-						realRecipeIngredients.add(realIngredient);
-					}
-
-					ingredientsPerRecipe.put(recipe, realRecipeIngredients);
-				}
+			for (Recipe recipe : recipes) {
+				List<Ingredient> baseIngredients = getBaseIngredientsRecursive(recipe, this.quantityToCraft);
+				ingredientsPerRecipe.put(recipe, baseIngredients);
 			}
-
-			requiredIngredients.put(item, ingredientsPerRecipe);
 		}
 
-		return requiredIngredients;
-	}
-
-	public HashMap<Item, HashMap<Recipe, List<Ingredient>>> getRequiredBaseIngredients() {
-		HashMap<Item, HashMap<Recipe, List<Ingredient>>> requiredBaseIngredients = new HashMap<Item, HashMap<Recipe, List<Ingredient>>>();
-
-		for (Map.Entry<Item, Integer> entry : this.itemsToCraft.entrySet()) {
-			Item item = entry.getKey();
-			int quantityToCraft = entry.getValue();
-
-			List<Recipe> recipes = item.getRecipes();
-			HashMap<Recipe, List<Ingredient>> ingredientsPerRecipe = new HashMap<>();
-
-			if (quantityToCraft > 0) {
-				for (Recipe recipe : recipes) {
-					List<Ingredient> baseIngredients = getBaseIngredientsRecursive(recipe, quantityToCraft);
-					ingredientsPerRecipe.put(recipe, baseIngredients);
-				}
-			}
-
-			requiredBaseIngredients.put(item, ingredientsPerRecipe);
-		}
-
-		return requiredBaseIngredients;
+		return ingredientsPerRecipe;
 	}
 
 	private List<Ingredient> getBaseIngredientsRecursive(Recipe recipe, int totalToCraft) {
@@ -233,84 +203,65 @@ public class CraftingSystem {
 	}
 
 	public boolean canCraft() {
-		HashMap<Item, HashMap<Recipe, List<Ingredient>>> missingIngredientsPerItem = this.getMissingIngredients();
+		HashMap<Recipe, List<Ingredient>> missingIngredientsPerRecipe = this.getMissingIngredients();
 
-		for (HashMap<Recipe, List<Ingredient>> missingIngredientsPerRecipe : missingIngredientsPerItem.values()) {
-			for (List<Ingredient> missingIngredients : missingIngredientsPerRecipe.values()) {
-				if (!missingIngredients.isEmpty()) {
-					return false;
-				}
+		for (List<Ingredient> missingIngredients : missingIngredientsPerRecipe.values()) {
+			if (missingIngredients.isEmpty()) {
+				return true;
 			}
 		}
 
-		return true;
-	};
-
-	public CraftingSystem setItemsToCraft(HashMap<Item, Integer> items) {
-		this.itemsToCraft = items;
-		return this;
+		return false;
 	}
 
-	public void craftItems() throws NonCraftableItemException {
-		HashMap<Item, HashMap<Recipe, List<Ingredient>>> missingIngredientsPerItem = this.getMissingIngredients();
+	public void setItemToCraft(Item item, int quantity) {
+		this.itemToCraft = item;
+		this.quantityToCraft = quantity;
+	}
 
-		HashMap<Item, Recipe> recipesToCraftPerItem = new HashMap<Item, Recipe>();
+	public void craftItem() throws NonCraftableItemException {
+		Recipe firstEmptyRecipe = null;
+		HashMap<Recipe, List<Ingredient>> missingIngredientsPerRecipe = this.getMissingIngredients();
 
-		for (Map.Entry<Item, HashMap<Recipe, List<Ingredient>>> itemEntry : missingIngredientsPerItem.entrySet()) {
-			Item itemToCraft = itemEntry.getKey();
-			HashMap<Recipe, List<Ingredient>> recipes = itemEntry.getValue();
+		for (Map.Entry<Recipe, List<Ingredient>> recipeEntry : missingIngredientsPerRecipe.entrySet()) {
+			Recipe recipe = recipeEntry.getKey();
+			List<Ingredient> missingIngredients = recipeEntry.getValue();
 
-			Recipe firstEmptyRecipe = null;
-
-			for (Map.Entry<Recipe, List<Ingredient>> recipeEntry : recipes.entrySet()) {
-				Recipe recipe = recipeEntry.getKey();
-				List<Ingredient> missingIngredients = recipeEntry.getValue();
-
-				if (missingIngredients.isEmpty()) {
-					firstEmptyRecipe = recipe;
-					break;
-				}
-			}
-
-			if (this.itemsToCraft.get(itemToCraft) > 0 && firstEmptyRecipe == null) {
-				String errorMessage = String.format(
-						"Inventory does not have the necessary ingredients to craft %d of \"%s\" items with any recipe.",
-						this.itemsToCraft.get(itemToCraft), itemToCraft.getName());
-
-				throw new NonCraftableItemException(errorMessage);
-			}
-
-			if (this.itemsToCraft.get(itemToCraft) > 0) {
-				recipesToCraftPerItem.put(itemToCraft, firstEmptyRecipe);
+			if (missingIngredients.isEmpty()) {
+				firstEmptyRecipe = recipe;
+				break;
 			}
 		}
 
-		for (Map.Entry<Item, Recipe> entry : recipesToCraftPerItem.entrySet()) {
-			Item itemToCraft = entry.getKey();
-			Recipe recipeToCraft = entry.getValue();
+		if (this.quantityToCraft > 0 && firstEmptyRecipe == null) {
+			String errorMessage = String.format(
+					"Inventory does not have the necessary ingredients to craft %d of \"%s\" items with any recipe.",
+					this.quantityToCraft, this.itemToCraft.getName());
 
-			List<Ingredient> ingredientsToRemove = recipeToCraft.getBaseIngredients();
+			throw new NonCraftableItemException(errorMessage);
+		}
 
-			for (Ingredient ingredient : ingredientsToRemove) {
-				Item itemToRemove = ingredient.getItem();
-				int quantityToRemove = ingredient.getQuantity();
+		List<Ingredient> ingredientsToRemove = firstEmptyRecipe.getIngredients();
 
-				try {
-					this.inventory.removeItem(itemToRemove, quantityToRemove);
-				} catch (ItemNotFoundException | OutOfRangeException e) {
-					// TODO
-				}
-			}
-
-			int quantityToCraft = recipeToCraft.getQuantityToCraft()
-					* (int) Math.ceil(this.itemsToCraft.get(itemToCraft) / (double) recipeToCraft.getQuantityToCraft());
+		for (Ingredient ingredient : ingredientsToRemove) {
+			Item itemToRemove = ingredient.getItem();
+			int quantityToRemove = ingredient.getQuantity();
 
 			try {
-				this.inventory.addItem(itemToCraft, quantityToCraft);
-				this.history.addItem(itemToCraft, recipeToCraft, quantityToCraft);
-			} catch (OutOfRangeException e) {
+				this.inventory.removeItem(itemToRemove, quantityToRemove);
+			} catch (ItemNotFoundException | OutOfRangeException e) {
 				// TODO
 			}
+		}
+
+		int quantityToCraft = firstEmptyRecipe.getQuantityToCraft()
+				* (int) Math.ceil(this.quantityToCraft / (double) firstEmptyRecipe.getQuantityToCraft());
+
+		try {
+			this.inventory.addItem(this.itemToCraft, quantityToCraft);
+			this.history.addItem(this.itemToCraft, firstEmptyRecipe, quantityToCraft);
+		} catch (OutOfRangeException e) {
+			// TODO
 		}
 	}
 
