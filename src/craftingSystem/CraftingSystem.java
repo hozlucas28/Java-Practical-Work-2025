@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import exceptions.InvalidItemException;
 import exceptions.ItemNotFoundException;
 import exceptions.NonCraftableItemException;
 import exceptions.OutOfRangeException;
@@ -214,7 +215,11 @@ public class CraftingSystem {
 		return false;
 	}
 
-	public void setItemToCraft(Item item, int quantity) {
+	public void setItemToCraft(Item item, int quantity) throws InvalidItemException {
+		if (item.isBase()) {
+			throw new InvalidItemException("Item to craft should not be a base one");
+		}
+
 		this.itemToCraft = item;
 		this.quantityToCraft = quantity;
 	}

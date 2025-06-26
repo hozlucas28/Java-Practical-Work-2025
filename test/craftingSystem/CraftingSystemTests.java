@@ -46,20 +46,16 @@ class CraftingSystemTests {
 		Inventory inventory = new Inventory(inventoryItems);
 		CraftingSystem craftingSystem = new CraftingSystem(inventory);
 
-		// Acts within asserts
-		craftingSystem.setItemToCraft(sword, 2);
-
+		// Acts within assert
 		assertDoesNotThrow(() -> {
+			craftingSystem.setItemToCraft(sword, 2);
 			craftingSystem.craftItem();
-		}, "Should not throw an exception if it craft craftable items");
 
-		craftingSystem.setItemToCraft(furnace, 1);
-
-		assertDoesNotThrow(() -> {
+			craftingSystem.setItemToCraft(furnace, 1);
 			craftingSystem.craftItem();
-		}, "Should not throw an exception if it craft craftable items");
+		}, "Should not throw an exception if it want to craft non-base and craftable items with the inventory");
 
-		// Assert
+		// Asserts
 		// @formatter:off
 		List<CraftedItem> expected = List.of(
 			new CraftedItem(furnace, furnaceRecipe),
@@ -115,25 +111,27 @@ class CraftingSystemTests {
 		Inventory inventory = new Inventory(inventoryItems);
 		CraftingSystem craftingSystem = new CraftingSystem(inventory);
 
-		// Acts
-		craftingSystem.setItemToCraft(sword, 1);
-		int swordCraftableUnits = craftingSystem.getCraftableUnits();
+		// Acts within assert
+		assertDoesNotThrow(() -> {
+			craftingSystem.setItemToCraft(sword, 1);
+			int swordCraftableUnits = craftingSystem.getCraftableUnits();
 
-		craftingSystem.setItemToCraft(torch, 2);
-		int torchCraftableUnits = craftingSystem.getCraftableUnits();
+			craftingSystem.setItemToCraft(torch, 2);
+			int torchCraftableUnits = craftingSystem.getCraftableUnits();
 
-		// Asserts
-		int expectedSwordCraftableUnits = 2;
-		int receivedSwordCraftableUnits = swordCraftableUnits;
+			// Asserts
+			int expectedSwordCraftableUnits = 2;
+			int receivedSwordCraftableUnits = swordCraftableUnits;
 
-		int expectedTorchCraftableUnits = 3 * 4;
-		int receivedTorchCraftableUnits = torchCraftableUnits;
+			int expectedTorchCraftableUnits = 3 * 4;
+			int receivedTorchCraftableUnits = torchCraftableUnits;
 
-		assertEquals(expectedSwordCraftableUnits, receivedSwordCraftableUnits,
-				"Should return the maximum craftable swords");
+			assertEquals(expectedSwordCraftableUnits, receivedSwordCraftableUnits,
+					"Should return the maximum craftable swords");
 
-		assertEquals(expectedTorchCraftableUnits, receivedTorchCraftableUnits,
-				"Should return the maximum craftable torches");
+			assertEquals(expectedTorchCraftableUnits, receivedTorchCraftableUnits,
+					"Should return the maximum craftable torches");
+		}, "Should not throw an exception if it want to craft non-base items");
 	}
 
 	@Test
@@ -171,7 +169,7 @@ class CraftingSystemTests {
 			inventory.addItem(itemBase04, 4);
 		}, "Should not throw an exception if it craft craftable items");
 
-		// Act
+		// Acts within asserts
 		// @formatter:off
 		Map<Recipe, List<Ingredient>> expectedMissingIngredients01 = Map.of(
 			recipe01,
@@ -190,18 +188,20 @@ class CraftingSystemTests {
 		);
 		// @formatter:on
 
-		craftingSystem.setItemToCraft(itemToCraft01, 1);
-		HashMap<Recipe, List<Ingredient>> receivedMissingIngredients01 = craftingSystem.getMissingIngredients();
+		assertDoesNotThrow(() -> {
+			craftingSystem.setItemToCraft(itemToCraft01, 1);
+			HashMap<Recipe, List<Ingredient>> receivedMissingIngredients01 = craftingSystem.getMissingIngredients();
 
-		craftingSystem.setItemToCraft(itemToCraft02, 5);
-		HashMap<Recipe, List<Ingredient>> receivedMissingIngredients02 = craftingSystem.getMissingIngredients();
+			craftingSystem.setItemToCraft(itemToCraft02, 5);
+			HashMap<Recipe, List<Ingredient>> receivedMissingIngredients02 = craftingSystem.getMissingIngredients();
 
-		// Assert
-		assertEquals(expectedMissingIngredients01, receivedMissingIngredients01,
-				"Should return the missing ingredients to craft item 01 per recipe");
+			// Asserts
+			assertEquals(expectedMissingIngredients01, receivedMissingIngredients01,
+					"Should return the missing ingredients to craft item 01 per recipe");
 
-		assertEquals(expectedMissingIngredients02, receivedMissingIngredients02,
-				"Should return the missing ingredients to craft item 02 per recipe");
+			assertEquals(expectedMissingIngredients02, receivedMissingIngredients02,
+					"Should return the missing ingredients to craft item 02 per recipe");
+		}, "Should not throw an exception if it want to craft non-base items");
 	}
 
 	// TODO: test getMissingBaseIngredients() X
@@ -235,7 +235,7 @@ class CraftingSystemTests {
 		Item itemToCraft01 = new Item("Item A01", List.of(recipe01));
 		Item itemToCraft02 = new Item("Item A02", List.of(recipe02));
 
-		// Act
+		// Acts within asserts
 		// @formatter:off
 		Map<Recipe, List<Ingredient>> expectedRequiredIngredients01 = Map.of(
 			recipe01,
@@ -255,18 +255,20 @@ class CraftingSystemTests {
 		);
 		// @formatter:on
 
-		craftingSystem.setItemToCraft(itemToCraft01, 1);
-		HashMap<Recipe, List<Ingredient>> receivedRequiredIngredients01 = craftingSystem.getRequiredIngredients();
+		assertDoesNotThrow(() -> {
+			craftingSystem.setItemToCraft(itemToCraft01, 1);
+			HashMap<Recipe, List<Ingredient>> receivedRequiredIngredients01 = craftingSystem.getRequiredIngredients();
 
-		craftingSystem.setItemToCraft(itemToCraft02, 5);
-		HashMap<Recipe, List<Ingredient>> receivedRequiredIngredients02 = craftingSystem.getRequiredIngredients();
+			craftingSystem.setItemToCraft(itemToCraft02, 5);
+			HashMap<Recipe, List<Ingredient>> receivedRequiredIngredients02 = craftingSystem.getRequiredIngredients();
 
-		// Assert
-		assertEquals(expectedRequiredIngredients01, receivedRequiredIngredients01,
-				"Should return the required ingredients to craft item 01 per recipe");
+			// Asserts
+			assertEquals(expectedRequiredIngredients01, receivedRequiredIngredients01,
+					"Should return the required ingredients to craft item 01 per recipe");
 
-		assertEquals(expectedRequiredIngredients02, receivedRequiredIngredients02,
-				"Should return the required ingredients to craft item 02 per recipe");
+			assertEquals(expectedRequiredIngredients02, receivedRequiredIngredients02,
+					"Should return the required ingredients to craft item 02 per recipe");
+		}, "Should not throw an exception if it want to craft non-base items");
 	}
 
 	@Test
@@ -295,7 +297,9 @@ class CraftingSystemTests {
 		Inventory inventory = new Inventory(inventoryItems);
 		CraftingSystem craftingSystem = new CraftingSystem(inventory);
 
-		craftingSystem.setItemToCraft(sword, 2);
+		assertDoesNotThrow(() -> {
+			craftingSystem.setItemToCraft(sword, 2);
+		}, "Should not throw an exception if it want to craft a non-base item");
 
 		// Act
 		// @formatter:off
@@ -334,10 +338,13 @@ class CraftingSystemTests {
 		Inventory inventory = new Inventory(inventoryItems);
 		CraftingSystem craftingSystem = new CraftingSystem(inventory);
 
-		craftingSystem.setItemToCraft(furnace, 1);
+		// Act within asserts
+		assertDoesNotThrow(() -> {
+			craftingSystem.setItemToCraft(furnace, 1);
 
-		// Act within assert
-		assertTrue(craftingSystem.canCraft(), "Should be true on can craft 1 furnace");
+			// Assert
+			assertTrue(craftingSystem.canCraft(), "Should be true on can craft 1 furnace");
+		}, "Should not throw an exception if it want to craft non-base items");
 	}
 
 	@Test
@@ -358,11 +365,14 @@ class CraftingSystemTests {
 		Inventory inventory = new Inventory(inventoryItems);
 		CraftingSystem craftingSystem = new CraftingSystem(inventory);
 
-		craftingSystem.setItemToCraft(furnace, 1);
+		// Act within asserts
+		assertDoesNotThrow(() -> {
+			craftingSystem.setItemToCraft(furnace, 1);
 
-		// Act within assert
-		assertFalse(craftingSystem.canCraft(),
-				"Should be false, if crafting system can not craft 1 furnace because it have missing ingredients within inventory");
+			// Assert
+			assertFalse(craftingSystem.canCraft(),
+					"Should be false, if crafting system can not craft 1 furnace because it have missing ingredients within inventory");
+		}, "Should not throw an exception if it want to craft non-base items");
 	}
 
 	@Test
@@ -384,25 +394,25 @@ class CraftingSystemTests {
 		Inventory inventory = new Inventory(inventoryItems);
 		CraftingSystem craftingSystem = new CraftingSystem(inventory);
 
-		craftingSystem.setItemToCraft(furnace, 1);
-
 		// Act within assert
 		assertDoesNotThrow(() -> {
+			// Act
+			craftingSystem.setItemToCraft(furnace, 1);
 			craftingSystem.craftItem();
-		}, "Should not throw an exception if it craft a craftable item");
 
-		// Assert
-		HashMap<Item, Integer> expectedInventoryItems = new HashMap<Item, Integer>();
+			// Assert
+			HashMap<Item, Integer> expectedInventoryItems = new HashMap<Item, Integer>();
 
-		expectedInventoryItems.put(stone, 12 - 8);
-		expectedInventoryItems.put(woodCraftingTable, 2);
-		expectedInventoryItems.put(furnace, 1);
+			expectedInventoryItems.put(stone, 12 - 8);
+			expectedInventoryItems.put(woodCraftingTable, 2);
+			expectedInventoryItems.put(furnace, 1);
 
-		Inventory expectedInventory = new Inventory(expectedInventoryItems);
-		Inventory receivedInventory = inventory;
+			Inventory expectedInventory = new Inventory(expectedInventoryItems);
+			Inventory receivedInventory = inventory;
 
-		assertEquals(expectedInventory, receivedInventory,
-				"Inventory should have the quantity of crafted item, minus used ingredients to craft it");
+			assertEquals(expectedInventory, receivedInventory,
+					"Inventory should have the quantity of crafted item, minus used ingredients to craft it");
+		}, "Should not throw an exception if it want to craft a non-base and craftable item with the inventory");
 	}
 
 	@Test
@@ -424,11 +434,13 @@ class CraftingSystemTests {
 		Inventory inventory = new Inventory(inventoryItems);
 		CraftingSystem craftingSystem = new CraftingSystem(inventory);
 
-		craftingSystem.setItemToCraft(furnace, 1);
+		// Act within asserts
+		assertDoesNotThrow(() -> {
+			craftingSystem.setItemToCraft(furnace, 1);
 
-		// Act within assert
-		assertThrows(NonCraftableItemException.class, () -> craftingSystem.craftItem(),
-				"Should throw `NonCraftableItemException` on try to craft 1 furnace without the required ingredients within inventory");
+			assertThrows(NonCraftableItemException.class, () -> craftingSystem.craftItem(),
+					"Should throw `NonCraftableItemException` on try to craft 1 furnace without the required ingredients within inventory");
+		}, "Should not throw an exception if it want to craft non-base items");
 	}
 
 	@Test
