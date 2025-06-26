@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class PrologService {
+class PrologService {
 	private final String baseItemFactName;
 	private final String ingredientFactName;
 	private final String itemInInventoryFactName;
@@ -27,7 +27,7 @@ public class PrologService {
 	private final ItemsRepository itemsRepository;
 	private final Inventory inventory;
 
-	protected PrologService(PrologServiceBuilder builder) {
+	public PrologService(PrologServiceBuilder builder) {
 		this.baseItemFactName = builder.baseItemFactName;
 		this.ingredientFactName = builder.ingredientFactName;
 		this.itemInInventoryFactName = builder.itemInInventoryFactName;
