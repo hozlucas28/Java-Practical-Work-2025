@@ -6,5 +6,4 @@ public class NonCraftableItemException extends Exception {
 	public NonCraftableItemException(String message) {
 		super(message);
 	};
-
 }
