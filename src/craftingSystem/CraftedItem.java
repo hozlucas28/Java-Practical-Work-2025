@@ -6,7 +6,7 @@ import java.util.Objects;
 import inventory.Item;
 import recipe.Recipe;
 
-public class CraftedItem extends Item {
+class CraftedItem extends Item {
 	private final ZonedDateTime date;
 	private final Recipe usedRecipe;
 	private final int quantityCrafted;
