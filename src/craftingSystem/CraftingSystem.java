@@ -28,10 +28,53 @@ public class CraftingSystem {
 		return this.history.getItems();
 	}
 
-	public int getCraftableUnits() {
-		// TODO
+	public HashMap<Item, Integer> getCraftableUnits() {
+		HashMap<Item, Integer> craftableUnits = new HashMap<Item, Integer>();
+		HashMap<Item, HashMap<Recipe, List<Ingredient>>> requiredIngredientsPerItem = this.getRequiredIngredients();
 
-		return 0;
+		for (Map.Entry<Item, Integer> itemEntry : this.itemsToCraft.entrySet()) {
+			Item itemToCraft = itemEntry.getKey();
+
+			int itemCraftableUnits = 0;
+			HashMap<Recipe, List<Ingredient>> itemRecipes = requiredIngredientsPerItem.get(itemToCraft);
+
+			for (Map.Entry<Recipe, List<Ingredient>> recipeEntry : itemRecipes.entrySet()) {
+				Recipe recipe = recipeEntry.getKey();
+				List<Ingredient> ingredients = recipeEntry.getValue();
+
+				Item recipeCraftingTable = recipe.getCraftingTable().orElseGet(() -> null);
+				int recipeQuantityToCraft = recipe.getQuantityToCraft();
+
+				Integer possibleCraftableUnits = null;
+
+				for (Ingredient ingredient : ingredients) {
+					Item item = ingredient.getItem();
+					int quantity = ingredient.getQuantity();
+					int quantityInInventory = this.inventory.getItemQuantity(item);
+
+					int ingredientUnits = quantityInInventory / quantity;
+
+					if (item == recipeCraftingTable) {
+						if (quantityInInventory < 1) {
+							possibleCraftableUnits = 0;
+							break;
+						}
+					} else {
+						possibleCraftableUnits = possibleCraftableUnits == null ? ingredientUnits
+								: Math.min(possibleCraftableUnits, ingredientUnits);
+					}
+				}
+
+				int totalCraftable = possibleCraftableUnits == null ? 0
+						: possibleCraftableUnits * recipeQuantityToCraft;
+
+				itemCraftableUnits = Math.max(itemCraftableUnits, totalCraftable);
+			}
+
+			craftableUnits.put(itemToCraft, itemCraftableUnits);
+		}
+
+		return craftableUnits;
 	}
 
 	public HashMap<Item, HashMap<Recipe, List<Ingredient>>> getMissingIngredients() {

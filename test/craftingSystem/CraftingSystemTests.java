@@ -76,7 +76,56 @@ class CraftingSystemTests {
 		}
 	}
 
-	// TODO: test getCraftableUnits()
+	@Test
+	void getCraftableUnits() {
+		// Arrange
+		Item iron = new Item("iron");
+		Item coal = new Item("coal");
+		Item stick = new Item("stick");
+		Item charcoal = new Item("coal");
+
+		Item woodCraftingTable = new Item("wood crafting table");
+
+		List<Ingredient> swordRecipeIngredients = List.of(new Ingredient(iron, 2), new Ingredient(stick, 1));
+		Recipe swordRecipe = new Recipe(swordRecipeIngredients, 2100, 1, woodCraftingTable);
+
+		Item sword = new Item("sword", List.of(swordRecipe));
+
+		List<Ingredient> torchRecipe01Ingredients = List.of(new Ingredient(coal, 2), new Ingredient(stick, 1));
+		Recipe torchRecipe01 = new Recipe(torchRecipe01Ingredients, 750, 4);
+
+		List<Ingredient> torchRecipe02Ingredients = List.of(new Ingredient(charcoal, 1), new Ingredient(stick, 1));
+		Recipe torchRecipe02 = new Recipe(torchRecipe02Ingredients, 750, 4);
+
+		Item torch = new Item("torch", List.of(torchRecipe01, torchRecipe02));
+
+		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
+
+		inventoryItems.put(iron, 5);
+		inventoryItems.put(coal, 2);
+		inventoryItems.put(stick, 3);
+		inventoryItems.put(charcoal, 3);
+		inventoryItems.put(woodCraftingTable, 1);
+
+		Inventory inventory = new Inventory(inventoryItems);
+		CraftingSystem craftingSystem = new CraftingSystem(inventory);
+
+		HashMap<Item, Integer> itemsToCraft = new HashMap<Item, Integer>();
+
+		itemsToCraft.put(sword, 1);
+		itemsToCraft.put(torch, 2);
+
+		craftingSystem.setItemsToCraft(itemsToCraft);
+		
+		// Act
+		HashMap<Item, Integer> craftableUnits = craftingSystem.getCraftableUnits();
+
+		// Assert
+		Map<Item, Integer> expected = Map.of(sword, 2, torch, 12);
+		HashMap<Item, Integer> received = craftableUnits;
+		
+		assertEquals(expected, received);
+	}
 
 	@Test
 	void getMissingIngredients() {
