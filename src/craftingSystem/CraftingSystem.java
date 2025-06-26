@@ -255,7 +255,9 @@ public class CraftingSystem {
 			try {
 				this.inventory.removeItem(itemToRemove, quantityToRemove);
 			} catch (ItemNotFoundException | OutOfRangeException e) {
-				// TODO
+				// With an required ingredient quantity below the available one, and knowing
+				// that it exists inside the inventory, it's never throw an
+				// ItemNotFoundException or OutOfRangeException.
 			}
 		}
 
@@ -266,7 +268,8 @@ public class CraftingSystem {
 			this.inventory.addItem(this.itemToCraft, quantityToCraft);
 			this.history.addItem(this.itemToCraft, firstEmptyRecipe, quantityToCraft);
 		} catch (OutOfRangeException e) {
-			// TODO
+			// With a crafted item quantity greater than 1, it's never throw an
+			// OutOfRangeException.
 		}
 	}
 
