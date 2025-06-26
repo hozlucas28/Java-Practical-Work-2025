@@ -17,26 +17,26 @@ class ItemsRepositoryTests {
 	@Test
 	void getItem() {
 		// Arrange
-		Item item01 = new Item("My item A01");
-		Item item02 = new Item("My item A02");
-		Item item03 = new Item("My item A03");
-		Item item04 = new Item("My item A04");
+		Item diamond = new Item("diamond");
+		Item shovel = new Item("shovel");
+		Item meat = new Item("meat");
+		Item refinedStone = new Item("refined stone");
 
 		HashMap<String, Item> items = new HashMap<String, Item>();
 
-		items.put(item01.getName(), item01);
-		items.put(item02.getName(), item02);
-		items.put(item03.getName(), item03);
-		items.put(item04.getName(), item04);
+		items.put(diamond.getName(), diamond);
+		items.put(shovel.getName(), shovel);
+		items.put(meat.getName(), meat);
+		items.put(refinedStone.getName(), refinedStone);
 
 		ItemsRepository itemsRepository = new ItemsRepository(items);
 
 		// Act
-		Item expected = item03;
-		Item received = itemsRepository.getItem(item03.getName());
+		Item expected = meat;
+		Item received = itemsRepository.getItem(meat.getName());
 
 		// Assert
-		assertEquals(expected, received, "Should return the item from the repository");
+		assertEquals(expected, received, "Should return the meat item from the repository");
 	}
 
 	@Test

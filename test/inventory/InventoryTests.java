@@ -18,50 +18,48 @@ class InventoryTests {
 	@Test
 	void getItems() {
 		// Arrange
-		Item item01 = new Item("My item A01");
-		Item item02 = new Item("My item A02");
+		Item diamond = new Item("diamond");
+		Item cobblestone = new Item("cobblestone");
 
-		int item01Quantity = 1;
-		int item02Quantity = 3;
+		int diamondQuantity = 1;
+		int cobblestoneQuantity = 3;
 
 		HashMap<Item, Integer> items = new HashMap<Item, Integer>();
 
-		items.put(item01, item01Quantity);
-		items.put(item02, item02Quantity);
+		items.put(diamond, diamondQuantity);
+		items.put(cobblestone, cobblestoneQuantity);
 
 		Inventory inventory = new Inventory(items);
 
-		// Act
+		// Act within assert
 		HashMap<Item, Integer> expected = new HashMap<Item, Integer>();
 
-		expected.put(item01, item01Quantity);
-		expected.put(item02, item02Quantity);
+		expected.put(diamond, diamondQuantity);
+		expected.put(cobblestone, cobblestoneQuantity);
 
 		HashMap<Item, Integer> received = inventory.getItems();
 
-		// Assert
 		assertEquals(expected, received, "Should return the correct items and quantities within inventory");
 	}
 
 	@Test
 	void getItemQuantity() {
 		// Arrange
-		Item item = new Item("My item A");
+		Item gold = new Item("gold");
 
-		int itemQuantity = 7;
+		int goldQuantity = 7;
 
 		HashMap<Item, Integer> items = new HashMap<Item, Integer>();
 
-		items.put(item, itemQuantity);
+		items.put(gold, goldQuantity);
 
 		Inventory inventory = new Inventory(items);
 
-		// Act
-		int expected = itemQuantity;
-		int received = inventory.getItemQuantity(item);
+		// Act within assert
+		int expected = goldQuantity;
+		int received = inventory.getItemQuantity(gold);
 
-		// Assert
-		assertEquals(expected, received, "Should return the correct quantity of the stored item");
+		assertEquals(expected, received, "Should return the correct quantity of gold items within inventory");
 	}
 
 	@Test
@@ -70,20 +68,21 @@ class InventoryTests {
 		HashMap<Item, Integer> items = new HashMap<Item, Integer>();
 		Inventory inventory = new Inventory(items);
 
-		Item item = new Item("My item A");
+		Item redstone = new Item("redstone");
 
-		int itemQuantity = 7;
+		int redstoneQuantity = 7;
 
+		// Act within assert
 		assertDoesNotThrow(() -> {
 			// Act
-			inventory.addItem(item, itemQuantity);
+			inventory.addItem(redstone, redstoneQuantity);
 
-			int expected = itemQuantity;
-			int received = inventory.getItemQuantity(item);
+			int expected = redstoneQuantity;
+			int received = inventory.getItemQuantity(redstone);
 
 			// Assert
-			assertEquals(expected, received, "Should add the correct quantity to inventory");
-		}, "Should not throw an exception with a valid item quantity to add");
+			assertEquals(expected, received, "Should add the correct quantity of redstone to the inventory");
+		}, "Should not throw an exception with a valid redstone quantity to add");
 	}
 
 	@Test
@@ -92,103 +91,102 @@ class InventoryTests {
 		HashMap<Item, Integer> items = new HashMap<Item, Integer>();
 		Inventory inventory = new Inventory(items);
 
-		Item item = new Item("My item A");
+		Item compass = new Item("compass");
 
-		int itemQuantity = 0;
+		int compassQuantity = 0;
 
 		// Act within assert
-		assertThrows(OutOfRangeException.class, () -> inventory.addItem(item, itemQuantity),
-				"Should throw `OutOfRangeException` on add zero item to inventory");
+		assertThrows(OutOfRangeException.class, () -> inventory.addItem(compass, compassQuantity),
+				"Should throw `OutOfRangeException` on add zero compass items to the inventory");
 	}
 
 	@Test
 	void removeItem() {
 		// Arrange
-		Item item = new Item("My item A");
+		Item torch = new Item("torch");
 
-		int itemQuantity = 7;
+		int torchQuantity = 7;
 
 		HashMap<Item, Integer> items = new HashMap<Item, Integer>();
 
-		items.put(item, itemQuantity);
+		items.put(torch, torchQuantity);
 
 		Inventory inventory = new Inventory(items);
 
-		// Act
-		int quantityToRemove = 1;
-		assertDoesNotThrow(() -> inventory.removeItem(item, quantityToRemove),
-				"Should not throw an exception with a valid item quantity to remove");
+		// Act within assert
+		int torchesToRemove = 1;
+		assertDoesNotThrow(() -> inventory.removeItem(torch, torchesToRemove),
+				"Should not throw an exception with a valid torches quantity to remove");
 
-		int expected = itemQuantity - quantityToRemove;
-		int received = inventory.getItemQuantity(item);
+		int expected = torchQuantity - torchesToRemove;
+		int received = inventory.getItemQuantity(torch);
 
-		// Assert
-		assertEquals(expected, received, "Should decrease the quantity of the stored item");
+		assertEquals(expected, received, "Should decrease the quantity of the stored torches");
 	}
 
 	@Test
 	void removeItem__ItemNotFoundException() {
 		// Arrange
-		Item item = new Item("My item A");
+		Item shovel = new Item("shovel");
 
 		HashMap<Item, Integer> items = new HashMap<Item, Integer>();
 		Inventory inventory = new Inventory(items);
 
 		// Act within assert
-		assertThrows(ItemNotFoundException.class, () -> inventory.removeItem(item, 1),
-				"Should throw `ItemNotFoundException` on try to remove a missing item within inventory");
+		assertThrows(ItemNotFoundException.class, () -> inventory.removeItem(shovel, 1),
+				"Should throw `ItemNotFoundException` on try to remove a missing shovel within inventory");
 	}
 
 	@Test
 	void removeItem__OutOfRangeException() {
 		// Arrange
-		Item item = new Item("My item A");
+		Item fish = new Item("fish");
 
-		int itemQuantity = 7;
+		int fishQuantity = 7;
 
 		HashMap<Item, Integer> items = new HashMap<Item, Integer>();
 
-		items.put(item, itemQuantity);
+		items.put(fish, fishQuantity);
 
 		Inventory inventory = new Inventory(items);
 
 		// Act within assert
-		assertThrows(OutOfRangeException.class, () -> inventory.removeItem(item, 10),
-				"Should throw `OutOfRangeException` on try to remove an item above the stored quantity");
+		assertThrows(OutOfRangeException.class, () -> inventory.removeItem(fish, 10),
+				"Should throw `OutOfRangeException` on try to remove fish above the stored quantity");
 	}
 
 	@Test
 	void storeOnJSON() {
-
 		// Arrange
-		Item itemA = new Item("Item A");
-		Item itemB = new Item("Item B");
-		Item itemC = new Item("Item C");
-		Item itemD = new Item("Item D");
+		Item diamond = new Item("diamond");
+		Item redstone = new Item("redstone");
+		Item gold = new Item("gold");
+		Item iron = new Item("iron");
 
-		int itemAQuantity = 2;
-		int itemBQuantity = 5;
-		int itemCQuantity = 9;
-		int itemDQuantity = 1;
+		int diamondQuantity = 2;
+		int redstoneQuantity = 5;
+		int goldQuantity = 9;
+		int ironQuantity = 1;
 
 		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
 
-		inventoryItems.put(itemA, itemAQuantity);
-		inventoryItems.put(itemB, itemBQuantity);
-		inventoryItems.put(itemC, itemCQuantity);
-		inventoryItems.put(itemD, itemDQuantity);
+		inventoryItems.put(diamond, diamondQuantity);
+		inventoryItems.put(redstone, redstoneQuantity);
+		inventoryItems.put(gold, goldQuantity);
+		inventoryItems.put(iron, ironQuantity);
 
 		Inventory inventory = new Inventory(inventoryItems);
 
 		HashMap<String, Item> repositoryItems = new HashMap<String, Item>();
 
-		repositoryItems.put(itemA.getName(), itemA);
-		repositoryItems.put(itemB.getName(), itemB);
-		repositoryItems.put(itemC.getName(), itemC);
-		repositoryItems.put(itemD.getName(), itemD);
+		repositoryItems.put(diamond.getName(), diamond);
+		repositoryItems.put(redstone.getName(), redstone);
+		repositoryItems.put(gold.getName(), gold);
+		repositoryItems.put(iron.getName(), iron);
 
 		ItemsRepository itemsRepository = new ItemsRepository(repositoryItems);
 
+		// Act within assert
 		assertDoesNotThrow(() -> {
 			// Act
 			File tempFile = File.createTempFile("inventoryTests__storeOnJSON", ".tmp.json");

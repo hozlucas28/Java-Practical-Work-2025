@@ -17,91 +17,53 @@ class CraftingHistoryTests {
 	@Test
 	void addItems() {
 		// Arrange
-		Item item01 = new Item("My item A01");
-		Item item02 = new Item("My item A02");
+		Item stone = new Item("stone");
+		Item stick = new Item("stick");
 
-		Ingredient ingredient01 = new Ingredient(item01, 5);
-		Ingredient ingredient02 = new Ingredient(item02, 2);
+		Recipe refinedStoneCraftedRecipe = new Recipe(List.of(new Ingredient(stone, 5)), 2250, 3);
+		Recipe sturdyWoodCraftedRecipe = new Recipe(List.of(new Ingredient(stick, 2)), 1500, 1);
 
-		List<Ingredient> ingredients01 = new ArrayList<Ingredient>();
-		List<Ingredient> ingredients02 = new ArrayList<Ingredient>();
-
-		ingredients01.add(ingredient01);
-		ingredients02.add(ingredient02);
-
-		Recipe recipeItem03 = new Recipe(ingredients01, 2250, 3);
-		Recipe recipeItem04 = new Recipe(ingredients02, 1500, 1);
-
-		List<Recipe> recipesCraftedItem01 = new ArrayList<Recipe>();
-		List<Recipe> recipesCraftedItem02 = new ArrayList<Recipe>();
-
-		recipesCraftedItem01.add(recipeItem03);
-		recipesCraftedItem02.add(recipeItem04);
-
-		Item craftedItem01 = new Item("My item B01", recipesCraftedItem01);
-		Item craftedItem02 = new Item("My item B02", recipesCraftedItem02);
+		Item refinedStone = new Item("refined stone", List.of(refinedStoneCraftedRecipe));
+		Item sturdyWood = new Item("sturdy wood", List.of(sturdyWoodCraftedRecipe));
 
 		CraftingHistory craftingHistory = new CraftingHistory();
 
-		Recipe usedRecipeCraftedItem01 = recipesCraftedItem01.get(0);
-		Recipe usedRecipeCraftedItem02 = recipesCraftedItem02.get(0);
-
-		craftingHistory.addItem(craftedItem01, usedRecipeCraftedItem01, 1);
-		craftingHistory.addItem(craftedItem02, usedRecipeCraftedItem02, 1);
+		craftingHistory.addItem(refinedStone, refinedStoneCraftedRecipe, 1);
+		craftingHistory.addItem(sturdyWood, sturdyWoodCraftedRecipe, 1);
 
 		// Act
-		List<CraftedItem> expected = new ArrayList<CraftedItem>();
-
-		expected.add(new CraftedItem(craftedItem02, usedRecipeCraftedItem02));
-		expected.add(new CraftedItem(craftedItem01, usedRecipeCraftedItem01));
+		List<CraftedItem> expected = List.of(new CraftedItem(sturdyWood, refinedStoneCraftedRecipe),
+				new CraftedItem(refinedStone, sturdyWoodCraftedRecipe));
 
 		List<CraftedItem> received = craftingHistory.getItems();
 
 		// Assert
-		assertEquals(expected, received, "Should add crafted items to the crafting history");
+		assertEquals(expected, received, "Should add crafted items (refined stone and sturdy wood) to the crafting history");
 	}
 
 	@Test
 	void removeLastItem() {
 		// Arrange
-		Item item01 = new Item("My item A01");
-		Item item02 = new Item("My item A02");
+		Item stone = new Item("stone");
+		Item stick = new Item("stick");
 
-		Ingredient ingredient01 = new Ingredient(item01, 5);
-		Ingredient ingredient02 = new Ingredient(item02, 2);
+		Recipe refinedStoneCraftedRecipe = new Recipe(List.of(new Ingredient(stone, 5)), 2250, 3);
+		Recipe sturdyWoodCraftedRecipe = new Recipe(List.of(new Ingredient(stick, 2)), 1500, 1);
 
-		List<Ingredient> ingredients01 = new ArrayList<Ingredient>();
-		List<Ingredient> ingredients02 = new ArrayList<Ingredient>();
-
-		ingredients01.add(ingredient01);
-		ingredients02.add(ingredient02);
-
-		Recipe recipeItem03 = new Recipe(ingredients01, 2250, 3);
-		Recipe recipeItem04 = new Recipe(ingredients02, 1500, 1);
-
-		List<Recipe> recipesCraftedItem01 = new ArrayList<Recipe>();
-		List<Recipe> recipesCraftedItem02 = new ArrayList<Recipe>();
-
-		recipesCraftedItem01.add(recipeItem03);
-		recipesCraftedItem02.add(recipeItem04);
-
-		Item craftedItem01 = new Item("My item B01", recipesCraftedItem01);
-		Item craftedItem02 = new Item("My item B02", recipesCraftedItem02);
+		Item refinedStone = new Item("refined stone", List.of(refinedStoneCraftedRecipe));
+		Item sturdyWood = new Item("sturdy wood", List.of(sturdyWoodCraftedRecipe));
 
 		CraftingHistory craftingHistory = new CraftingHistory();
 
-		Recipe usedRecipeCraftedItem01 = recipesCraftedItem01.get(0);
-		Recipe usedRecipeCraftedItem02 = recipesCraftedItem02.get(0);
-
-		craftingHistory.addItem(craftedItem01, usedRecipeCraftedItem01, 1);
-		craftingHistory.addItem(craftedItem02, usedRecipeCraftedItem02, 1);
+		craftingHistory.addItem(refinedStone, refinedStoneCraftedRecipe, 1);
+		craftingHistory.addItem(sturdyWood, sturdyWoodCraftedRecipe, 1);
 
 		// Act
-		CraftedItem expected = new CraftedItem(craftedItem02, usedRecipeCraftedItem02);
+		CraftedItem expected = new CraftedItem(sturdyWood, sturdyWoodCraftedRecipe);
 		CraftedItem received = assertDoesNotThrow(() -> craftingHistory.removeLastItem());
 
 		// Assert
-		assertEquals(expected, received, "Should remove and return the last crafted item");
+		assertEquals(expected, received, "Should remove and return the last crafted item (sturdy wood)");
 	}
 
 	@Test

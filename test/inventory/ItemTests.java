@@ -15,69 +15,54 @@ class ItemTests {
 	@Test
 	void getName() {
 		// Arrange
-		String itemName = "My item";
-
-		Item item = new Item(itemName);
+		Item gold = new Item("gold");
 
 		// Act
-		String expected = itemName;
-		String received = item.getName();
+		String expected = "gold";
+		String received = gold.getName();
 
 		// Assert
-		assertEquals(expected, received, "Should return the item name");
+		assertEquals(expected, received, "Should return \"gold\" as name");
 	}
 
 	@Test
 	void getRecipes() {
 		// Arrange
-		Item item01 = new Item("My item A01");
-		Item item02 = new Item("My item A02");
-		Item item03 = new Item("My item A03");
-		Item item04 = new Item("My item A04");
+		Item diamond = new Item("diamond");
+		Item obsidian = new Item("obsidian");
+		Item book = new Item("book");
+		Item glass = new Item("glass");
 
-		Ingredient ingredient01 = new Ingredient(item01, 1);
-		Ingredient ingredient02 = new Ingredient(item02, 3);
-		Ingredient ingredient03 = new Ingredient(item03, 7);
-		Ingredient ingredient04 = new Ingredient(item04, 5);
+		List<Ingredient> enchantingTableRecipe01Ingredients = List.of(new Ingredient(book, 1), new Ingredient(diamond, 2),
+				new Ingredient(obsidian, 4));
+		
+		List<Ingredient> enchantingTableRecipe02Ingredients = List.of(new Ingredient(book, 1), new Ingredient(glass, 2),
+				new Ingredient(diamond, 4));
 
-		List<Ingredient> ingredients01 = new ArrayList<Ingredient>();
-		List<Ingredient> ingredients02 = new ArrayList<Ingredient>();
+		Recipe enchantingTableRecipe01 = new Recipe(enchantingTableRecipe01Ingredients, 1000, 1);
+		Recipe enchantingTableRecipe02 = new Recipe(enchantingTableRecipe02Ingredients, 1250, 3);
 
-		ingredients01.add(ingredient01);
-		ingredients01.add(ingredient02);
+		List<Recipe> enchantingTableRecipes = List.of(enchantingTableRecipe01, enchantingTableRecipe02);
 
-		ingredients02.add(ingredient03);
-		ingredients02.add(ingredient04);
-
-		Recipe recipe01 = new Recipe(ingredients01, 1000, 1);
-		Recipe recipe02 = new Recipe(ingredients02, 1250, 3);
-
-		List<Recipe> recipes = new ArrayList<Recipe>();
-
-		recipes.add(recipe01);
-		recipes.add(recipe02);
-
-		Item item = new Item("My item B", recipes);
+		Item enchantingTable = new Item("enchanting table", enchantingTableRecipes);
 
 		// Act
-		List<Recipe> expected = recipes;
-		List<Recipe> received = item.getRecipes();
+		List<Recipe> expected = enchantingTableRecipes;
+		List<Recipe> received = enchantingTable.getRecipes();
 
 		// Assert
-		assertEquals(expected, received, "Should return item recipes");
+		assertEquals(expected, received, "Should return enchanting table recipes");
 	}
 
 	@Test
 	void isBase() {
 		// Arrange
-		String itemName = "My item";
-
-		Item item = new Item(itemName);
+		Item iron = new Item("iron");
 
 		// Act
-		boolean received = item.isBase();
+		boolean received = iron.isBase();
 
 		// Assert
-		assertTrue(received, "Should return true if it is a base item");
+		assertTrue(received, "Should return true if iron is a base item");
 	}
 }

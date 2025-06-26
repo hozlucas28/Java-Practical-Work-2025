@@ -15,68 +15,56 @@ class RecipeTests {
 	void getCraftingTable() {
 		// Arrange
 		Item craftingTable = new Item("Crafting table");
-		List<Ingredient> ingredients = new ArrayList<Ingredient>();
-		int timeToCraftInMilliseconds = 1000;
-		int quantityToCraft = 2;
 
-		Recipe recipe = new Recipe(craftingTable, ingredients, timeToCraftInMilliseconds, quantityToCraft);
+		Recipe recipe = new Recipe(craftingTable, List.of(), 1000, 2);
 
-		// Act
+		// Act within assert
 		Item expected = craftingTable;
 		Item received = recipe.getCraftingTable();
 
-		// Assert
 		assertEquals(expected, received, "Should return the crafting table");
 	}
 
 	@Test
 	void getIngredients() {
 		// Arrange
-		List<Ingredient> ingredients = new ArrayList<Ingredient>();
-		int timeToCraftInMilliseconds = 1500;
-		int quantityToCraft = 7;
+		Item wood = new Item("wood");
+		List<Ingredient> ingredients = List.of(new Ingredient(wood, 5));
 
-		Recipe recipe = new Recipe(ingredients, timeToCraftInMilliseconds, quantityToCraft);
+		Recipe recipe = new Recipe(ingredients, 1500, 7);
 
-		// Act
+		// Act within assert
 		List<Ingredient> expected = ingredients;
 		List<Ingredient> received = recipe.getIngredients();
 
-		// Assert
 		assertEquals(expected, received, "Should return the list of ingredients");
 	}
 
 	@Test
 	void getTimeToCraftInMilliseconds() {
 		// Arrange
-		List<Ingredient> ingredients = new ArrayList<Ingredient>();
 		int timeToCraftInMilliseconds = 2000;
-		int quantityToCraft = 1;
 
-		Recipe recipe = new Recipe(ingredients, timeToCraftInMilliseconds, quantityToCraft);
+		Recipe recipe = new Recipe(List.of(), timeToCraftInMilliseconds, 1);
 
-		// Act
+		// Act within assert
 		int expected = timeToCraftInMilliseconds;
 		int received = recipe.getTimeToCraftInMilliseconds();
 
-		// Assert
 		assertEquals(expected, received, "Should return the crafting time in milliseconds");
 	}
 
 	@Test
 	void getQuantityToCraft() {
 		// Arrange
-		List<Ingredient> ingredients = new ArrayList<Ingredient>();
-		int timeToCraftInMilliseconds = 3000;
 		int quantityToCraft = 5;
 
-		Recipe recipe = new Recipe(ingredients, timeToCraftInMilliseconds, quantityToCraft);
+		Recipe recipe = new Recipe(List.of(), 3000, quantityToCraft);
 
-		// Act
+		// Act within assert
 		int expected = quantityToCraft;
 		int received = recipe.getQuantityToCraft();
 
-		// Assert
 		assertEquals(expected, received, "Should return the quantity to craft");
 	}
 

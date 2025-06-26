@@ -18,50 +18,43 @@ class CraftedItemTests {
 	@Test
 	void getDate() {
 		// Arrange
-		Item item = new Item("My item A");
+		Item woodenBlocks = new Item("wooden blocks");
 
-		Ingredient ingredient = new Ingredient(item, 1);
-		List<Ingredient> ingredients = new ArrayList<Ingredient>();
+		List<Ingredient> stairIngredients = List.of(new Ingredient(woodenBlocks, 1));
 
-		ingredients.add(ingredient);
+		Recipe craftedStairRecipe = new Recipe(stairIngredients, 1000, 1);
+		List<Recipe> stairRecipes = List.of(craftedStairRecipe);
 
-		Recipe craftedItemRecipe = new Recipe(ingredients, 1000, 1);
-		List<Recipe> craftedItemRecipes = new ArrayList<Recipe>();
+		Item stair = new Item("stair", stairRecipes);
 
-		craftedItemRecipes.add(craftedItemRecipe);
+		CraftedItem craftedStair = new CraftedItem(stair, craftedStairRecipe);
 
-		CraftedItem craftedItem = new CraftedItem(new Item("My item B", craftedItemRecipes), craftedItemRecipes.get(0));
-
-		// Act
+		// Act within assert
 		ZonedDateTime expected = ZonedDateTime.now();
-		ZonedDateTime received = craftedItem.getDate();
+		ZonedDateTime received = craftedStair.getDate();
 
-		// Assert
 		assertEquals(0, ChronoUnit.SECONDS.between(expected, received), "Should return the current time");
 	}
 
 	@Test
 	void getUsedRecipe() {
 		// Arrange
-		Item item = new Item("My item A");
+		Item iron = new Item("iron");
+		Item stick = new Item("stick");
 
-		Ingredient ingredient = new Ingredient(item, 1);
-		List<Ingredient> ingredients = new ArrayList<Ingredient>();
+		List<Ingredient> ingredients = List.of(new Ingredient(iron, 2), new Ingredient(stick, 1));
 
-		ingredients.add(ingredient);
+		Recipe craftedKnifeRecipe = new Recipe(ingredients, 1365, 1);
+		List<Recipe> knifeRecipes = List.of(craftedKnifeRecipe);
 
-		Recipe craftedItemRecipe = new Recipe(ingredients, 1000, 1);
-		List<Recipe> craftedItemRecipes = new ArrayList<Recipe>();
+		Item knife = new Item("knife", knifeRecipes);
 
-		craftedItemRecipes.add(craftedItemRecipe);
+		CraftedItem craftedKnife = new CraftedItem(knife, craftedKnifeRecipe);
 
-		CraftedItem craftedItem = new CraftedItem(new Item("My item B", craftedItemRecipes), craftedItemRecipes.get(0));
+		// Act within assert
+		Recipe expected = knifeRecipes.get(0);
+		Recipe received = craftedKnife.getUsedRecipe();
 
-		// Act
-		Recipe expected = craftedItemRecipes.get(0);
-		Recipe received = craftedItem.getUsedRecipe();
-
-		// Assert
-		assertEquals(expected, received, "Should return the recipe used to craft the item");
+		assertEquals(expected, received, "Should return the recipe used to craft the knife");
 	}
 }

@@ -11,32 +11,28 @@ class IngredientTests {
 	@Test
 	void getItem() {
 		// Arrange
-		Item item = new Item("My item A");
-		int itemQuantity = 2;
+		Item glass = new Item("glass");
+		Ingredient ingredient = new Ingredient(glass, 2);
 
-		Ingredient ingredient = new Ingredient(item, itemQuantity);
-
-		// Act
-		Item expected = item;
+		// Act within assert
+		Item expected = glass;
 		Item received = ingredient.getItem();
 
-		// Assert
-		assertEquals(expected, received, "Should return the necessary item for the ingredient");
+		assertEquals(expected, received, "Should return the necessary glass item for the ingredient");
 	}
 
 	@Test
 	void getQuantity() {
 		// Arrange
-		Item item = new Item("My item A");
-		int itemQuantity = 5;
+		Item stick = new Item("stick");
+		int stickQuantity = 5;
 
-		Ingredient ingredient = new Ingredient(item, itemQuantity);
+		Ingredient ingredient = new Ingredient(stick, stickQuantity);
 
-		// Act
-		int expected = itemQuantity;
+		// Act within assert
+		int expected = stickQuantity;
 		int received = ingredient.getQuantity();
 
-		// Assert
 		assertEquals(expected, received, "Should return ingredient quantity");
 	}
 }
