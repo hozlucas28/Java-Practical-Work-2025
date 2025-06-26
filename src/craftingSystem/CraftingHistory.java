@@ -8,7 +8,7 @@ import exceptions.ItemNotFoundException;
 import inventory.Item;
 import recipe.Recipe;
 
-public class CraftingHistory {
+class CraftingHistory {
 	private List<CraftedItem> items;
 
 	public CraftingHistory() {
