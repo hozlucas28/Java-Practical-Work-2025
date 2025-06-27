@@ -238,7 +238,7 @@ public class CraftingSystem {
 			}
 		}
 
-		if (this.quantityToCraft > 0 && firstEmptyRecipe == null) {
+		if (firstEmptyRecipe == null) {
 			String errorMessage = String.format(
 					"Inventory does not have the necessary ingredients to craft %d of \"%s\" items with any recipe.",
 					this.quantityToCraft, this.itemToCraft.getName());
