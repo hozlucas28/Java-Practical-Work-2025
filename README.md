@@ -118,6 +118,7 @@ direction TB
 	    +HashMap~String, Item~ getItems()
 	    +Item getItem(String name)
         +static ItemsRepository loadFromJSON(String path)
+        +String toString(String itemMarkers[], int lPadding)
     }
 
     class PrologService {
@@ -202,6 +203,7 @@ direction TB
 	    +void removeItem(Item item, int quantity)
         +void storeOnJSON(String path)
         +static Inventory loadFromJSON(String path)
+        +String toString(String itemMarker, int lPadding)
     }
 
     class Ingredient {
@@ -210,6 +212,7 @@ direction TB
 
 	    +Item getItem()
 	    +int getQuantity()
+        +String toString(String itemMarker, int lPadding)
     }
 
     class CraftingSystem {
