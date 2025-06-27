@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -20,6 +21,7 @@ import com.google.gson.JsonSyntaxException;
 import exceptions.ItemNotFoundException;
 import exceptions.OutOfRangeException;
 import repositories.ItemsRepository;
+import utilities.StringTransformers;
 
 public class Inventory {
 	private HashMap<Item, Integer> items;
@@ -118,6 +120,23 @@ public class Inventory {
 
 		return inventory;
 	}
+	
+	public String toString(String itemMarker, int lPadding) {
+		StringBuilder builder = new StringBuilder();
+		Formatter formatter = new Formatter(builder);
+
+		for (Map.Entry<Item, Integer> itemEntry : this.items.entrySet()) {
+			String itemName = itemEntry.getKey().getName();
+			Integer itemQuantity = itemEntry.getValue();
+
+			formatter.format("%" + lPadding + "s%s ", " ", itemMarker);
+			formatter.format("%s (x%d)\n", StringTransformers.toTitle(itemName), itemQuantity);
+		}
+
+		formatter.close();
+
+		return builder.toString().stripTrailing();
+	}
 
 	@Override
 	public int hashCode() {
@@ -137,9 +156,9 @@ public class Inventory {
 		if (this.getClass() != obj.getClass()) {
 			return false;
 		}
-		
+
 		Inventory other = (Inventory) obj;
-		
+
 		return Objects.equals(this.items, other.items);
 	}
 }

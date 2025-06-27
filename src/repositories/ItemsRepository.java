@@ -1,8 +1,11 @@
 package repositories;
 
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.io.InputStreamReader;
 import java.io.FileInputStream;
@@ -20,6 +23,9 @@ import com.google.gson.JsonObject;
 import exceptions.ItemNotFoundException;
 import exceptions.OutOfRangeException;
 import inventory.Item;
+import recipe.Ingredient;
+import recipe.Recipe;
+import utilities.StringTransformers;
 
 public class ItemsRepository {
 	private final HashMap<String, Item> items;
@@ -92,7 +98,8 @@ public class ItemsRepository {
 					}
 
 					// Append recipe to list
-					JSONRecipe jsonRecipe = new JSONRecipe(craftingTable, ingredients, timeToCraftInMilliseconds, quantityToCraft);
+					JSONRecipe jsonRecipe = new JSONRecipe(craftingTable, ingredients, timeToCraftInMilliseconds,
+							quantityToCraft);
 
 					jsonItemRecipes.add(jsonRecipe);
 				}
@@ -112,6 +119,49 @@ public class ItemsRepository {
 		ItemsRepository itemsRepository = new ItemsRepository(items);
 
 		return itemsRepository;
+	}
+
+	public String toString(String itemMarkers[], int lPadding) {
+		StringBuilder builder = new StringBuilder();
+		Formatter formatter = new Formatter(builder);
+
+		for (Map.Entry<String, Item> itemEntry : this.items.entrySet()) {
+			String itemName = itemEntry.getKey();
+			Item item = itemEntry.getValue();
+
+			formatter.format("%" + lPadding + "s%s ", " ", itemMarkers[0]);
+			formatter.format(StringTransformers.toTitle(itemName));
+
+			if (item.isBase()) {
+				formatter.format("\n");
+			} else {
+				formatter.format(":\n");
+				List<Recipe> itemRecipes = item.getRecipes();
+
+				for (int i = 0; i < itemRecipes.size(); i++) {
+					Recipe recipe = itemRecipes.get(i);
+					List<Ingredient> ingredients = recipe.getIngredients();
+
+					formatter.format("%" + lPadding * 2 + "s%s ", " ", itemMarkers[1]);
+					formatter.format("Recipe #%d:\n", i + 1);
+
+					if (recipe.needsCraftingTable()) {
+						String craftingTable = recipe.getCraftingTable().getName();
+
+						formatter.format("%" + lPadding * 3 + "s%s ", " ", itemMarkers[2]);
+						formatter.format("%s (x1)\n", StringTransformers.toTitle(craftingTable));
+					}
+
+					for (Ingredient ingredient : ingredients) {
+						formatter.format("%s\n", ingredient.toString(itemMarkers[2], lPadding * 3));
+					}
+				}
+			}
+		}
+
+		formatter.close();
+
+		return builder.toString().stripTrailing();
 	}
 
 	@Override
