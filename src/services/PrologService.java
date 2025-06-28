@@ -1,5 +1,6 @@
 package services;
 
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,11 +90,13 @@ class PrologService {
 	}
 
 	private String toProlog(ItemsRepository itemsRepository) {
-		String prologLine;
-		String prologBaseItems = null;
-		String prologIngredients = null;
+		StringBuilder prologLinesBuilder = new StringBuilder();
+		Formatter prologLinesFormatter = new Formatter(prologLinesBuilder);
 
 		HashMap<String, Item> repositoryItems = itemsRepository.getItems();
+
+		StringBuilder ingredientsBuilder = new StringBuilder();
+		Formatter ingredientsFormatter = new Formatter(ingredientsBuilder);
 
 		// Migrate base items and ingredients to prolog
 		for (Map.Entry<String, Item> entry : repositoryItems.entrySet()) {
@@ -102,10 +105,7 @@ class PrologService {
 
 			// Base item to prolog
 			if (item.isBase()) {
-				prologLine = String.format("%s(\"%s\").", this.baseItemFactName, itemName);
-				prologBaseItems = prologBaseItems == null ? prologLine
-						: String.format("%s\n%s", prologBaseItems, prologLine);
-
+				prologLinesFormatter.format("%s(\"%s\").\n", this.baseItemFactName, itemName);
 				continue;
 			}
 
@@ -121,10 +121,8 @@ class PrologService {
 					String craftingTableName = craftingTable.getName();
 					int craftingTableQuantity = 1;
 
-					prologLine = String.format("%s(\"%s\", %d, \"%s\", %d).", this.ingredientFactName, itemName,
+					ingredientsFormatter.format("%s(\"%s\", %d, \"%s\", %d).\n", this.ingredientFactName, itemName,
 							quantityToCraft, craftingTableName, craftingTableQuantity);
-					prologIngredients = prologIngredients == null ? prologLine
-							: String.format("%s\n%s", prologIngredients, prologLine);
 				}
 
 				// Ingredient to prolog
@@ -133,30 +131,27 @@ class PrologService {
 					String ingredientName = ingredientItem.getName();
 					int ingredientQuantity = ingredient.getQuantity();
 
-					prologLine = String.format("%s(\"%s\", %d, \"%s\", %d).", this.ingredientFactName, itemName,
+					ingredientsFormatter.format("%s(\"%s\", %d, \"%s\", %d).\n", this.ingredientFactName, itemName,
 							quantityToCraft, ingredientName, ingredientQuantity);
-					prologIngredients = prologIngredients == null ? prologLine
-							: String.format("%s\n%s", prologIngredients, prologLine);
 				}
 			}
 		}
 
-		String prologLines = "";
+		prologLinesFormatter.close();
+		ingredientsFormatter.close();
 
-		if (prologBaseItems != null) {
-			prologLines = prologBaseItems;
+		if (prologLinesBuilder.isEmpty()) {
+			prologLinesBuilder.append("\n");
 		}
 
-		if (prologIngredients != null) {
-			prologLines = String.format("%s\n\n%s", prologLines, prologIngredients);
-		}
+		prologLinesBuilder.append(ingredientsBuilder);
 
-		return prologLines;
+		return prologLinesBuilder.toString();
 	}
 
 	private String toProlog(Inventory inventory) {
-		String prologLine;
-		String prologLines = null;
+		StringBuilder prologLinesBuilder = new StringBuilder();
+		Formatter prologLinesFormatter = new Formatter(prologLinesBuilder);
 
 		HashMap<Item, Integer> inventoryItems = inventory.getItems();
 
@@ -165,11 +160,12 @@ class PrologService {
 			String itemName = item.getName();
 			Integer itemQuantity = entry.getValue();
 
-			prologLine = String.format("%s(\"%s\", %d).", this.itemInInventoryFactName, itemName, itemQuantity);
-			prologLines = prologLines == null ? prologLine : String.format("%s\n%s", prologLines, prologLine);
+			prologLinesFormatter.format("%s(\"%s\", %d).\n", this.itemInInventoryFactName, itemName, itemQuantity);
 		}
+		
+		prologLinesFormatter.close();
 
-		return prologLines == null ? "" : prologLines;
+		return prologLinesBuilder.toString();
 	}
 
 	private String utilityRules() {
