@@ -57,7 +57,7 @@ public class Main {
 
 		// Print items within inventory
 		System.out.println("\n> Inventory:");
-		System.out.println(inventory.toString("•", 2));
+		System.out.printf("%s\n\n", inventory.toString("•", 2));
 
 		// Create and initialize menu
 		Menu menu = new Menu(inventory, itemsRepository);
