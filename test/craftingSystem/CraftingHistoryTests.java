@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import exceptions.EmptyHistoryException;
 import exceptions.ItemNotFoundException;
 import inventory.Item;
 import recipe.Ingredient;
@@ -66,12 +67,12 @@ class CraftingHistoryTests {
 	}
 
 	@Test
-	void removeLastItem__ItemNotFoundException() {
+	void removeLastItem__EmptyHistoryException() {
 		// Arrange
 		CraftingHistory craftingHistory = new CraftingHistory();
 
 		// Act within assert
-		assertThrows(ItemNotFoundException.class, () -> craftingHistory.removeLastItem(),
-				"Should throw `ItemNotFoundException` when the crafting history is empty");
+		assertThrows(EmptyHistoryException.class, () -> craftingHistory.removeLastItem(),
+				"Should throw `EmptyHistoryException` when the crafting history is empty");
 	}
 }

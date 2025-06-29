@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import exceptions.EmptyHistoryException;
 import exceptions.ItemNotFoundException;
 import exceptions.NonCraftableItemException;
 import inventory.Inventory;
@@ -484,12 +485,42 @@ class CraftingSystemTests {
 	}
 
 	@Test
-	void undoLastCraft__ItemNotFoundException() {
+	void undoLastCraft__EmptyHistoryException() {
 		// Arrange
 		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
 
 		Inventory inventory = new Inventory(inventoryItems);
 		CraftingSystem craftingSystem = new CraftingSystem(inventory);
+
+		// Act within assert
+		assertThrows(EmptyHistoryException.class, () -> craftingSystem.undoLastCraft(),
+				"If the crafted history is empty, it should throw `EmptyHistoryException` on try to undo the last craft");
+	}
+
+	@Test
+	void undoLastCraft__ItemNotFoundException() {
+		// Arrange
+		Item stone = new Item("stone");
+		Item woodCraftingTable = new Item("wood crafting table");
+
+		List<Ingredient> furnaceRecipeIngredients = List.of(new Ingredient(stone, 8));
+		Recipe furnaceRecipe = new Recipe(woodCraftingTable, furnaceRecipeIngredients, 1250, 1);
+
+		Item furnace = new Item("furnace", List.of(furnaceRecipe));
+
+		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
+
+		inventoryItems.put(stone, 12);
+		inventoryItems.put(woodCraftingTable, 2);
+
+		Inventory inventory = new Inventory(inventoryItems);
+		CraftingSystem craftingSystem = new CraftingSystem(inventory);
+
+		assertDoesNotThrow(() -> {
+			craftingSystem.setItemToCraft(furnace, 1);
+			craftingSystem.craftItem();
+			inventory.removeItem(furnace, 1);
+		}, "Should not throw an exception if it want to craft a non-base and craftable item with the inventory");
 
 		// Act within assert
 		assertThrows(ItemNotFoundException.class, () -> craftingSystem.undoLastCraft(),
