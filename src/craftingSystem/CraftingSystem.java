@@ -224,7 +224,7 @@ public class CraftingSystem {
 		this.quantityToCraft = quantity;
 	}
 
-	public void craftItem() throws NonCraftableItemException {
+	public int craftItem() throws NonCraftableItemException {
 		Recipe firstEmptyRecipe = null;
 		HashMap<Recipe, List<Ingredient>> missingIngredientsPerRecipe = this.getMissingIngredients();
 
@@ -261,16 +261,18 @@ public class CraftingSystem {
 			}
 		}
 
-		int quantityToCraft = firstEmptyRecipe.getQuantityToCraft()
+		int itemsCrafted = firstEmptyRecipe.getQuantityToCraft()
 				* (int) Math.ceil(this.quantityToCraft / (double) firstEmptyRecipe.getQuantityToCraft());
 
 		try {
-			this.inventory.addItem(this.itemToCraft, quantityToCraft);
-			this.history.addItem(this.itemToCraft, firstEmptyRecipe, quantityToCraft);
+			this.inventory.addItem(this.itemToCraft, itemsCrafted);
+			this.history.addItem(this.itemToCraft, firstEmptyRecipe, itemsCrafted);
 		} catch (OutOfRangeException e) {
 			// With a crafted item quantity greater than 1, it's never throw an
 			// OutOfRangeException.
 		}
+
+		return itemsCrafted;
 	}
 
 	public void undoLastCraft() throws ItemNotFoundException {
