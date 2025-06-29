@@ -39,10 +39,11 @@ class Menu {
 		this.setItemToCraft();
 
 		int option = 0;
+		String itemToCraftName = this.itemToCraft.getName();
 
 		do {
 			System.out.println();
-			option = requestOperation(this.itemToCraft.getName(), this.quantityToCraft);
+			option = requestOperation(itemToCraftName, this.quantityToCraft);
 			System.out.println();
 
 			switch (option) {
@@ -50,10 +51,10 @@ class Menu {
 				try {
 					int itemsCrafted = this.craftingSystem.craftItem();
 
-					System.out.printf("> %d %ss crafted.\n", itemsCrafted, this.itemToCraft.getName());
+					System.out.printf("> %d %ss crafted.\n", itemsCrafted, itemToCraftName);
 				} catch (NonCraftableItemException e) {
 					System.out.printf("> You don't have the required ingredients to craft %d %ss.\n",
-							this.quantityToCraft, this.itemToCraft.getName());
+							this.quantityToCraft, itemToCraftName);
 				}
 				break;
 
@@ -61,7 +62,7 @@ class Menu {
 				int craftableUnits = this.craftingSystem.getCraftableUnits();
 
 				System.out.printf("> With your actual inventory, you can craft %d %ss.\n", craftableUnits,
-						this.itemToCraft.getName());
+						itemToCraftName);
 				break;
 
 			case 3:
@@ -118,9 +119,10 @@ class Menu {
 			case 11:
 				try {
 					CraftedItem lastCraftedItem = this.craftingSystem.undoLastCraft();
+					String lastCraftedItemName = lastCraftedItem.getName();
 
 					System.out.printf("> %d %ss were decrafted.\n", lastCraftedItem.getQuantityCrafted(),
-							lastCraftedItem.getName());
+							lastCraftedItemName);
 				} catch (EmptyHistoryException e) {
 					System.out.println("> The crafting history is empty.");
 				} catch (ItemNotFoundException e) {
