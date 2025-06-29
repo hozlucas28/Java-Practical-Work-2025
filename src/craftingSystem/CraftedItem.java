@@ -82,14 +82,16 @@ public class CraftedItem extends Item {
 		}
 
 		usedIngredients.addAll(usedRecipe.getIngredients());
+		
+		int usedIngredientsLength = usedIngredients.size();
 
-		for (int i = 0; i < usedIngredients.size(); i++) {
+		for (int i = 0; i < usedIngredientsLength; i++) {
 			Ingredient ingredient = usedIngredients.get(i);
 
 			String ingredientName = StringTransformers.toTitle(ingredient.getItem().getName());
 			int ingredientQuantity = ingredient.getQuantity();
 
-			if (i == usedIngredients.size() - 1) {
+			if (i == usedIngredientsLength - 1) {
 				formatter.format("%s%s (x%d)", i == 0 ? "" : "and ", ingredientName, ingredientQuantity);
 			} else {
 				formatter.format("%s (x%d), ", ingredientName, ingredientQuantity);

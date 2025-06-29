@@ -63,13 +63,15 @@ class CraftingSystemTests {
 			new CraftedItem(sword, swordRecipe, 2)
 		);
 		// @formatter:on
+		int expectedSize = expected.size();
 
 		List<CraftedItem> received = craftingSystem.getCraftedItems();
+		int receivedSize = received.size();
 
-		assertTrue(expected.size() == received.size(),
+		assertTrue(receivedSize == expectedSize,
 				"List of expected and received crafted items should have the same length");
 
-		for (int i = 0; i < expected.size(); i++) {
+		for (int i = 0; i < expectedSize; i++) {
 			CraftedItem expectedCraftedItem = expected.get(i);
 			CraftedItem receivedCraftedItem = received.get(i);
 

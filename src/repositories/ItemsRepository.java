@@ -135,9 +135,11 @@ public class ItemsRepository {
 				formatter.format("\n");
 			} else {
 				formatter.format(":\n");
+				
 				List<Recipe> itemRecipes = item.getRecipes();
+				int itemRecipesLength = itemRecipes.size();
 
-				for (int i = 0; i < itemRecipes.size(); i++) {
+				for (int i = 0; i < itemRecipesLength; i++) {
 					Recipe recipe = itemRecipes.get(i);
 
 					int quantityToCraft = recipe.getQuantityToCraft();

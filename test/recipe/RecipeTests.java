@@ -87,9 +87,12 @@ class RecipeTests {
 
 		// Assert
 		List<Ingredient> expected = List.of(new Ingredient(wood, 2), new Ingredient(iron, 3));
-		List<Ingredient> received = baseIngredients;
+		int expectedSize = expected.size();
 
-		assertTrue(received.size() == expected.size(),
+		List<Ingredient> received = baseIngredients;
+		int receivedSize = received.size();
+
+		assertTrue(receivedSize == expectedSize,
 				"List of expected and received base ingredients should have the same length");
 		assertTrue(received.containsAll(expected),
 				"Received base ingredients should contain all expected base ingredients");

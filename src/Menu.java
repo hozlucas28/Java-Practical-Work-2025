@@ -273,18 +273,20 @@ class Menu {
 		int i = 0;
 
 		for (List<Ingredient> ingredients : collection) {
-			if (ingredients.size() > 0) {
+			int ingredientsLength = ingredients.size();
+
+			if (ingredientsLength > 0) {
 				System.out.printf("> Recipe #%d: ", i + 1);
 			} else {
 				System.out.println(onEmptyList.apply(i));
 			}
 
-			for (int j = 0; j < ingredients.size(); j++) {
+			for (int j = 0; j < ingredientsLength; j++) {
 				Ingredient ingredient = ingredients.get(j);
 				String ingredientName = ingredient.getItem().getName();
 				int ingredientQuantity = ingredient.getQuantity();
 
-				if (j == ingredients.size() - 1) {
+				if (j == ingredientsLength - 1) {
 					System.out.printf("%s%ss (x%d).\n", j == 0 ? "" : "and ", ingredientName, ingredientQuantity);
 				} else {
 					System.out.printf("%ss (x%d), ", ingredientName, ingredientQuantity);
