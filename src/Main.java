@@ -1,6 +1,5 @@
 import java.io.FileNotFoundException;
 import java.nio.file.Paths;
-import java.util.List;
 
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
@@ -56,11 +55,13 @@ public class Main {
 		System.out.println(itemsRepository.toString(new String[] { "•", "•", "◦" }, 2));
 
 		// Print items within inventory
-		System.out.println("\n> Inventory:");
+		System.out.println("\n> Preloaded inventory:");
 		System.out.printf("%s\n\n", inventory.toString("•", 2));
 
 		// Create and initialize menu
 		Menu menu = new Menu(inventory, itemsRepository);
 		menu.init();
+
+		System.out.println("> Program finished.");
 	}
 }
