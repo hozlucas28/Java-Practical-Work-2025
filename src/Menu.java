@@ -24,24 +24,24 @@ import utilities.StringTransformers;
 class Menu {
 	private final Scanner inputScanner;
 
-	private final Inventory playerInventory;
+	private final Inventory inventory;
 	private final ItemsRepository itemsRepository;
 
-	private Item itemToCraft = null;
-	private int quantityToCraft = 0;
+	private Item itemToCraft;
+	private int quantityToCraft;
 	private final CraftingSystem craftingSystem;
 
 	private final PrologService prologService;
 
-	public Menu(Inventory playerInventory, ItemsRepository itemsRepository, PrologService prologService) {
+	public Menu(Inventory inventory, ItemsRepository itemsRepository, PrologService prologService) {
 		this.inputScanner = new Scanner(System.in);
 
-		this.playerInventory = playerInventory;
+		this.inventory = inventory;
 		this.itemsRepository = itemsRepository;
 
 		this.itemToCraft = null;
 		this.quantityToCraft = 0;
-		this.craftingSystem = new CraftingSystem(this.playerInventory);
+		this.craftingSystem = new CraftingSystem(this.inventory);
 
 		this.prologService = prologService;
 	}
@@ -108,14 +108,14 @@ class Menu {
 
 			case 8:
 				System.out.println("> Current inventory:\n");
-				System.out.printf("%s\n", this.playerInventory.toString("•", 2));
+				System.out.printf("%s\n", this.inventory.toString("•", 2));
 				break;
 
 			case 9:
 				String savePath = this.requestInventorySavePath();
 
 				try {
-					this.playerInventory.storeOnJSON(savePath);
+					this.inventory.storeOnJSON(savePath);
 					System.out.println("> Inventory saved.");
 				} catch (IOException e) {
 					System.out.printf("> An error occurred on try to save the inventory within \"%s\" file.\n",
