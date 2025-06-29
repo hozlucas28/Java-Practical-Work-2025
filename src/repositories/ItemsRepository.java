@@ -3,7 +3,6 @@ package repositories;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -140,10 +139,17 @@ public class ItemsRepository {
 
 				for (int i = 0; i < itemRecipes.size(); i++) {
 					Recipe recipe = itemRecipes.get(i);
+
+					int quantityToCraft = recipe.getQuantityToCraft();
 					List<Ingredient> ingredients = recipe.getIngredients();
 
 					formatter.format("%" + lPadding * 2 + "s%s ", " ", itemMarkers[1]);
-					formatter.format("Recipe #%d:\n", i + 1);
+
+					if (quantityToCraft == 1) {
+						formatter.format("Recipe #%d:\n", i + 1);
+					} else {
+						formatter.format("Recipe #%d (x%d):\n", i + 1, quantityToCraft);
+					}
 
 					if (recipe.needsCraftingTable()) {
 						String craftingTable = recipe.getCraftingTable().getName();
