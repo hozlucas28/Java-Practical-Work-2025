@@ -1,7 +1,6 @@
 package recipe;
 
 import java.util.Formatter;
-import java.util.Map;
 import java.util.Objects;
 
 import inventory.Item;
