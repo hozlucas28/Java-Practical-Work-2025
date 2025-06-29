@@ -7,8 +7,8 @@ import java.util.Objects;
 import recipe.Recipe;
 
 public class Item {
-	private final String name;
-	private final List<Recipe> recipes;
+	protected final String name;
+	protected final List<Recipe> recipes;
 
 	public Item(String name) {
 		this.name = name;
