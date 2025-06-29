@@ -136,11 +136,11 @@ direction TB
     }
 
     class PrologServiceBuilder {
-	    #String baseItemFactName
-	    #String ingredientFactName
-	    #String itemInInventoryFactName
-	    #ItemsRepository itemsRepository
-	    #Inventory inventory
+	    -String baseItemFactName
+	    -String ingredientFactName
+	    -String itemInInventoryFactName
+	    -ItemsRepository itemsRepository
+	    -Inventory inventory
 
         +PrologServiceBuilder setBaseItemFactName(String baseItemFactName)
         +PrologServiceBuilder setIngredientFactName(String ingredientFactName)

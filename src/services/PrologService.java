@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-class PrologService {
+public class PrologService {
 	private final String baseItemFactName;
 	private final String ingredientFactName;
 	private final String itemInInventoryFactName;
@@ -28,12 +28,14 @@ class PrologService {
 	private final ItemsRepository itemsRepository;
 	private final Inventory inventory;
 
-	public PrologService(PrologServiceBuilder builder) {
-		this.baseItemFactName = builder.baseItemFactName;
-		this.ingredientFactName = builder.ingredientFactName;
-		this.itemInInventoryFactName = builder.itemInInventoryFactName;
-		this.itemsRepository = builder.itemsRepository;
-		this.inventory = builder.inventory;
+	public PrologService(String baseItemFactName, String ingredientFactName, String itemInInventoryFactName,
+			ItemsRepository itemsRepository, Inventory inventory) {
+		this.baseItemFactName = baseItemFactName;
+		this.ingredientFactName = ingredientFactName;
+		this.itemInInventoryFactName = itemInInventoryFactName;
+
+		this.itemsRepository = itemsRepository;
+		this.inventory = inventory;
 	}
 
 	public HashMap<Item, Integer> craftableItems() throws IOException {
@@ -162,7 +164,7 @@ class PrologService {
 
 			prologLinesFormatter.format("%s(\"%s\", %d).\n", this.itemInInventoryFactName, itemName, itemQuantity);
 		}
-		
+
 		prologLinesFormatter.close();
 
 		return prologLinesBuilder.toString();

@@ -8,6 +8,8 @@ import exceptions.ItemNotFoundException;
 import exceptions.OutOfRangeException;
 import inventory.Inventory;
 import repositories.ItemsRepository;
+import services.PrologService;
+import services.PrologServiceBuilder;
 
 public class Main {
 	public static void main(String[] args) {
@@ -50,6 +52,13 @@ public class Main {
 			System.exit(203);
 		}
 
+		// Build prolog service
+		PrologServiceBuilder prologServiceBuilder = new PrologServiceBuilder();
+
+		PrologService prologService = prologServiceBuilder.setBaseItemFactName("base_item")
+				.setIngredientFactName("ingredient").setItemInInventoryFactName("have")
+				.setItemsRepository(itemsRepository).setInventory(inventory).build();
+
 		// Print items within items repository
 		System.out.println("> Repository items:\n");
 		System.out.println(itemsRepository.toString(new String[] { "•", "•", "◦" }, 2));
@@ -59,7 +68,7 @@ public class Main {
 		System.out.printf("%s\n\n", inventory.toString("•", 2));
 
 		// Create and initialize menu
-		Menu menu = new Menu(inventory, itemsRepository);
+		Menu menu = new Menu(inventory, itemsRepository, prologService);
 		menu.init();
 
 		System.out.println("> Program finished.");

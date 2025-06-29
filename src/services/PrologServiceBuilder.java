@@ -7,12 +7,12 @@ import inventory.Item;
 import repositories.ItemsRepository;
 
 public class PrologServiceBuilder {
-	protected String baseItemFactName = "base_item";
-	protected String ingredientFactName = "ingredient";
-	protected String itemInInventoryFactName = "have";
+	private String baseItemFactName = "base_item";
+	private String ingredientFactName = "ingredient";
+	private String itemInInventoryFactName = "have";
 
-	protected ItemsRepository itemsRepository = new ItemsRepository(new HashMap<String, Item>());
-	protected Inventory inventory = new Inventory(new HashMap<Item, Integer>());
+	private ItemsRepository itemsRepository = new ItemsRepository(new HashMap<String, Item>());
+	private Inventory inventory = new Inventory(new HashMap<Item, Integer>());
 
 	public PrologServiceBuilder() {
 	}
@@ -43,6 +43,7 @@ public class PrologServiceBuilder {
 	}
 
 	public PrologService build() {
-		return new PrologService(this);
+		return new PrologService(this.baseItemFactName, this.ingredientFactName, this.itemInInventoryFactName,
+				this.itemsRepository, this.inventory);
 	}
 }

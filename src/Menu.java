@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Function;
 
@@ -17,6 +18,7 @@ import inventory.Item;
 import recipe.Ingredient;
 import recipe.Recipe;
 import repositories.ItemsRepository;
+import services.PrologService;
 import utilities.StringTransformers;
 
 class Menu {
@@ -29,7 +31,9 @@ class Menu {
 	private int quantityToCraft = 0;
 	private final CraftingSystem craftingSystem;
 
-	public Menu(Inventory playerInventory, ItemsRepository itemsRepository) {
+	private final PrologService prologService;
+
+	public Menu(Inventory playerInventory, ItemsRepository itemsRepository, PrologService prologService) {
 		this.inputScanner = new Scanner(System.in);
 
 		this.playerInventory = playerInventory;
@@ -38,6 +42,8 @@ class Menu {
 		this.itemToCraft = null;
 		this.quantityToCraft = 0;
 		this.craftingSystem = new CraftingSystem(this.playerInventory);
+
+		this.prologService = prologService;
 	}
 
 	public void init() {
@@ -153,7 +159,17 @@ class Menu {
 				System.out.println("> Repository items:\n");
 				System.out.println(itemsRepository.toString(new String[] { "•", "•", "◦" }, 2));
 				break;
+
+			case 14:
+				try {
+					System.out.println("> Craftable items:\n");
+					this.showCraftableItemsByProlog();
+				} catch (IOException e) {
+					System.out.println("> An error occurred on try to communicate with the Prolog service.");
+				}
+				break;
 			}
+
 		} while (option != 0);
 
 		this.inputScanner.close();
@@ -217,8 +233,9 @@ class Menu {
 			System.out.println("  9  - Save inventory");
 			System.out.println("  10 - Show crafting history");
 			System.out.println("  11 - Undo last craft");
-			System.out.println("  12 - Show crafteable items");
+			System.out.println("  12 - Show craftable items");
 			System.out.println("  13 - Show repository items");
+			System.out.println("  14 - Show craftable items by communicating with the prolog service");
 			System.out.println("  0  - Exit\n");
 			// @formatter:on
 
@@ -226,10 +243,10 @@ class Menu {
 			option = this.inputScanner.nextInt();
 			this.inputScanner.nextLine();
 
-			if (option < 0 || option > 13) {
+			if (option < 0 || option > 14) {
 				System.out.printf("> %d is an invalid operation! Try again...\n\n", option);
 			}
-		} while (option < 0 || option > 13);
+		} while (option < 0 || option > 14);
 
 		return option;
 	}
@@ -275,6 +292,19 @@ class Menu {
 			}
 
 			i++;
+		}
+	}
+
+	private void showCraftableItemsByProlog() throws IOException {
+		HashMap<Item, Integer> craftableItems = this.prologService.craftableItems();
+
+		for (Map.Entry<Item, Integer> craftableItemEntry : craftableItems.entrySet()) {
+			Item item = craftableItemEntry.getKey();
+			Integer quantity = craftableItemEntry.getValue();
+
+			String itemName = StringTransformers.toTitle(item.getName());
+
+			System.out.printf("  • %ss (x%d).\n", itemName, quantity);
 		}
 	}
 }
