@@ -1,8 +1,10 @@
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Function;
 
 import craftingSystem.CraftedItem;
 import craftingSystem.CraftingSystem;
@@ -73,8 +75,12 @@ class Menu {
 				break;
 
 			case 4:
+				HashMap<Recipe, List<Ingredient>> requiredIngredients = this.craftingSystem.getRequiredIngredients();
+
 				System.out.printf("> Required ingredients to craft %d %ss:\n\n", this.quantityToCraft, itemToCraftName);
-				this.showRequiredIngredients();
+				this.showIngredientsCollection(requiredIngredients.values(), (index) -> {
+					return String.format("> Recipe #%d: not requires ingredients.", index);
+				});
 				break;
 
 			case 5:
@@ -82,7 +88,12 @@ class Menu {
 				break;
 
 			case 6:
-				// TODO: Show missing ingredients to craft
+				HashMap<Recipe, List<Ingredient>> missingIngredients = this.craftingSystem.getMissingIngredients();
+
+				System.out.printf("> Missing ingredients to craft %d %ss:\n\n", this.quantityToCraft, itemToCraftName);
+				this.showIngredientsCollection(missingIngredients.values(), (index) -> {
+					return String.format("> Recipe #%d: no missing ingredients within inventory.", index);
+				});
 				break;
 
 			case 7:
@@ -240,13 +251,16 @@ class Menu {
 		return savePath;
 	}
 
-	private void showRequiredIngredients() {
-		HashMap<Recipe, List<Ingredient>> requiredIngredients = this.craftingSystem.getRequiredIngredients();
+	private void showIngredientsCollection(Collection<List<Ingredient>> collection,
+			Function<Integer, String> onEmptyList) {
+		int i = 0;
 
-		int i = 1;
-
-		for (List<Ingredient> ingredients : requiredIngredients.values()) {
-			System.out.printf("> Recipe #%d: ", i);
+		for (List<Ingredient> ingredients : collection) {
+			if (ingredients.size() > 0) {
+				System.out.printf("> Recipe #%d: ", i + 1);
+			} else {
+				System.out.println(onEmptyList.apply(i));
+			}
 
 			for (int j = 0; j < ingredients.size(); j++) {
 				Ingredient ingredient = ingredients.get(j);
