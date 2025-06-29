@@ -33,40 +33,39 @@ public class CraftingSystem {
 	}
 
 	public int getCraftableUnits() {
-		HashMap<Recipe, List<Ingredient>> ingredientsPerRecipe = this.getRequiredIngredients();
-
 		int maxCraftableUnits = 0;
 
-		for (Map.Entry<Recipe, List<Ingredient>> recipeEntry : ingredientsPerRecipe.entrySet()) {
-			Recipe recipe = recipeEntry.getKey();
-			List<Ingredient> ingredients = recipeEntry.getValue();
+		if (this.quantityToCraft > 0) {
+			for (Recipe recipe : this.itemToCraft.getRecipes()) {
+				List<Ingredient> ingredients = recipe.getIngredients();
 
-			Item recipeCraftingTable = recipe.getCraftingTable();
-			int recipeQuantityToCraft = recipe.getQuantityToCraft();
+				Integer minCraftableUnits = null;
 
-			Integer minCraftableUnits = null;
+				if (recipe.needsCraftingTable()) {
+					Item craftingTable = recipe.getCraftingTable();
+					int quantityInInventory = this.inventory.getItemQuantity(craftingTable);
 
-			for (Ingredient ingredient : ingredients) {
-				Item item = ingredient.getItem();
-				int quantity = ingredient.getQuantity();
-				int quantityInInventory = this.inventory.getItemQuantity(item);
-
-				if (item == recipeCraftingTable) {
 					if (quantityInInventory < 1) {
-						minCraftableUnits = 0;
-						break;
+						continue;
 					}
-				} else {
+				}
+
+				for (Ingredient ingredient : ingredients) {
+					Item item = ingredient.getItem();
+					int quantity = ingredient.getQuantity();
+					int quantityInInventory = this.inventory.getItemQuantity(item);
+
 					int ingredientUnits = quantityInInventory / quantity;
 
 					minCraftableUnits = minCraftableUnits == null ? ingredientUnits
 							: Math.min(minCraftableUnits, ingredientUnits);
 				}
+
+				int craftableRecipeUnits = minCraftableUnits == null ? 0
+						: minCraftableUnits * recipe.getQuantityToCraft();
+
+				maxCraftableUnits = Math.max(maxCraftableUnits, craftableRecipeUnits);
 			}
-
-			int craftableRecipeUnits = minCraftableUnits == null ? 0 : minCraftableUnits * recipeQuantityToCraft;
-
-			maxCraftableUnits = Math.max(maxCraftableUnits, craftableRecipeUnits);
 		}
 
 		return maxCraftableUnits;
@@ -251,7 +250,9 @@ public class CraftingSystem {
 
 		for (Ingredient ingredient : ingredientsToRemove) {
 			Item itemToRemove = ingredient.getItem();
-			int quantityToRemove = ingredient.getQuantity();
+			int quantityToRemove = (int) Math
+					.ceil(this.quantityToCraft / (double) firstEmptyRecipe.getQuantityToCraft())
+					* ingredient.getQuantity();
 
 			try {
 				this.inventory.removeItem(itemToRemove, quantityToRemove);
@@ -295,7 +296,8 @@ public class CraftingSystem {
 
 		for (Ingredient ingredient : usedIngredients) {
 			Item itemIngredient = ingredient.getItem();
-			int itemIngredientQuantity = ingredient.getQuantity();
+			int itemIngredientQuantity = (int) Math.ceil(quantityCrafted / (double) usedRecipe.getQuantityToCraft())
+					* ingredient.getQuantity();
 
 			try {
 				this.inventory.addItem(itemIngredient, itemIngredientQuantity);
@@ -304,7 +306,7 @@ public class CraftingSystem {
 				// OutOfRangeException.
 			}
 		}
-		
+
 		return lastCraftedItem;
 	}
 }
