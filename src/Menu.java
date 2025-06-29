@@ -1,5 +1,6 @@
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -11,6 +12,8 @@ import exceptions.ItemNotFoundException;
 import exceptions.NonCraftableItemException;
 import inventory.Inventory;
 import inventory.Item;
+import recipe.Ingredient;
+import recipe.Recipe;
 import repositories.ItemsRepository;
 import utilities.StringTransformers;
 
@@ -70,7 +73,8 @@ class Menu {
 				break;
 
 			case 4:
-				// TODO: Show required ingredients to craft
+				System.out.printf("> Required ingredients to craft %d %ss:\n\n", this.quantityToCraft, itemToCraftName);
+				this.showRequiredIngredients();
 				break;
 
 			case 5:
@@ -234,5 +238,29 @@ class Menu {
 		} while (!savePath.endsWith(".json"));
 
 		return savePath;
+	}
+
+	private void showRequiredIngredients() {
+		HashMap<Recipe, List<Ingredient>> requiredIngredients = this.craftingSystem.getRequiredIngredients();
+
+		int i = 1;
+
+		for (List<Ingredient> ingredients : requiredIngredients.values()) {
+			System.out.printf("> Recipe #%d: ", i);
+
+			for (int j = 0; j < ingredients.size(); j++) {
+				Ingredient ingredient = ingredients.get(j);
+				String ingredientName = ingredient.getItem().getName();
+				int ingredientQuantity = ingredient.getQuantity();
+
+				if (j == ingredients.size() - 1) {
+					System.out.printf("%s%ss (x%d).\n", j == 0 ? "" : "and ", ingredientName, ingredientQuantity);
+				} else {
+					System.out.printf("%ss (x%d), ", ingredientName, ingredientQuantity);
+				}
+			}
+
+			i++;
+		}
 	}
 }
