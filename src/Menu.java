@@ -152,12 +152,17 @@ class Menu {
 				break;
 
 			case 12:
-				// TODO: Show crafteable items
+				System.out.println("> Repository items:\n");
+				System.out.println(itemsRepository.toString(new String[] { "•", "•", "◦" }, 2));
 				break;
 
 			case 13:
-				System.out.println("> Repository items:\n");
-				System.out.println(itemsRepository.toString(new String[] { "•", "•", "◦" }, 2));
+				HashMap<String, Item> craftableItems = this.itemsRepository.getCraftableItems();
+
+				System.out.println("> Repository craftable items:\n");
+				for (String itemName : craftableItems.keySet()) {
+					System.out.printf("  • %ss.\n", StringTransformers.toTitle(itemName));
+				}
 				break;
 
 			case 14:
@@ -233,8 +238,8 @@ class Menu {
 			System.out.println("  9  - Save inventory");
 			System.out.println("  10 - Show crafting history");
 			System.out.println("  11 - Undo last craft");
-			System.out.println("  12 - Show craftable items");
-			System.out.println("  13 - Show repository items");
+			System.out.println("  12 - Show repository items");
+			System.out.println("  13 - Show repository craftable items");
 			System.out.println("  14 - Show craftable items by communicating with the prolog service");
 			System.out.println("  0  - Exit\n");
 			// @formatter:on

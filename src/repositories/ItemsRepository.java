@@ -37,6 +37,21 @@ public class ItemsRepository {
 		return this.items;
 	}
 
+	public HashMap<String, Item> getCraftableItems() {
+		HashMap<String, Item> craftableItems = new HashMap<String, Item>();
+
+		for (Map.Entry<String, Item> itemEntry : this.items.entrySet()) {
+			String itemName = itemEntry.getKey();
+			Item item = itemEntry.getValue();
+
+			if (!item.isBase()) {
+				craftableItems.put(itemName, item);
+			}
+		}
+
+		return craftableItems;
+	}
+
 	public Item getItem(String name) {
 		Item item = this.items.get(name);
 		return item;
@@ -135,7 +150,7 @@ public class ItemsRepository {
 				formatter.format("\n");
 			} else {
 				formatter.format(":\n");
-				
+
 				List<Recipe> itemRecipes = item.getRecipes();
 				int itemRecipesLength = itemRecipes.size();
 

@@ -116,6 +116,7 @@ direction TB
 	    -HashMap~String, Item~ items
 
 	    +HashMap~String, Item~ getItems()
+	    +HashMap~String, Item~ getCraftableItems()
 	    +Item getItem(String name)
         +static ItemsRepository loadFromJSON(String path)
         +String toString(String itemMarkers[], int lPadding)
