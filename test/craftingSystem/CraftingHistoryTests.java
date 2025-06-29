@@ -7,7 +7,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import exceptions.EmptyHistoryException;
-import exceptions.ItemNotFoundException;
 import inventory.Item;
 import recipe.Ingredient;
 import recipe.Recipe;
