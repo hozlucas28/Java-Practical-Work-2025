@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import exceptions.ItemNotFoundException;
+import exceptions.EmptyHistoryException;
 import inventory.Item;
 import recipe.Recipe;
 
@@ -19,9 +19,9 @@ class CraftingHistory {
 		return Collections.unmodifiableList(this.items);
 	}
 
-	public CraftedItem getLastItem() throws ItemNotFoundException {
+	public CraftedItem getLastItem() throws EmptyHistoryException {
 		if (this.items.isEmpty()) {
-			throw new ItemNotFoundException("There are no crafted items within the `CraftingHistory` instance");
+			throw new EmptyHistoryException("There are no crafted items within the `CraftingHistory` instance");
 		}
 
 		return this.items.get(0);
@@ -32,9 +32,9 @@ class CraftingHistory {
 		this.items.add(0, craftedItem);
 	}
 
-	public CraftedItem removeLastItem() throws ItemNotFoundException {
+	public CraftedItem removeLastItem() throws EmptyHistoryException {
 		if (this.items.isEmpty()) {
-			throw new ItemNotFoundException("There are no crafted items within the `CraftingHistory` instance");
+			throw new EmptyHistoryException("There are no crafted items within the `CraftingHistory` instance");
 		}
 
 		CraftedItem lastCraftedItem = this.items.remove(0);
