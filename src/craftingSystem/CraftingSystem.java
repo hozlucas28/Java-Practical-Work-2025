@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import exceptions.EmptyHistoryException;
 import exceptions.InvalidItemException;
 import exceptions.ItemNotFoundException;
 import exceptions.NonCraftableItemException;
@@ -275,7 +276,7 @@ public class CraftingSystem {
 		return itemsCrafted;
 	}
 
-	public void undoLastCraft() throws ItemNotFoundException {
+	public CraftedItem undoLastCraft() throws EmptyHistoryException, ItemNotFoundException {
 		CraftedItem lastCraftedItem = this.history.getLastItem();
 		int quantityCrafted = lastCraftedItem.getQuantityCrafted();
 
@@ -303,5 +304,7 @@ public class CraftingSystem {
 				// OutOfRangeException.
 			}
 		}
+		
+		return lastCraftedItem;
 	}
 }

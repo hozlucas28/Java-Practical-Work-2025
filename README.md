@@ -231,7 +231,7 @@ direction TB
 	    +boolean canCraft()
 	    +void setItemToCraft(Item item, int quantity)
 	    +int craftItems()
-	    +void undoLastCraft()
+	    +CraftedItem undoLastCraft()
     }
 
     class CraftingHistory {
