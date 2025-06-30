@@ -174,17 +174,6 @@ direction TB
 	    +List~Item~ getBaseIngredients()
     }
 
-    class JSONRecipe {
-        << Adapter >>
-
-	    -Item craftingTable
-	    -HashMap~String, Integer~ ingredients
-	    -int timeToCraftInMilliseconds
-	    -int quantityToCraft
-
-	    +static void linkItemsWithRecipes(HashMap~String, Item~ items, HashMap~String, List~JSONRecipe~~ recipesPerItem)
-    }
-
     class CraftedItem {
 	    -ZonedDateTime date
 	    -Recipe usedRecipe
@@ -245,7 +234,6 @@ direction TB
     }
 
     ItemsRepository "1" --o "0...*" Item : Has
-    ItemsRepository "1" --* "1...*" JSONRecipe : Instance and uses the static method
 
     PrologService "1" --o "1" Inventory : Has a reference to
     PrologService "1" --o "1" ItemsRepository : Has a reference to
@@ -255,8 +243,6 @@ direction TB
 
     Recipe "1" --o "1...*" Ingredient : Has
     Recipe "1" --o "0...1" Item : Has a reference to
-
-    JSONRecipe "1" --o "0...1" Item : Has
 
     CraftedItem --|>  Item : Inherits from
 
