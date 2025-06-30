@@ -137,14 +137,14 @@ class Menu {
 				break;
 
 			case 9:
-				String savePath = this.requestInventorySavePath();
+				String inventorySavePath = this.requestInventorySavePath();
 
 				try {
-					this.inventory.storeOnJSON(savePath);
+					this.inventory.storeOnJSON(inventorySavePath);
 					System.out.println("> Inventory saved.");
 				} catch (IOException e) {
 					System.out.printf("> An error occurred on try to save the inventory within \"%s\" file.\n",
-							savePath);
+							inventorySavePath);
 				}
 				break;
 
@@ -177,7 +177,7 @@ class Menu {
 				break;
 
 			case 12:
-				System.out.println("> Repository items:\n");
+				System.out.println("> Items repository:\n");
 				System.out.println(itemsRepository.toString(new String[] { "•", "•", "◦" }, 2));
 				break;
 
@@ -198,8 +198,19 @@ class Menu {
 					System.out.println("> An error occurred on try to communicate with the Prolog service.");
 				}
 				break;
-			}
 
+			case 15:
+				String prologPath = this.requestPrologPath();
+
+				try {
+					this.prologService.toFile(prologPath);
+					System.out.println("> Prolog file created.");
+				} catch (IOException e) {
+					System.out.printf("> An error occurred on try to write prolog content within \"%s\" file.\n",
+							prologPath);
+				}
+				break;
+			}
 		} while (operation != 0);
 	}
 
@@ -269,9 +280,10 @@ class Menu {
 			System.out.println("  9  - Save inventory");
 			System.out.println("  10 - Show crafting history");
 			System.out.println("  11 - Undo last craft");
-			System.out.println("  12 - Show repository items");
+			System.out.println("  12 - Show items repository");
 			System.out.println("  13 - Show repository craftable items");
 			System.out.println("  14 - Show craftable items with inventory items (Prolog service)");
+			System.out.println("  15 - Create a Prolog file with items repository, inventory, and all the necessary facts and rules");			
 			System.out.println("  0  - Exit\n");
 			// @formatter:on
 
@@ -285,10 +297,10 @@ class Menu {
 				this.scanner.nextLine();
 			}
 
-			if (operation < 0 || operation > 14) {
+			if (operation < 0 || operation > 15) {
 				System.out.printf("> %d is an invalid operation! Try again...\n\n", operation);
 			}
-		} while (operation < 0 || operation > 14);
+		} while (operation < 0 || operation > 15);
 
 		return operation;
 	}
@@ -333,7 +345,7 @@ class Menu {
 
 			if (!savePath.endsWith(".json")) {
 				System.out.printf(
-						"> \"%s\" is an invalid JSON path. Try again (for example \"my_saved_inventory.json\")...\n",
+						"> \"%s\" is an invalid JSON path. Try again (for example \"final_inventory.json\")...\n",
 						savePath);
 			}
 		} while (!savePath.endsWith(".json"));
@@ -404,5 +416,21 @@ class Menu {
 
 			System.out.printf("  • %ss (x%d).\n", itemName, quantity);
 		}
+	}
+
+	private String requestPrologPath() {
+		String savePath = "";
+
+		do {
+			System.out.printf("> Enter the file path where do you want to create the Prolog file: ");
+			savePath = this.scanner.nextLine().trim();
+
+			if (!savePath.endsWith(".pl")) {
+				System.out.printf("> \"%s\" is an invalid Prolog path. Try again (for example \"prolog_file.pl\")...\n",
+						savePath);
+			}
+		} while (!savePath.endsWith(".pl"));
+
+		return savePath;
 	}
 }

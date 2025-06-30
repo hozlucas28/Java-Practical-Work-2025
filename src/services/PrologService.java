@@ -84,64 +84,79 @@ public class PrologService {
 	private void toFile(FileWriter fWriter) throws IOException {
 		fWriter.append("\n");
 
-		fWriter.append("% Ingredients\n");
+		fWriter.append("% Ingredients\n\n");
 		fWriter.append(this.toProlog(this.itemsRepository));
 
-		fWriter.append("\n\n");
+		fWriter.append("\n");
 
-		fWriter.append("% Inventory\n");
+		fWriter.append("% Inventory\n\n");
 		fWriter.append(this.toProlog(this.inventory));
 
-		fWriter.append("\n\n");
+		fWriter.append("\n");
 
 		fWriter.append("% Utility rules\n\n");
 		fWriter.append(this.utilityRules());
 	}
 
 	private String toProlog(ItemsRepository itemsRepository) {
-		StringBuilder prologLinesBuilder = new StringBuilder();
-		Formatter prologLinesFormatter = new Formatter(prologLinesBuilder);
+		HashMap<String, Item> baseItems = new HashMap<String, Item>();
+		HashMap<String, Item> craftableItems = new HashMap<String, Item>();
 
 		HashMap<String, Item> repositoryItems = itemsRepository.getItems();
 
-		StringBuilder ingredientsBuilder = new StringBuilder();
-		Formatter ingredientsFormatter = new Formatter(ingredientsBuilder);
-
-		// Migrate base items and ingredients to prolog
 		for (Map.Entry<String, Item> itemEntry : repositoryItems.entrySet()) {
 			String itemName = itemEntry.getKey();
 			Item item = itemEntry.getValue();
 
 			if (item.isBase()) {
-				// Base item to prolog
-				prologLinesFormatter.format("%s(\"%s\").\n", this.baseItemFactName, itemName);
+				baseItems.put(itemName, item);
 			} else {
-				// Complex item to prolog
-				List<Recipe> itemRecipes = item.getRecipes();
+				craftableItems.put(itemName, item);
+			}
+		}
 
-				for (Recipe recipe : itemRecipes) {
-					int quantityToCraft = recipe.getQuantityToCraft();
-					List<Ingredient> ingredients = recipe.getIngredients();
+		StringBuilder prologLinesBuilder = new StringBuilder();
+		Formatter prologLinesFormatter = new Formatter(prologLinesBuilder);
 
-					// Crafting table to prolog if it's exists
-					if (recipe.needsCraftingTable()) {
-						Item craftingTable = recipe.getCraftingTable();
-						String craftingTableName = craftingTable.getName();
-						int craftingTableQuantity = 1;
+		StringBuilder ingredientsBuilder = new StringBuilder();
+		Formatter ingredientsFormatter = new Formatter(ingredientsBuilder);
 
-						ingredientsFormatter.format("%s(\"%s\", %d, \"%s\", %d).\n", this.ingredientFactName, itemName,
-								quantityToCraft, craftingTableName, craftingTableQuantity);
-					}
+		// Migrate base items to prolog
+		for (String itemName : baseItems.keySet()) {
+			prologLinesFormatter.format("%s(\"%s\").\n", this.baseItemFactName, itemName);
+		}
 
-					// Ingredient to prolog
-					for (Ingredient ingredient : ingredients) {
-						Item ingredientItem = ingredient.getItem();
-						String ingredientName = ingredientItem.getName();
-						int ingredientQuantity = ingredient.getQuantity();
+		prologLinesFormatter.format("\n");
 
-						ingredientsFormatter.format("%s(\"%s\", %d, \"%s\", %d).\n", this.ingredientFactName, itemName,
-								quantityToCraft, ingredientName, ingredientQuantity);
-					}
+		// Migrate craftable items to prolog
+		for (Map.Entry<String, Item> itemEntry : craftableItems.entrySet()) {
+			String itemName = itemEntry.getKey();
+			Item item = itemEntry.getValue();
+
+			List<Recipe> itemRecipes = item.getRecipes();
+
+			for (Recipe recipe : itemRecipes) {
+				int quantityToCraft = recipe.getQuantityToCraft();
+				List<Ingredient> ingredients = recipe.getIngredients();
+
+				// Crafting table to prolog if it's exists
+				if (recipe.needsCraftingTable()) {
+					Item craftingTable = recipe.getCraftingTable();
+					String craftingTableName = craftingTable.getName();
+					int craftingTableQuantity = 1;
+
+					ingredientsFormatter.format("%s(\"%s\", %d, \"%s\", %d).\n", this.ingredientFactName, itemName,
+							quantityToCraft, craftingTableName, craftingTableQuantity);
+				}
+
+				// Ingredient to prolog
+				for (Ingredient ingredient : ingredients) {
+					Item ingredientItem = ingredient.getItem();
+					String ingredientName = ingredientItem.getName();
+					int ingredientQuantity = ingredient.getQuantity();
+
+					ingredientsFormatter.format("%s(\"%s\", %d, \"%s\", %d).\n", this.ingredientFactName, itemName,
+							quantityToCraft, ingredientName, ingredientQuantity);
 				}
 			}
 		}

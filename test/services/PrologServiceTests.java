@@ -120,10 +120,10 @@ class PrologServiceTests {
 			prologService.toFile(tempFilePath);
 
 			// Assert
-			long expectedFileLines = 53;
+			long expectedFileLines = 54;
 			long receivedFileLines = Files.lines(tempFile.toPath()).count();
 
-			assertEquals(expectedFileLines, receivedFileLines, "File should have at least 53 lines");
+			assertEquals(expectedFileLines, receivedFileLines, "File should have 54 lines");
 			
 			// After
 			tempFile.delete();
