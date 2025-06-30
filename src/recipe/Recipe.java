@@ -9,8 +9,8 @@ import java.util.Map;
 import inventory.Item;
 
 public class Recipe {
-	private final Item craftingTable;
-	private final List<Ingredient> ingredients;
+	private Item craftingTable;
+	private List<Ingredient> ingredients;
 	private final int timeToCraftInMilliseconds;
 	private final int quantityToCraft;
 
@@ -28,6 +28,10 @@ public class Recipe {
 		this.quantityToCraft = quantityToCraft;
 	}
 
+	public Item getCraftingTable() {
+		return this.craftingTable;
+	}
+
 	public List<Ingredient> getIngredients() {
 		return Collections.unmodifiableList(this.ingredients);
 	}
@@ -38,14 +42,6 @@ public class Recipe {
 
 	public int getQuantityToCraft() {
 		return this.quantityToCraft;
-	}
-
-	public Item getCraftingTable() {
-		return this.craftingTable;
-	}
-
-	public boolean needsCraftingTable() {
-		return this.craftingTable != null;
 	}
 
 	public List<Ingredient> getBaseIngredients() {
@@ -82,5 +78,17 @@ public class Recipe {
 		}
 
 		return baseIngredients;
+	}
+
+	public boolean needsCraftingTable() {
+		return this.craftingTable != null;
+	}
+
+	public void setCraftingTable(Item craftingTable) {
+		this.craftingTable = craftingTable;
+	}
+
+	public void setIngredients(List<Ingredient> ingredients) {
+		this.ingredients = ingredients;
 	}
 }

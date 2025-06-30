@@ -170,8 +170,10 @@ direction TB
 	    +List~Item~ getIngredients()
 	    +int getTimeToCraftInMilliseconds()
 	    +int getQuantityToCraft()
-	    +boolean needsCraftingTable()
 	    +List~Item~ getBaseIngredients()
+	    +boolean needsCraftingTable()
+        +void setCraftingTable(Item craftingTable)
+        +void setIngredients(List~Ingredient~ ingredients)
     }
 
     class CraftedItem {
