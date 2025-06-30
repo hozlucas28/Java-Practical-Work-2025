@@ -50,17 +50,17 @@ class Menu {
 	public void init() {
 		this.setItemToCraft();
 
-		int option = 0;
+		int operation = 0;
 		String itemToCraftName = this.itemToCraft.getName();
 
 		int branch;
 
 		do {
 			System.out.println();
-			option = requestOperation(itemToCraftName, this.quantityToCraft);
+			operation = requestOperation(itemToCraftName, this.quantityToCraft);
 			System.out.println();
 
-			switch (option) {
+			switch (operation) {
 			case 1:
 				try {
 					int itemsCrafted = this.craftingSystem.craftItem();
@@ -195,7 +195,7 @@ class Menu {
 				break;
 			}
 
-		} while (option != 0);
+		} while (operation != 0);
 	}
 
 	private void setItemToCraft() {
@@ -248,7 +248,7 @@ class Menu {
 	}
 
 	private int requestOperation(String item, int quantity) {
-		int option = -1;
+		int operation = -1;
 
 		do {
 			// @formatter:off
@@ -273,19 +273,19 @@ class Menu {
 			System.out.printf("> Select an operation: ");
 
 			try {
-				option = this.scanner.nextInt();
+				operation = this.scanner.nextInt();
 			} catch (NoSuchElementException e) {
-				// Ignore the exception occurrence, just continue requesting the option.
+				// Ignore the exception occurrence, just continue requesting the operation.
 			} finally {
 				this.scanner.nextLine();
 			}
 
-			if (option < 0 || option > 14) {
-				System.out.printf("> %d is an invalid operation! Try again...\n\n", option);
+			if (operation < 0 || operation > 14) {
+				System.out.printf("> %d is an invalid operation! Try again...\n\n", operation);
 			}
-		} while (option < 0 || option > 14);
+		} while (operation < 0 || operation > 14);
 
-		return option;
+		return operation;
 	}
 
 	private String requestInventorySavePath() {
