@@ -78,6 +78,7 @@ class Menu {
 
 			case 3:
 				this.setItemToCraft();
+				itemToCraftName = this.itemToCraft.getName();
 				break;
 
 			case 4:
