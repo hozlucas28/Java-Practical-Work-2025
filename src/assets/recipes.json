@@ -23,6 +23,14 @@
                 },
                 "quantity_to_craft": 4,
                 "time_to_craft": 1000
+            },
+            {
+                "crafting_table": "wood crafting table",
+                "ingredients": {
+                    "white wood": 1
+                },
+                "quantity_to_craft": 4,
+                "time_to_craft": 1000
             }
         ]
     },
@@ -91,6 +99,9 @@
     },
     {
         "name": "wood"
+    },
+    {
+        "name": "white wood"
     },
     {
         "name": "coal"
