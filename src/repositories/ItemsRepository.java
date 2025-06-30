@@ -20,7 +20,6 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 
 import exceptions.ItemNotFoundException;
-import exceptions.OutOfRangeException;
 import inventory.Item;
 import recipe.Ingredient;
 import recipe.Recipe;
@@ -57,49 +56,48 @@ public class ItemsRepository {
 		return item;
 	}
 
-	public static ItemsRepository loadFromJSON(String path) throws FileNotFoundException, JsonIOException,
-			JsonSyntaxException, ItemNotFoundException, OutOfRangeException, IOException {
+	public static ItemsRepository loadFromJSON(String path)
+			throws FileNotFoundException, JsonIOException, JsonSyntaxException, ItemNotFoundException, IOException {
 		FileInputStream fileStream = new FileInputStream(path);
 		InputStreamReader streamReader = new InputStreamReader(fileStream, StandardCharsets.UTF_8);
 
 		JsonArray json = JsonParser.parseReader(streamReader).getAsJsonArray();
 
 		HashMap<String, Item> items = new HashMap<String, Item>();
-		HashMap<String, List<JSONRecipe>> recipesPerItem = new HashMap<String, List<JSONRecipe>>();
 
+		// Parse items
 		for (JsonElement jsonItemElement : json) {
 			JsonObject jsonItemElementAsObj = jsonItemElement.getAsJsonObject();
 
-			// Get item
+			// Get name
 			String itemName = jsonItemElementAsObj.get("name").getAsString().trim();
-			Item item = new Item(itemName);
 
-			// Put item in map
-			items.put(itemName, item);
+			List<Recipe> itemRecipes = null;
 
 			if (jsonItemElementAsObj.has("recipes")) {
 				JsonArray jsonItemElementRecipes = jsonItemElementAsObj.getAsJsonArray("recipes");
 
-				List<JSONRecipe> jsonItemRecipes = new ArrayList<JSONRecipe>();
+				itemRecipes = new ArrayList<Recipe>();
 
-				// Get item recipes
+				// Get recipes
 				for (JsonElement jsonItemElementRecipe : jsonItemElementRecipes) {
 					JsonObject jsonItemElementRecipeAsObj = jsonItemElementRecipe.getAsJsonObject();
 					JsonObject jsonItemElementRecipeIngredients = jsonItemElementRecipeAsObj
 							.getAsJsonObject("ingredients");
 
 					// Get ingredients
-					HashMap<String, Integer> ingredients = new HashMap<String, Integer>();
+					List<Ingredient> ingredients = new ArrayList<Ingredient>();
 
 					for (String ingredientName : jsonItemElementRecipeIngredients.keySet()) {
 						int ingredientQuantity = jsonItemElementRecipeIngredients.get(ingredientName).getAsInt();
-						ingredients.put(ingredientName, ingredientQuantity);
+						Ingredient ingredient = new Ingredient(new Item(ingredientName), ingredientQuantity);
+						ingredients.add(ingredient);
 					}
 
 					// Get time to craft in milliseconds
 					int timeToCraftInMilliseconds = jsonItemElementRecipeAsObj.get("time_to_craft").getAsInt();
 
-					// Get items to craft
+					// Get quantity to craft
 					int quantityToCraft = jsonItemElementRecipeAsObj.get("quantity_to_craft").getAsInt();
 
 					// Get crafting table if it's exists
@@ -112,22 +110,68 @@ public class ItemsRepository {
 					}
 
 					// Append recipe to list
-					JSONRecipe jsonRecipe = new JSONRecipe(craftingTable, ingredients, timeToCraftInMilliseconds,
-							quantityToCraft);
+					Recipe recipe = craftingTable == null
+							? new Recipe(ingredients, timeToCraftInMilliseconds, quantityToCraft)
+							: new Recipe(craftingTable, ingredients, timeToCraftInMilliseconds, quantityToCraft);
 
-					jsonItemRecipes.add(jsonRecipe);
+					itemRecipes.add(recipe);
 				}
-
-				// Put recipes in map
-				recipesPerItem.put(itemName, jsonItemRecipes);
 			}
+
+			// Put item in map
+			Item item = itemRecipes == null ? new Item(itemName) : new Item(itemName, itemRecipes);
+			items.put(itemName, item);
 		}
 
 		streamReader.close();
 		fileStream.close();
 
-		// Assign and link items with recipes
-		JSONRecipe.linkItemsWithRecipes(items, recipesPerItem);
+		// Link recipes with items
+		for (Item item : items.values()) {
+			if (item.isBase()) {
+				continue;
+			}
+
+			List<Recipe> itemRecipes = item.getRecipes();
+			for (Recipe recipe : itemRecipes) {
+				if (recipe.needsCraftingTable()) {
+					Item craftingTable = recipe.getCraftingTable();
+					Item craftingTableRef = items.get(craftingTable.getName());
+
+					if (craftingTableRef == null) {
+						String errorMessage = String.format("Item with \"%s\" name was not found within items hash map",
+								craftingTable.getName());
+
+						throw new ItemNotFoundException(errorMessage);
+					}
+
+					recipe.setCraftingTable(craftingTableRef);
+				}
+
+				List<Ingredient> ingredients = recipe.getIngredients();
+				List<Ingredient> realIngredients = new ArrayList<Ingredient>();
+
+				for (Ingredient ingredient : ingredients) {
+					Item ingItem = ingredient.getItem();
+					int ingQuantity = ingredient.getQuantity();
+
+					Item ingItemRef = items.get(ingItem.getName());
+
+					if (ingItemRef == null) {
+						String errorMessage = String.format("Item with \"%s\" name was not found within items hash map",
+								ingItem.getName());
+
+						throw new ItemNotFoundException(errorMessage);
+
+					}
+
+					Ingredient realIngredient = new Ingredient(ingItemRef, ingQuantity);
+					realIngredients.add(realIngredient);
+				}
+
+				recipe.setIngredients(realIngredients);
+			}
+		}
 
 		// Create repository
 		ItemsRepository itemsRepository = new ItemsRepository(items);
