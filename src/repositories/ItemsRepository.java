@@ -183,39 +183,56 @@ public class ItemsRepository {
 		StringBuilder builder = new StringBuilder();
 		Formatter formatter = new Formatter(builder);
 
+		HashMap<String, Item> basicItems = new HashMap<String, Item>();
+		HashMap<String, Item> complexItems = new HashMap<String, Item>();
+
 		for (Map.Entry<String, Item> itemEntry : this.items.entrySet()) {
+			String itemName = itemEntry.getKey();
+			Item item = itemEntry.getValue();
+
+			if (item.isBase()) {
+				basicItems.put(itemName, item);
+			} else {
+				complexItems.put(itemName, item);
+			}
+		}
+
+		for (String itemName : basicItems.keySet()) {
+			formatter.format("%" + lPadding + "s%s ", " ", itemMarkers[0]);
+			formatter.format("%s\n", StringTransformers.toTitle(itemName));
+		}
+
+		for (Map.Entry<String, Item> itemEntry : complexItems.entrySet()) {
 			String itemName = itemEntry.getKey();
 			Item item = itemEntry.getValue();
 
 			formatter.format("%" + lPadding + "s%s ", " ", itemMarkers[0]);
 			formatter.format("%s\n", StringTransformers.toTitle(itemName));
 
-			if (!item.isBase()) {
-				List<Recipe> itemRecipes = item.getRecipes();
-				int itemRecipesLength = itemRecipes.size();
+			List<Recipe> itemRecipes = item.getRecipes();
+			int itemRecipesLength = itemRecipes.size();
 
-				for (int i = 0; i < itemRecipesLength; i++) {
-					Recipe recipe = itemRecipes.get(i);
+			for (int i = 0; i < itemRecipesLength; i++) {
+				Recipe recipe = itemRecipes.get(i);
 
-					List<Ingredient> ingredients = recipe.getIngredients();
-					int quantityToCraft = recipe.getQuantityToCraft();
-					int timeToCraftInMilliseconds = recipe.getTimeToCraftInMilliseconds();
+				List<Ingredient> ingredients = recipe.getIngredients();
+				int quantityToCraft = recipe.getQuantityToCraft();
+				int timeToCraftInMilliseconds = recipe.getTimeToCraftInMilliseconds();
 
-					formatter.format("%" + lPadding * 2 + "s%s ", " ", itemMarkers[1]);
+				formatter.format("%" + lPadding * 2 + "s%s ", " ", itemMarkers[1]);
 
-					formatter.format("Recipe #%d (x%d ~ %d milliseconds)\n", i + 1, quantityToCraft,
-							timeToCraftInMilliseconds);
+				formatter.format("Recipe #%d (x%d ~ %d milliseconds)\n", i + 1, quantityToCraft,
+						timeToCraftInMilliseconds);
 
-					if (recipe.needsCraftingTable()) {
-						String craftingTable = recipe.getCraftingTable().getName();
+				if (recipe.needsCraftingTable()) {
+					String craftingTable = recipe.getCraftingTable().getName();
 
-						formatter.format("%" + lPadding * 3 + "s%s ", " ", itemMarkers[2]);
-						formatter.format("%s (x1)\n", StringTransformers.toTitle(craftingTable));
-					}
+					formatter.format("%" + lPadding * 3 + "s%s ", " ", itemMarkers[2]);
+					formatter.format("%s (x1)\n", StringTransformers.toTitle(craftingTable));
+				}
 
-					for (Ingredient ingredient : ingredients) {
-						formatter.format("%s\n", ingredient.toString(itemMarkers[2], lPadding * 3));
-					}
+				for (Ingredient ingredient : ingredients) {
+					formatter.format("%s\n", ingredient.toString(itemMarkers[2], lPadding * 3));
 				}
 			}
 		}
