@@ -262,21 +262,45 @@ class CraftingSystemTests {
 		// Arrange
 		Item wood = new Item("wood");
 		Item iron = new Item("iron");
+		Item whiteWood = new Item("white wood");
 
 		Item woodCraftingTable = new Item("wood crafting table");
 
-		List<Ingredient> stickRecipeIngredients = List.of(new Ingredient(wood, 2));
-		Recipe stickRecipe = new Recipe(woodCraftingTable, stickRecipeIngredients, 1400, 4);
-		List<Recipe> stickRecipes = List.of(stickRecipe);
+		// @formatter:off
+		Recipe stickRecipe01 = new Recipe(
+			woodCraftingTable,
+			List.of(
+				new Ingredient(wood, 2)
+			),
+			1400,
+			4
+		);
+		
+		Recipe stickRecipe02 = new Recipe(
+			woodCraftingTable,
+			List.of(
+				new Ingredient(whiteWood, 2)
+			),
+			1400,
+			4
+		);
+		// @formatter:on
 
-		Item stick = new Item("stick", stickRecipes);
+		Item stick = new Item("stick", List.of(stickRecipe01, stickRecipe02));
 
-		List<Ingredient> swordRecipeIngredients = List.of(new Ingredient(stick, 1), new Ingredient(wood, 10),
-				new Ingredient(iron, 3));
-		Recipe swordRecipe = new Recipe(woodCraftingTable, swordRecipeIngredients, 2100, 1);
-		List<Recipe> swordRecipes = List.of(swordRecipe);
+		// @formatter:off
+		Recipe swordRecipe = new Recipe(
+			woodCraftingTable,
+			List.of(
+				new Ingredient(stick, 1),
+				new Ingredient(wood, 10),
+				new Ingredient(iron, 3)
+			),
+			2100,
+			1);
+		// @formatter:on
 
-		Item sword = new Item("sword", swordRecipes);
+		Item sword = new Item("sword", List.of(swordRecipe));
 
 		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
 
@@ -287,7 +311,9 @@ class CraftingSystemTests {
 			craftingSystem.setItemToCraft(sword, 2);
 		}, "Should not throw an exception if it want to craft a non-base item");
 
-		// Act
+		// Acts within asserts
+		int recipePath = 0;
+
 		// @formatter:off
 		Map<Recipe, List<Ingredient>> expected = Map.of(
 			swordRecipe,
@@ -299,10 +325,29 @@ class CraftingSystemTests {
 		);
 		// @formatter:on
 
-		HashMap<Recipe, List<Ingredient>> received = craftingSystem.getRequiredBaseIngredients();
+		HashMap<Recipe, List<Ingredient>> received = craftingSystem.getRequiredBaseIngredients(recipePath);
 
-		// Assert
-		assertEquals(expected, received, "Should return the required base ingredients to craft 2 swords per recipe");
+		assertEquals(expected, received,
+				"Should return the required base ingredients to craft 2 swords per recipe, following the first recipe path");
+
+		recipePath = 1;
+
+		// @formatter:off
+		expected = Map.of(
+			swordRecipe,
+			List.of(
+				new Ingredient(whiteWood, 2),
+				new Ingredient(woodCraftingTable, 1),
+				new Ingredient(iron, 6),
+				new Ingredient(wood, 20)
+			)
+		);
+		// @formatter:on
+
+		received = craftingSystem.getRequiredBaseIngredients(recipePath);
+
+		assertEquals(expected, received,
+				"Should return the required base ingredients to craft 2 swords per recipe, following the second recipe path");
 	}
 
 	@Test

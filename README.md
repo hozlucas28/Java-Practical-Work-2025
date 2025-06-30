@@ -212,14 +212,15 @@ direction TB
         -int quantityToCraft
 	    -Inventory inventory
 	    -CraftingHistory history
+
         +List~CraftedItem~ getCraftedItems()
 	    +int getCraftableUnits()
         +HashMap~Recipe, List~Ingredient~~ getMissingIngredients()
-        +HashMap~Recipe, List~Ingredient~~ getMissingBaseIngredients()
+        +HashMap~Recipe, List~Ingredient~~ getMissingBaseIngredients(int branch)
         -HashMap~Recipe, List~Ingredient~~ getMissingIngredients(HashMap~Recipe, List~Ingredient~~ recipes)
 	    +HashMap~Recipe, List~Ingredient~~ getRequiredIngredients()
-        +HashMap~Recipe, List~Ingredient~~ getRequiredBaseIngredients()
-        -List~Ingredient~ getBaseIngredientsRecursive(Recipe recipe, int totalToCraft)
+        +HashMap~Recipe, List~Ingredient~~ getRequiredBaseIngredients(int branch)
+        -List~Ingredient~ getBaseIngredientsRecursive(Recipe recipe, int totalToCraft, int branch)
 	    +boolean canCraft()
 	    +void setItemToCraft(Item item, int quantity)
 	    +int craftItems()

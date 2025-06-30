@@ -75,10 +75,8 @@ public class CraftingSystem {
 		return this.getMissingIngredients(this.getRequiredIngredients());
 	}
 
-	public HashMap<Recipe, List<Ingredient>> getMissingBaseIngredients() {
-		// TODO: add parameter to select which path of recipes the algorithm should
-		// follow, and if the inventory have all the required items return empty list
-		return this.getMissingIngredients(this.getRequiredBaseIngredients());
+	public HashMap<Recipe, List<Ingredient>> getMissingBaseIngredients(int branch) {
+		return this.getMissingIngredients(this.getRequiredBaseIngredients(branch));
 	}
 
 	private HashMap<Recipe, List<Ingredient>> getMissingIngredients(HashMap<Recipe, List<Ingredient>> recipes) {
@@ -140,14 +138,14 @@ public class CraftingSystem {
 		return ingredientsPerRecipe;
 	}
 
-	public HashMap<Recipe, List<Ingredient>> getRequiredBaseIngredients() {
+	public HashMap<Recipe, List<Ingredient>> getRequiredBaseIngredients(int branch) {
 		HashMap<Recipe, List<Ingredient>> ingredientsPerRecipe = new HashMap<Recipe, List<Ingredient>>();
 
 		if (this.quantityToCraft > 0) {
 			List<Recipe> recipes = this.itemToCraft.getRecipes();
 
 			for (Recipe recipe : recipes) {
-				List<Ingredient> baseIngredients = getBaseIngredientsRecursive(recipe, this.quantityToCraft);
+				List<Ingredient> baseIngredients = getBaseIngredientsRecursive(recipe, this.quantityToCraft, branch);
 				ingredientsPerRecipe.put(recipe, baseIngredients);
 			}
 		}
@@ -155,7 +153,7 @@ public class CraftingSystem {
 		return ingredientsPerRecipe;
 	}
 
-	private List<Ingredient> getBaseIngredientsRecursive(Recipe recipe, int totalToCraft) {
+	private List<Ingredient> getBaseIngredientsRecursive(Recipe recipe, int totalToCraft, int branch) {
 		List<Ingredient> ingredients = recipe.getIngredients();
 
 		Map<Item, Integer> baseCount = new HashMap<Item, Integer>();
@@ -176,11 +174,15 @@ public class CraftingSystem {
 			if (item.isBase()) {
 				baseCount.put(item, baseCount.getOrDefault(item, 0) + itemQuantityNeeded);
 			} else {
-				Recipe firstRecipe = item.getRecipes().get(0);
-				List<Ingredient> firstRecipeBaseIngredients = getBaseIngredientsRecursive(firstRecipe,
-						itemQuantityNeeded);
+				List<Recipe> itemRecipes = item.getRecipes();
 
-				for (Ingredient baseIngredient : firstRecipeBaseIngredients) {
+				int recipeIndex = (branch + itemRecipes.size()) % itemRecipes.size();
+				Recipe desiredRecipe = itemRecipes.get(recipeIndex);
+
+				List<Ingredient> desiredRecipeBaseIngredients = getBaseIngredientsRecursive(desiredRecipe,
+						itemQuantityNeeded, branch);
+
+				for (Ingredient baseIngredient : desiredRecipeBaseIngredients) {
 					Item baseItem = baseIngredient.getItem();
 					int baseItemQuantity = baseIngredient.getQuantity();
 
