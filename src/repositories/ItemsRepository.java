@@ -206,11 +206,7 @@ public class ItemsRepository {
 
 					formatter.format("%" + lPadding * 2 + "s%s ", " ", itemMarkers[1]);
 
-					if (quantityToCraft == 1) {
-						formatter.format("Recipe #%d:\n", i + 1);
-					} else {
-						formatter.format("Recipe #%d (x%d):\n", i + 1, quantityToCraft);
-					}
+					formatter.format("Recipe #%d (x%d):\n", i + 1, quantityToCraft);
 
 					if (recipe.needsCraftingTable()) {
 						String craftingTable = recipe.getCraftingTable().getName();
