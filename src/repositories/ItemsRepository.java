@@ -188,13 +188,9 @@ public class ItemsRepository {
 			Item item = itemEntry.getValue();
 
 			formatter.format("%" + lPadding + "s%s ", " ", itemMarkers[0]);
-			formatter.format(StringTransformers.toTitle(itemName));
+			formatter.format("%s\n", StringTransformers.toTitle(itemName));
 
-			if (item.isBase()) {
-				formatter.format("\n");
-			} else {
-				formatter.format(":\n");
-
+			if (!item.isBase()) {
 				List<Recipe> itemRecipes = item.getRecipes();
 				int itemRecipesLength = itemRecipes.size();
 
@@ -206,7 +202,7 @@ public class ItemsRepository {
 
 					formatter.format("%" + lPadding * 2 + "s%s ", " ", itemMarkers[1]);
 
-					formatter.format("Recipe #%d (x%d):\n", i + 1, quantityToCraft);
+					formatter.format("Recipe #%d (x%d)\n", i + 1, quantityToCraft);
 
 					if (recipe.needsCraftingTable()) {
 						String craftingTable = recipe.getCraftingTable().getName();
