@@ -13,12 +13,12 @@ class RecipeTests {
 	@Test
 	void getCraftingTable() {
 		// Arrange
-		Item craftingTable = new Item("Crafting table");
+		Item woodCraftingTable = new Item("Wood crafting table");
 
-		Recipe recipe = new Recipe(craftingTable, List.of(), 1000, 2);
+		Recipe recipe = new Recipe(woodCraftingTable, List.of(), 1000, 2);
 
 		// Act within assert
-		Item expected = craftingTable;
+		Item expected = woodCraftingTable;
 		Item received = recipe.getCraftingTable();
 
 		assertEquals(expected, received, "Should return the crafting table");
@@ -96,5 +96,53 @@ class RecipeTests {
 				"List of expected and received base ingredients should have the same length");
 		assertTrue(received.containsAll(expected),
 				"Received base ingredients should contain all expected base ingredients");
+	}
+
+	@Test
+	void needsCraftingTable() {
+		// Arrange
+		Item woodCraftingTable = new Item("Wood crafting table");
+
+		Recipe recipe = new Recipe(List.of(), 1000, 2);
+		Recipe recipeWithCT = new Recipe(woodCraftingTable, List.of(), 1275, 1);
+
+		// Acts within asserts
+		assertFalse(recipe.needsCraftingTable(), "If recipe doesn't need a crafting table, it should be false");
+		assertTrue(recipeWithCT.needsCraftingTable(), "If recipe needs a crafting table, it should be true");
+	}
+
+	@Test
+	void setCraftingTable() {
+		// Arrange
+		Item woodCraftingTable = new Item("Wood crafting table");
+
+		Recipe recipe = new Recipe(List.of(), 1000, 2);
+
+		// Act
+		recipe.setCraftingTable(woodCraftingTable);
+
+		// Assert
+		Item expected = woodCraftingTable;
+		Item received = recipe.getCraftingTable();
+
+		assertEquals(expected, received, "Crafting table of the recipe should be the wood crafting table");
+	}
+
+	@Test
+	void setIngredients() {
+		// Arrange
+		Item wood = new Item("wood");
+		List<Ingredient> ingredients = List.of(new Ingredient(wood, 5));
+
+		Recipe recipe = new Recipe(List.of(), 1500, 7);
+		
+		// Act
+		recipe.setIngredients(ingredients);
+
+		// Assert
+		List<Ingredient> expected = ingredients;
+		List<Ingredient> received = recipe.getIngredients();
+
+		assertEquals(expected, received, "Should return the list of setted ingredients");
 	}
 }
