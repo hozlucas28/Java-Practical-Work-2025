@@ -212,7 +212,7 @@ class Menu {
 		do {
 			do {
 				System.out.print("> Which item do you want to craft? ");
-				itemName = this.scanner.nextLine().toLowerCase();
+				itemName = this.scanner.nextLine().toLowerCase().trim();
 				itemToCraft = this.itemsRepository.getItem(itemName);
 
 				if (itemToCraft == null) {
@@ -329,7 +329,7 @@ class Menu {
 
 		do {
 			System.out.printf("> Enter the file path where do you want to store the inventory: ");
-			savePath = this.scanner.nextLine();
+			savePath = this.scanner.nextLine().trim();
 
 			if (!savePath.endsWith(".json")) {
 				System.out.printf(
