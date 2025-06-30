@@ -297,6 +297,10 @@ class Menu {
 		int recipe = 0;
 		int maxRecipe = this.itemToCraft.getRecipes().size();
 
+		if (maxRecipe < 2) {
+			return 0;
+		}
+
 		do {
 			System.out.printf("> Enter the recipe number to craft: ");
 
