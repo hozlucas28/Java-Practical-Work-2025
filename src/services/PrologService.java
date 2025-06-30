@@ -101,9 +101,9 @@ public class PrologService {
 		Formatter ingredientsFormatter = new Formatter(ingredientsBuilder);
 
 		// Migrate base items and ingredients to prolog
-		for (Map.Entry<String, Item> entry : repositoryItems.entrySet()) {
-			String itemName = entry.getKey();
-			Item item = entry.getValue();
+		for (Map.Entry<String, Item> itemEntry : repositoryItems.entrySet()) {
+			String itemName = itemEntry.getKey();
+			Item item = itemEntry.getValue();
 
 			// Base item to prolog
 			if (item.isBase()) {
@@ -157,10 +157,10 @@ public class PrologService {
 
 		HashMap<Item, Integer> inventoryItems = inventory.getItems();
 
-		for (Map.Entry<Item, Integer> entry : inventoryItems.entrySet()) {
-			Item item = entry.getKey();
+		for (Map.Entry<Item, Integer> itemEntry : inventoryItems.entrySet()) {
+			Item item = itemEntry.getKey();
 			String itemName = item.getName();
-			Integer itemQuantity = entry.getValue();
+			Integer itemQuantity = itemEntry.getValue();
 
 			prologLinesFormatter.format("%s(\"%s\", %d).\n", this.itemInInventoryFactName, itemName, itemQuantity);
 		}

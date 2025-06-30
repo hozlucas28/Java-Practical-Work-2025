@@ -68,9 +68,9 @@ public class Recipe {
 
 		List<Ingredient> baseIngredients = new ArrayList<Ingredient>();
 
-		for (Map.Entry<Ingredient, Integer> entry : baseIngredientsMap.entrySet()) {
-			Ingredient baseIngredient = entry.getKey();
-			int realBaseIngredientQuantity = baseIngredient.getQuantity() * entry.getValue();
+		for (Map.Entry<Ingredient, Integer> baseIngredientEntry : baseIngredientsMap.entrySet()) {
+			Ingredient baseIngredient = baseIngredientEntry.getKey();
+			int realBaseIngredientQuantity = baseIngredient.getQuantity() * baseIngredientEntry.getValue();
 
 			Ingredient realBaseIngredient = new Ingredient(baseIngredient.getItem(), realBaseIngredientQuantity);
 

@@ -76,9 +76,9 @@ public class Inventory {
 	public void storeOnJSON(String path) throws IOException {
 		JsonObject json = new JsonObject();
 
-		for (Map.Entry<Item, Integer> entry : this.items.entrySet()) {
-			Item item = entry.getKey();
-			Integer quantity = entry.getValue();
+		for (Map.Entry<Item, Integer> itemEntry : this.items.entrySet()) {
+			Item item = itemEntry.getKey();
+			Integer quantity = itemEntry.getValue();
 
 			json.addProperty(item.getName(), quantity);
 		}

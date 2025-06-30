@@ -156,7 +156,7 @@ public class CraftingSystem {
 	private List<Ingredient> getBaseIngredientsRecursive(Recipe recipe, int totalToCraft, int branch) {
 		List<Ingredient> ingredients = recipe.getIngredients();
 
-		Map<Item, Integer> baseCount = new HashMap<Item, Integer>();
+		Map<Item, Integer> quantitiesPerItem = new HashMap<Item, Integer>();
 		List<Ingredient> baseIngredients = new ArrayList<Ingredient>();
 
 		int craftsNeeded = (int) Math.ceil(totalToCraft / (double) recipe.getQuantityToCraft());
@@ -164,7 +164,7 @@ public class CraftingSystem {
 		Item craftingTable = recipe.getCraftingTable();
 
 		if (recipe.needsCraftingTable()) {
-			baseCount.put(craftingTable, 1);
+			quantitiesPerItem.put(craftingTable, 1);
 		}
 
 		for (Ingredient ingredient : ingredients) {
@@ -172,7 +172,7 @@ public class CraftingSystem {
 			int itemQuantityNeeded = ingredient.getQuantity() * craftsNeeded;
 
 			if (item.isBase()) {
-				baseCount.put(item, baseCount.getOrDefault(item, 0) + itemQuantityNeeded);
+				quantitiesPerItem.put(item, quantitiesPerItem.getOrDefault(item, 0) + itemQuantityNeeded);
 			} else {
 				List<Recipe> itemRecipes = item.getRecipes();
 
@@ -187,15 +187,15 @@ public class CraftingSystem {
 					int baseItemQuantity = baseIngredient.getQuantity();
 
 					if (baseItem != craftingTable) {
-						baseCount.put(baseItem, baseCount.getOrDefault(baseItem, 0) + baseItemQuantity);
+						quantitiesPerItem.put(baseItem, quantitiesPerItem.getOrDefault(baseItem, 0) + baseItemQuantity);
 					}
 				}
 			}
 		}
 
-		for (Map.Entry<Item, Integer> entry : baseCount.entrySet()) {
-			Item item = entry.getKey();
-			Integer itemQuantity = entry.getValue();
+		for (Map.Entry<Item, Integer> itemEntry : quantitiesPerItem.entrySet()) {
+			Item item = itemEntry.getKey();
+			Integer itemQuantity = itemEntry.getValue();
 
 			Ingredient baseIngredient = new Ingredient(item, itemQuantity);
 
