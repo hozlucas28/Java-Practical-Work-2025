@@ -73,7 +73,7 @@ class ItemsRepositoryTests {
 		repositoryItems.put(torch.getName(), torch);
 
 		// Act
-		String jsonPath = Paths.get("test", "assets", "recipes.json").toString();
+		String jsonPath = Paths.get("test", "assets", "recipes.test.json").toString();
 		ItemsRepository itemsRepository = assertDoesNotThrow(() -> ItemsRepository.loadFromJSON(jsonPath),
 				"Should not throw an exception for a valid JSON file");
 

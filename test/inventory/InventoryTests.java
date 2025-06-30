@@ -225,7 +225,7 @@ class InventoryTests {
 		ItemsRepository itemsRepository = new ItemsRepository(repositoryItems);
 
 		// Act
-		String jsonPath = Paths.get("test", "assets", "inventory.json").toString();
+		String jsonPath = Paths.get("test", "assets", "inventory.test.json").toString();
 		Inventory inventory = assertDoesNotThrow(() -> Inventory.loadFromJSON(jsonPath, itemsRepository),
 				"Should not throw an exception for a valid JSON file");
 
