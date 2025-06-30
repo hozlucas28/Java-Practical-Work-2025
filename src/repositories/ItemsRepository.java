@@ -197,12 +197,14 @@ public class ItemsRepository {
 				for (int i = 0; i < itemRecipesLength; i++) {
 					Recipe recipe = itemRecipes.get(i);
 
-					int quantityToCraft = recipe.getQuantityToCraft();
 					List<Ingredient> ingredients = recipe.getIngredients();
+					int quantityToCraft = recipe.getQuantityToCraft();
+					int timeToCraftInMilliseconds = recipe.getTimeToCraftInMilliseconds();
 
 					formatter.format("%" + lPadding * 2 + "s%s ", " ", itemMarkers[1]);
 
-					formatter.format("Recipe #%d (x%d)\n", i + 1, quantityToCraft);
+					formatter.format("Recipe #%d (x%d ~ %d milliseconds)\n", i + 1, quantityToCraft,
+							timeToCraftInMilliseconds);
 
 					if (recipe.needsCraftingTable()) {
 						String craftingTable = recipe.getCraftingTable().getName();

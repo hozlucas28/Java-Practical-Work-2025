@@ -91,7 +91,7 @@ public class CraftedItem extends Item {
 		usedIngredients.addAll(usedRecipe.getIngredients());
 
 		int recipeNumber = this.recipes.indexOf(usedRecipe) + 1;
-		formatter.format("  ◦ Recipe #%d (x%d): ", recipeNumber, this.quantityCrafted);
+		formatter.format("  ◦ Recipe #%d (x%d ~ %d milliseconds): ", recipeNumber, this.quantityCrafted, this.craftingTimeInMilliseconds);
 
 		int usedIngredientsLength = usedIngredients.size();
 
