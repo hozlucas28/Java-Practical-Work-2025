@@ -2,6 +2,8 @@ package services;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 
@@ -73,5 +75,58 @@ class PrologServiceTests {
 
 		assertEquals(expected, received,
 				"Should match the craftable items and quantities loaded from prolog query to expected ones");
+	}
+
+	@Test
+	void toFile() {
+		// Arrange
+		Item wood = new Item("wood");
+		Item iron = new Item("iron");
+
+		List<Ingredient> stickRecipeIngredients = List.of(new Ingredient(wood, 2));
+		Recipe stickRecipe = new Recipe(stickRecipeIngredients, 1400, 1);
+		List<Recipe> stickRecipes = List.of(stickRecipe);
+
+		Item stick = new Item("stick", stickRecipes);
+
+		HashMap<String, Item> repositoryItems = new HashMap<String, Item>();
+
+		repositoryItems.put(wood.getName(), wood);
+		repositoryItems.put(iron.getName(), iron);
+
+		repositoryItems.put(stick.getName(), stick);
+
+		ItemsRepository itemsRepository = new ItemsRepository(repositoryItems);
+
+		HashMap<Item, Integer> inventoryItems = new HashMap<Item, Integer>();
+
+		inventoryItems.put(wood, 2);
+		inventoryItems.put(iron, 6);
+
+		Inventory inventory = new Inventory(inventoryItems);
+
+		PrologServiceBuilder prologServiceBuilder = new PrologServiceBuilder();
+
+		PrologService prologService = prologServiceBuilder.setBaseItemFactName("base_item")
+				.setIngredientFactName("ingredient").setItemInInventoryFactName("have")
+				.setItemsRepository(itemsRepository).setInventory(inventory).build();
+
+		// Act within assert
+		assertDoesNotThrow(() -> {
+			// Act
+			File tempFile = File.createTempFile("prologServiceTests__toFile", ".tmp.json");
+			String tempFilePath = tempFile.getAbsolutePath().replace("\\", "/");
+
+			prologService.toFile(tempFilePath);
+
+			// Assert
+			long expectedFileLines = 53;
+			long receivedFileLines = Files.lines(tempFile.toPath()).count();
+
+			assertEquals(expectedFileLines, receivedFileLines, "File should have at least 53 lines");
+			
+			// After
+			tempFile.delete();
+		}, "Should not throw an exception on store the prolog service in a valid file path");
 	}
 }

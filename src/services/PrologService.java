@@ -19,6 +19,7 @@ import repositories.ItemsRepository;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class PrologService {
 	private final String baseItemFactName;
@@ -43,7 +44,7 @@ public class PrologService {
 
 		File tempFile = File.createTempFile("prologService__craftableItems", ".tmp.pl");
 		String tempFilePath = tempFile.getPath().replace("\\", "/");
-		FileWriter tempFileWriter = new FileWriter(tempFile);
+		FileWriter tempFileWriter = new FileWriter(tempFile, StandardCharsets.UTF_8);
 
 		this.toFile(tempFileWriter);
 		tempFileWriter.close();
@@ -72,6 +73,12 @@ public class PrologService {
 		tempFile.delete();
 
 		return craftableItems;
+	}
+
+	public void toFile(String path) throws IOException {
+		FileWriter writer = new FileWriter(path, StandardCharsets.UTF_8);
+		this.toFile(writer);
+		writer.close();
 	}
 
 	private void toFile(FileWriter fWriter) throws IOException {

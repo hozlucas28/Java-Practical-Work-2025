@@ -130,6 +130,7 @@ direction TB
 	    -Inventory inventory
 
         +HashMap~Item, Integer~ craftableItems()
+        +void toFile(String path)
         -void toFile(FileWriter fWriter)
         -String toProlog(ItemsRepository itemsRepository)
         -String toProlog(Inventory inventory)
