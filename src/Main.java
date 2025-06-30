@@ -64,7 +64,7 @@ public class Main {
 		System.out.println(itemsRepository.toString(new String[] { "•", "•", "◦" }, 2));
 
 		// Print items within inventory
-		System.out.println("\n> Preloaded inventory:\n");
+		System.out.println("\n> Inventory:\n");
 		System.out.printf("%s\n\n", inventory.toString("•", 2));
 
 		// Create and initialize menu
