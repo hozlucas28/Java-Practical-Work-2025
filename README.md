@@ -179,11 +179,13 @@ direction TB
     class CraftedItem {
 	    -ZonedDateTime date
 	    -Recipe usedRecipe
-	    -int craftedItems
+	    -int quantityCrafted
+        -int craftingTimeInMilliseconds
 
 	    +ZonedDateTime getDate()
 	    +Recipe getUsedRecipe()
-	    +int getCraftedItems()
+	    +int getQuantityCrafted()
+        +int getCraftingTimeInMilliseconds()
     }
 
     class Inventory {

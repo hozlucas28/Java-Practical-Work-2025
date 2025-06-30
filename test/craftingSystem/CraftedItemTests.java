@@ -56,4 +56,45 @@ class CraftedItemTests {
 
 		assertEquals(expected, received, "Should return the recipe used to craft the knife");
 	}
+
+	@Test
+	void quantityCrafted() {
+		// Arrange
+		Item stick = new Item("stick");
+
+		List<Ingredient> ingredients = List.of(new Ingredient(stick, 2));
+
+		Recipe longStickRecipe = new Recipe(ingredients, 1900, 1);
+		Item longStick = new Item("long stick", List.of(longStickRecipe));
+
+		int quantityCrafted = 13;
+		CraftedItem craftedLongStick = new CraftedItem(longStick, longStickRecipe, quantityCrafted);
+
+		// Act within assert
+		int expected = quantityCrafted;
+		int received = craftedLongStick.getQuantityCrafted();
+
+		assertEquals(expected, received, "Should return the number of crafted long sticks");
+	}
+
+	@Test
+	void getCraftingTimeInMilliseconds() {
+		// Arrange
+		Item refinedWood = new Item("refined wood");
+
+		List<Ingredient> ingredients = List.of(new Ingredient(refinedWood, 2));
+
+		Recipe tableRecipe = new Recipe(ingredients, 2250, 1);
+		Item table = new Item("long stick", List.of(tableRecipe));
+
+		int quantityCrafted = 3;
+		CraftedItem craftedTable = new CraftedItem(table, tableRecipe, quantityCrafted);
+
+		// Act within assert
+		int expected = (quantityCrafted / tableRecipe.getQuantityToCraft())
+				* tableRecipe.getTimeToCraftInMilliseconds();
+		int received = craftedTable.getCraftingTimeInMilliseconds();
+
+		assertEquals(expected, received, "Should return the crafting time in milliseconds for craft 3 tables");
+	}
 }

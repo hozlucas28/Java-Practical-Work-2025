@@ -16,6 +16,7 @@ public class CraftedItem extends Item {
 	private final ZonedDateTime date;
 	private final Recipe usedRecipe;
 	private final int quantityCrafted;
+	private final int craftingTimeInMilliseconds;
 
 	public CraftedItem(Item itemCrafted, Recipe usedRecipe) {
 		super(itemCrafted.getName(), itemCrafted.getRecipes());
@@ -23,6 +24,8 @@ public class CraftedItem extends Item {
 		this.date = ZonedDateTime.now();
 		this.usedRecipe = usedRecipe;
 		this.quantityCrafted = 1;
+		this.craftingTimeInMilliseconds = (quantityCrafted / usedRecipe.getQuantityToCraft())
+				* usedRecipe.getTimeToCraftInMilliseconds();
 	}
 
 	public CraftedItem(Item itemCrafted, Recipe usedRecipe, int quantityCrafted) {
@@ -31,6 +34,8 @@ public class CraftedItem extends Item {
 		this.date = ZonedDateTime.now();
 		this.usedRecipe = usedRecipe;
 		this.quantityCrafted = quantityCrafted;
+		this.craftingTimeInMilliseconds = (quantityCrafted / usedRecipe.getQuantityToCraft())
+				* usedRecipe.getTimeToCraftInMilliseconds();
 	}
 
 	public ZonedDateTime getDate() {
@@ -43,6 +48,10 @@ public class CraftedItem extends Item {
 
 	public int getQuantityCrafted() {
 		return this.quantityCrafted;
+	}
+
+	public int getCraftingTimeInMilliseconds() {
+		return this.craftingTimeInMilliseconds;
 	}
 
 	public boolean softEquals(Object obj) {
