@@ -71,25 +71,32 @@ public class CraftedItem extends Item {
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy 'at' HH:mm:ss");
 		formatter.format("%s (%s):\n", StringTransformers.toTitle(this.name), this.date.format(dateFormatter));
 
-		int recipeNumber = this.recipes.indexOf(usedRecipe) + 1;
-		formatter.format("  ◦ Recipe #%d (x%d): ", recipeNumber, this.quantityCrafted);
-
+		Ingredient craftingTable = null;
 		List<Ingredient> usedIngredients = new ArrayList<Ingredient>();
 
 		if (this.usedRecipe.needsCraftingTable()) {
-			Ingredient craftingTable = new Ingredient(this.usedRecipe.getCraftingTable(), 1);
+			craftingTable = new Ingredient(this.usedRecipe.getCraftingTable(), 1);
 			usedIngredients.add(craftingTable);
 		}
 
 		usedIngredients.addAll(usedRecipe.getIngredients());
-		
+
+		int recipeNumber = this.recipes.indexOf(usedRecipe) + 1;
+		formatter.format("  ◦ Recipe #%d (x%d): ", recipeNumber, this.quantityCrafted);
+
 		int usedIngredientsLength = usedIngredients.size();
 
 		for (int i = 0; i < usedIngredientsLength; i++) {
 			Ingredient ingredient = usedIngredients.get(i);
 
 			String ingredientName = StringTransformers.toTitle(ingredient.getItem().getName());
-			int ingredientQuantity = ingredient.getQuantity();
+			int ingredientQuantity = 1;
+
+			if (ingredient != craftingTable) {
+				ingredientQuantity = (int) Math
+						.ceil(this.quantityCrafted / (double) this.usedRecipe.getQuantityToCraft())
+						* ingredient.getQuantity();
+			}
 
 			if (i == usedIngredientsLength - 1) {
 				formatter.format("%s%s (x%d)", i == 0 ? "" : "and ", ingredientName, ingredientQuantity);
