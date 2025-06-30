@@ -226,7 +226,7 @@ public class CraftingSystem {
 		this.quantityToCraft = quantity;
 	}
 
-	public int craftItem(int recipe) throws NonCraftableItemException {
+	public CraftedItem craftItem(int recipe) throws NonCraftableItemException {
 		List<Recipe> recipes = this.itemToCraft.getRecipes();
 
 		int recipeIndex = (recipe + recipes.size()) % recipes.size();
@@ -286,7 +286,9 @@ public class CraftingSystem {
 			// OutOfRangeException.
 		}
 
-		return itemsCrafted;
+		CraftedItem craftedItem = new CraftedItem(this.itemToCraft, selectedRecipe, itemsCrafted);
+
+		return craftedItem;
 	}
 
 	public CraftedItem undoLastCraft() throws EmptyHistoryException, ItemNotFoundException {

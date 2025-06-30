@@ -63,10 +63,14 @@ class Menu {
 			switch (operation) {
 			case 1:
 				try {
-					int recipeToCraft =  this.requestRecipeToCraft();
-					int itemsCrafted = this.craftingSystem.craftItem();
+					int recipeToCraft = this.requestRecipeToCraft();
+					CraftedItem craftedItem = this.craftingSystem.craftItem(recipeToCraft);
 
-					System.out.printf("> %d %ss crafted.\n", itemsCrafted, itemToCraftName);
+					int itemsCrafted = craftedItem.getQuantityCrafted();
+					int craftingTimeInMilliseconds = craftedItem.getCraftingTimeInMilliseconds();
+
+					System.out.printf("> %d %ss crafted in %d milliseconds.\n", itemsCrafted, itemToCraftName,
+							craftingTimeInMilliseconds);
 				} catch (NonCraftableItemException e) {
 					System.out.printf("> You don't have the required ingredients to craft %d %ss.\n",
 							this.quantityToCraft, itemToCraftName);
@@ -305,7 +309,8 @@ class Menu {
 				}
 			} catch (NoSuchElementException e) {
 				recipe = 0;
-				System.out.printf("> Invalid recipe, it should be a number between 0 and %d (included). Try again...\n\n",
+				System.out.printf(
+						"> Invalid recipe, it should be a number between 0 and %d (included). Try again...\n\n",
 						maxRecipe);
 			} finally {
 				this.scanner.nextLine();

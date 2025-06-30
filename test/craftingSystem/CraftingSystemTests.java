@@ -429,9 +429,9 @@ class CraftingSystemTests {
 		assertDoesNotThrow(() -> {
 			// Act
 			craftingSystem.setItemToCraft(furnace, 1);
-			craftingSystem.craftItem(1);
+			CraftedItem craftedItem = craftingSystem.craftItem(1);
 
-			// Assert
+			// Asserts
 			HashMap<Item, Integer> expectedInventoryItems = new HashMap<Item, Integer>();
 
 			expectedInventoryItems.put(stone, 12 - 8);
@@ -440,9 +440,13 @@ class CraftingSystemTests {
 
 			Inventory expectedInventory = new Inventory(expectedInventoryItems);
 			Inventory receivedInventory = inventory;
+			
+			CraftedItem expectedCraftedItem = new CraftedItem(furnace, furnaceRecipe, 1);
+			CraftedItem receivedCraftedItem = craftedItem;
 
 			assertEquals(expectedInventory, receivedInventory,
 					"Inventory should have the quantity of crafted item, minus used ingredients to craft it");
+			assertEquals(expectedCraftedItem, receivedCraftedItem, "Crafted item should a furnace crafted with 8 stones in 1250 milliseconds");
 		}, "Should not throw an exception if it want to craft a non-base and craftable item with the inventory");
 	}
 
