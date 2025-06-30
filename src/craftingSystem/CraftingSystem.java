@@ -226,38 +226,48 @@ public class CraftingSystem {
 		this.quantityToCraft = quantity;
 	}
 
-	public int craftItem() throws NonCraftableItemException {
-		Recipe firstEmptyRecipe = null;
-		HashMap<Recipe, List<Ingredient>> missingIngredientsPerRecipe = this.getMissingIngredients();
+	public int craftItem(int recipe) throws NonCraftableItemException {
+		List<Recipe> recipes = this.itemToCraft.getRecipes();
 
-		for (Map.Entry<Recipe, List<Ingredient>> recipeEntry : missingIngredientsPerRecipe.entrySet()) {
-			Recipe recipe = recipeEntry.getKey();
-			List<Ingredient> missingIngredients = recipeEntry.getValue();
+		int recipeIndex = (recipe + recipes.size()) % recipes.size();
+		Recipe selectedRecipe = recipes.get(recipeIndex);
 
-			if (missingIngredients.isEmpty()) {
-				firstEmptyRecipe = recipe;
-				break;
+		List<Ingredient> ingredients = selectedRecipe.getIngredients();
+		int recipeQuantityToCraft = selectedRecipe.getQuantityToCraft();
+
+		if (selectedRecipe.needsCraftingTable()) {
+			Item craftingTable = selectedRecipe.getCraftingTable();
+
+			if (this.inventory.getItemQuantity(craftingTable) < 1) {
+				String errorMessage = String.format(
+						"Inventory does not have the necessary ingredients to craft %d of \"%s\" items with any recipe.",
+						this.quantityToCraft, this.itemToCraft.getName());
+
+				throw new NonCraftableItemException(errorMessage);
 			}
 		}
 
-		if (firstEmptyRecipe == null) {
-			String errorMessage = String.format(
-					"Inventory does not have the necessary ingredients to craft %d of \"%s\" items with any recipe.",
-					this.quantityToCraft, this.itemToCraft.getName());
+		for (Ingredient ingredient : ingredients) {
+			Item ingItem = ingredient.getItem();
+			int ingQuantity = ingredient.getQuantity();
+			int requiredQuantity = (int) Math.ceil(this.quantityToCraft / (double) recipeQuantityToCraft) * ingQuantity;
 
-			throw new NonCraftableItemException(errorMessage);
+			if (this.inventory.getItemQuantity(ingItem) < requiredQuantity) {
+				String errorMessage = String.format(
+						"Inventory does not have the necessary ingredients to craft %d of \"%s\" items with any recipe.",
+						this.quantityToCraft, this.itemToCraft.getName());
+
+				throw new NonCraftableItemException(errorMessage);
+			}
 		}
 
-		List<Ingredient> ingredientsToRemove = firstEmptyRecipe.getIngredients();
-
-		for (Ingredient ingredient : ingredientsToRemove) {
-			Item itemToRemove = ingredient.getItem();
-			int quantityToRemove = (int) Math
-					.ceil(this.quantityToCraft / (double) firstEmptyRecipe.getQuantityToCraft())
+		for (Ingredient ingredient : ingredients) {
+			Item item = ingredient.getItem();
+			int quantity = (int) Math.ceil(this.quantityToCraft / (double) selectedRecipe.getQuantityToCraft())
 					* ingredient.getQuantity();
 
 			try {
-				this.inventory.removeItem(itemToRemove, quantityToRemove);
+				this.inventory.removeItem(item, quantity);
 			} catch (ItemNotFoundException | OutOfRangeException e) {
 				// With an required ingredient quantity below the available one, and knowing
 				// that it exists inside the inventory, it's never throw an
@@ -265,12 +275,12 @@ public class CraftingSystem {
 			}
 		}
 
-		int itemsCrafted = firstEmptyRecipe.getQuantityToCraft()
-				* (int) Math.ceil(this.quantityToCraft / (double) firstEmptyRecipe.getQuantityToCraft());
+		int itemsCrafted = selectedRecipe.getQuantityToCraft()
+				* (int) Math.ceil(this.quantityToCraft / (double) selectedRecipe.getQuantityToCraft());
 
 		try {
 			this.inventory.addItem(this.itemToCraft, itemsCrafted);
-			this.history.addItem(this.itemToCraft, firstEmptyRecipe, itemsCrafted);
+			this.history.addItem(this.itemToCraft, selectedRecipe, itemsCrafted);
 		} catch (OutOfRangeException e) {
 			// With a crafted item quantity greater than 1, it's never throw an
 			// OutOfRangeException.

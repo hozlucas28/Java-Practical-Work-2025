@@ -223,7 +223,7 @@ direction TB
         -List~Ingredient~ getBaseIngredientsRecursive(Recipe recipe, int totalToCraft, int branch)
 	    +boolean canCraft()
 	    +void setItemToCraft(Item item, int quantity)
-	    +int craftItems()
+	    +int craftItem(int recipe)
 	    +CraftedItem undoLastCraft()
     }
 

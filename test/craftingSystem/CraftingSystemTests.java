@@ -50,10 +50,10 @@ class CraftingSystemTests {
 		// Acts within assert
 		assertDoesNotThrow(() -> {
 			craftingSystem.setItemToCraft(sword, 2);
-			craftingSystem.craftItem();
+			craftingSystem.craftItem(1);
 
 			craftingSystem.setItemToCraft(furnace, 1);
-			craftingSystem.craftItem();
+			craftingSystem.craftItem(1);
 		}, "Should not throw an exception if it want to craft non-base and craftable items with the inventory");
 
 		// Asserts
@@ -275,7 +275,7 @@ class CraftingSystemTests {
 			1400,
 			4
 		);
-		
+
 		Recipe stickRecipe02 = new Recipe(
 			woodCraftingTable,
 			List.of(
@@ -407,7 +407,7 @@ class CraftingSystemTests {
 	}
 
 	@Test
-	void craftItems() {
+	void craftItem() {
 		// Arrange
 		Item stone = new Item("stone");
 		Item woodCraftingTable = new Item("wood crafting table");
@@ -429,7 +429,7 @@ class CraftingSystemTests {
 		assertDoesNotThrow(() -> {
 			// Act
 			craftingSystem.setItemToCraft(furnace, 1);
-			craftingSystem.craftItem();
+			craftingSystem.craftItem(1);
 
 			// Assert
 			HashMap<Item, Integer> expectedInventoryItems = new HashMap<Item, Integer>();
@@ -447,7 +447,7 @@ class CraftingSystemTests {
 	}
 
 	@Test
-	void craftItems__NonCraftableItemException() {
+	void craftItem__NonCraftableItemException() {
 		// Arrange
 		Item stone = new Item("stone");
 		Item woodCraftingTable = new Item("wood crafting table");
@@ -469,7 +469,7 @@ class CraftingSystemTests {
 		assertDoesNotThrow(() -> {
 			craftingSystem.setItemToCraft(furnace, 1);
 
-			assertThrows(NonCraftableItemException.class, () -> craftingSystem.craftItem(),
+			assertThrows(NonCraftableItemException.class, () -> craftingSystem.craftItem(1),
 					"Should throw `NonCraftableItemException` on try to craft a furnace without the required ingredients within inventory");
 		}, "Should not throw an exception if it want to craft non-base items");
 	}
@@ -506,10 +506,10 @@ class CraftingSystemTests {
 		// Act within assert
 		assertDoesNotThrow(() -> {
 			craftingSystem.setItemToCraft(sword, 1);
-			craftingSystem.craftItem();
+			craftingSystem.craftItem(1);
 
 			craftingSystem.setItemToCraft(torch, 2);
-			craftingSystem.craftItem();
+			craftingSystem.craftItem(1);
 
 			craftingSystem.undoLastCraft();
 		}, "Should not throw an exception if it craft items and undo last one");
@@ -565,7 +565,7 @@ class CraftingSystemTests {
 
 		assertDoesNotThrow(() -> {
 			craftingSystem.setItemToCraft(furnace, 1);
-			craftingSystem.craftItem();
+			craftingSystem.craftItem(1);
 			inventory.removeItem(furnace, 1);
 		}, "Should not throw an exception if it want to craft a non-base and craftable item with the inventory");
 
