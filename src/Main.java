@@ -1,5 +1,6 @@
 import java.io.FileNotFoundException;
 import java.nio.file.Paths;
+import java.util.Scanner;
 
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
@@ -67,8 +68,11 @@ public class Main {
 		System.out.printf("%s\n\n", inventory.toString("•", 2));
 
 		// Create and initialize menu
-		Menu menu = new Menu(inventory, itemsRepository, prologService);
+		Scanner stdin = new Scanner(System.in);
+		Menu menu = new Menu(stdin, inventory, itemsRepository, prologService);
+		
 		menu.init();
+		stdin.close();
 
 		System.out.println("> Program finished.");
 	}

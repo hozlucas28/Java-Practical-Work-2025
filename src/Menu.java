@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.function.Function;
 
@@ -22,7 +23,7 @@ import services.PrologService;
 import utilities.StringTransformers;
 
 class Menu {
-	private final Scanner inputScanner;
+	private final Scanner scanner;
 
 	private final Inventory inventory;
 	private final ItemsRepository itemsRepository;
@@ -33,8 +34,8 @@ class Menu {
 
 	private final PrologService prologService;
 
-	public Menu(Inventory inventory, ItemsRepository itemsRepository, PrologService prologService) {
-		this.inputScanner = new Scanner(System.in);
+	public Menu(Scanner scanner, Inventory inventory, ItemsRepository itemsRepository, PrologService prologService) {
+		this.scanner = scanner;
 
 		this.inventory = inventory;
 		this.itemsRepository = itemsRepository;
@@ -88,11 +89,20 @@ class Menu {
 
 				System.out.printf("> Required ingredients to craft %d %ss:\n\n", this.quantityToCraft, itemToCraftName);
 				this.showIngredientsCollection(requiredIngredients.values(), (index) -> {
-					return String.format("> Recipe #%d: not requires ingredients.", index + 1);
+					return String.format("  • Recipe #%d: not requires ingredients.", index + 1);
 				});
 				break;
 
 			case 5:
+				HashMap<Recipe, List<Ingredient>> missingIngredients = this.craftingSystem.getMissingIngredients();
+
+				System.out.printf("> Missing ingredients to craft %d %ss:\n\n", this.quantityToCraft, itemToCraftName);
+				this.showIngredientsCollection(missingIngredients.values(), (index) -> {
+					return String.format("  • Recipe #%d: no missing ingredients within inventory.", index + 1);
+				});
+				break;
+
+			case 6:
 				branch = this.requestBranch();
 				HashMap<Recipe, List<Ingredient>> requiredBaseIngredients = this.craftingSystem
 						.getRequiredBaseIngredients(branch);
@@ -100,16 +110,7 @@ class Menu {
 				System.out.printf("> Required base ingredients to craft %d %ss:\n\n", this.quantityToCraft,
 						itemToCraftName);
 				this.showIngredientsCollection(requiredBaseIngredients.values(), (index) -> {
-					return String.format("> Recipe #%d: not requires base ingredients.", index + 1);
-				});
-				break;
-
-			case 6:
-				HashMap<Recipe, List<Ingredient>> missingIngredients = this.craftingSystem.getMissingIngredients();
-
-				System.out.printf("> Missing ingredients to craft %d %ss:\n\n", this.quantityToCraft, itemToCraftName);
-				this.showIngredientsCollection(missingIngredients.values(), (index) -> {
-					return String.format("> Recipe #%d: no missing ingredients within inventory.", index + 1);
+					return String.format("  • Recipe #%d: not requires base ingredients.", index + 1);
 				});
 				break;
 
@@ -121,7 +122,7 @@ class Menu {
 				System.out.printf("\n> Missing base ingredients to craft %d %ss (based on recipe path #%d):\n\n",
 						this.quantityToCraft, itemToCraftName, branch + 1);
 				this.showIngredientsCollection(missingBaseIngredients.values(), (index) -> {
-					return String.format("> Recipe #%d: no missing base ingredients within inventory.", index + 1);
+					return String.format("  • Recipe #%d: no missing base ingredients within inventory.", index + 1);
 				});
 				break;
 
@@ -195,8 +196,6 @@ class Menu {
 			}
 
 		} while (option != 0);
-
-		this.inputScanner.close();
 	}
 
 	private void setItemToCraft() {
@@ -208,7 +207,7 @@ class Menu {
 		do {
 			do {
 				System.out.print("> Which item do you want to craft? ");
-				itemName = this.inputScanner.nextLine().toLowerCase();
+				itemName = this.scanner.nextLine().toLowerCase();
 				itemToCraft = this.itemsRepository.getItem(itemName);
 
 				if (itemToCraft == null) {
@@ -219,11 +218,19 @@ class Menu {
 
 			do {
 				System.out.printf("> How many %ss do you want to craft as minimum? ", itemName);
-				quantityToCraft = this.inputScanner.nextInt();
-				this.inputScanner.nextLine();
 
-				if (quantityToCraft < 1) {
-					System.out.println("> Error! Quantity to craft must be greater or equal to 1. Try again...");
+				try {
+					quantityToCraft = this.scanner.nextInt();
+
+					if (quantityToCraft < 1) {
+						System.out.println("> Error! Quantity to craft must be greater or equal to 1. Try again...");
+					}
+				} catch (NoSuchElementException e) {
+					quantityToCraft = 0;
+					System.out
+							.println("> Error! Quantity to craft must be a number greater or equal to 1. Try again...");
+				} finally {
+					this.scanner.nextLine();
 				}
 			} while (quantityToCraft < 1);
 
@@ -241,7 +248,7 @@ class Menu {
 	}
 
 	private int requestOperation(String item, int quantity) {
-		int option = 0;
+		int option = -1;
 
 		do {
 			// @formatter:off
@@ -250,8 +257,8 @@ class Menu {
 			System.out.printf("  2  - How many %ss can I craft?\n", item);
 			System.out.println("  3  - Change item to craft");
 			System.out.printf("  4  - Show required ingredients to craft %d %ss\n", quantity, item);
-			System.out.printf("  5  - Show required base ingredients to craft %d %ss\n", quantity, item);
-			System.out.printf("  6  - Show missing ingredients to craft %d %ss\n", quantity, item);
+			System.out.printf("  5  - Show missing ingredients to craft %d %ss\n", quantity, item);
+			System.out.printf("  6  - Show required base ingredients to craft %d %ss\n", quantity, item);
 			System.out.printf("  7  - Show missing base ingredients to craft %d %ss\n", quantity, item);
 			System.out.println("  8  - Show inventory");
 			System.out.println("  9  - Save inventory");
@@ -259,13 +266,19 @@ class Menu {
 			System.out.println("  11 - Undo last craft");
 			System.out.println("  12 - Show repository items");
 			System.out.println("  13 - Show repository craftable items");
-			System.out.println("  14 - Show craftable items by communicating with the prolog service");
+			System.out.println("  14 - Show craftable items with inventory items (Prolog service)");
 			System.out.println("  0  - Exit\n");
 			// @formatter:on
 
 			System.out.printf("> Select an operation: ");
-			option = this.inputScanner.nextInt();
-			this.inputScanner.nextLine();
+
+			try {
+				option = this.scanner.nextInt();
+			} catch (NoSuchElementException e) {
+				// Ignore the exception occurrence, just continue requesting the option.
+			} finally {
+				this.scanner.nextLine();
+			}
 
 			if (option < 0 || option > 14) {
 				System.out.printf("> %d is an invalid operation! Try again...\n\n", option);
@@ -280,7 +293,7 @@ class Menu {
 
 		do {
 			System.out.printf("> Enter the file path where do you want to store the inventory: ");
-			savePath = this.inputScanner.nextLine();
+			savePath = this.scanner.nextLine();
 
 			if (!savePath.endsWith(".json")) {
 				System.out.printf(
@@ -300,7 +313,7 @@ class Menu {
 			int ingredientsLength = ingredients.size();
 
 			if (ingredientsLength > 0) {
-				System.out.printf("> Recipe #%d: ", i + 1);
+				System.out.printf("  • Recipe #%d: ", i + 1);
 			} else {
 				System.out.println(onEmptyList.apply(i));
 			}
@@ -322,15 +335,22 @@ class Menu {
 	}
 
 	private int requestBranch() {
-		int branch = 1;
+		int branch = 0;
 
 		do {
 			System.out.printf("> Enter the branch to follow: ");
-			branch = this.inputScanner.nextInt();
-			this.inputScanner.nextLine();
 
-			if (branch < 1) {
-				System.out.println("> Invalid branch, it should be greater or equal to 1. Try again...");
+			try {
+				branch = this.scanner.nextInt();
+
+				if (branch < 1) {
+					System.out.println("> Invalid branch, it should be greater or equal to 1. Try again...");
+				}
+			} catch (NoSuchElementException e) {
+				branch = 0;
+				System.out.println("> Invalid branch, it should be a number greater or equal to 1. Try again...");
+			} finally {
+				this.scanner.nextLine();
 			}
 		} while (branch < 1);
 
