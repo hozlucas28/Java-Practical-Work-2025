@@ -183,26 +183,26 @@ public class ItemsRepository {
 		StringBuilder builder = new StringBuilder();
 		Formatter formatter = new Formatter(builder);
 
-		HashMap<String, Item> basicItems = new HashMap<String, Item>();
-		HashMap<String, Item> complexItems = new HashMap<String, Item>();
+		HashMap<String, Item> baseItems = new HashMap<String, Item>();
+		HashMap<String, Item> craftableItems = new HashMap<String, Item>();
 
 		for (Map.Entry<String, Item> itemEntry : this.items.entrySet()) {
 			String itemName = itemEntry.getKey();
 			Item item = itemEntry.getValue();
 
 			if (item.isBase()) {
-				basicItems.put(itemName, item);
+				baseItems.put(itemName, item);
 			} else {
-				complexItems.put(itemName, item);
+				craftableItems.put(itemName, item);
 			}
 		}
 
-		for (String itemName : basicItems.keySet()) {
+		for (String itemName : baseItems.keySet()) {
 			formatter.format("%" + lPadding + "s%s ", " ", itemMarkers[0]);
 			formatter.format("%s\n", StringTransformers.toTitle(itemName));
 		}
 
-		for (Map.Entry<String, Item> itemEntry : complexItems.entrySet()) {
+		for (Map.Entry<String, Item> itemEntry : craftableItems.entrySet()) {
 			String itemName = itemEntry.getKey();
 			Item item = itemEntry.getValue();
 
