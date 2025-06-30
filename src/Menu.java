@@ -63,6 +63,7 @@ class Menu {
 			switch (operation) {
 			case 1:
 				try {
+					int recipeToCraft =  this.requestRecipeToCraft();
 					int itemsCrafted = this.craftingSystem.craftItem();
 
 					System.out.printf("> %d %ss crafted.\n", itemsCrafted, itemToCraftName);
@@ -286,6 +287,32 @@ class Menu {
 		} while (operation < 0 || operation > 14);
 
 		return operation;
+	}
+
+	private int requestRecipeToCraft() {
+		int recipe = 0;
+		int maxRecipe = this.itemToCraft.getRecipes().size();
+
+		do {
+			System.out.printf("> Enter the recipe number to craft: ");
+
+			try {
+				recipe = this.scanner.nextInt();
+
+				if (recipe < 0 || recipe > maxRecipe) {
+					System.out.printf("> Invalid recipe, it should be between 0 and %d (included). Try again...\n\n",
+							maxRecipe);
+				}
+			} catch (NoSuchElementException e) {
+				recipe = 0;
+				System.out.printf("> Invalid recipe, it should be a number between 0 and %d (included). Try again...\n\n",
+						maxRecipe);
+			} finally {
+				this.scanner.nextLine();
+			}
+		} while (recipe < 0 || recipe > maxRecipe);
+
+		return recipe - 1;
 	}
 
 	private String requestInventorySavePath() {
