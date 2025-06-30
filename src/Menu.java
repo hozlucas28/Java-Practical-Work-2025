@@ -98,12 +98,20 @@ class Menu {
 
 				System.out.printf("> Missing ingredients to craft %d %ss:\n\n", this.quantityToCraft, itemToCraftName);
 				this.showIngredientsCollection(missingIngredients.values(), (index) -> {
-					return String.format("> Recipe #%d: no missing ingredients within inventory.", index);
+					return String.format("> Recipe #%d: no missing ingredients within inventory.", index + 1);
 				});
 				break;
 
 			case 7:
-				// TODO: Show missing base ingredients to craft
+				int recipePath = this.requestBranch();
+				HashMap<Recipe, List<Ingredient>> missingBaseIngredients = this.craftingSystem
+						.getMissingBaseIngredients(recipePath);
+
+				System.out.printf("\n> Missing base ingredients to craft %d %ss (based on recipe path #%d):\n\n",
+						this.quantityToCraft, itemToCraftName, recipePath + 1);
+				this.showIngredientsCollection(missingBaseIngredients.values(), (index) -> {
+					return String.format("> Recipe #%d: no missing base ingredients within inventory.", index + 1);
+				});
 				break;
 
 			case 8:
@@ -300,6 +308,22 @@ class Menu {
 
 			i++;
 		}
+	}
+
+	private int requestBranch() {
+		int branch = 1;
+
+		do {
+			System.out.printf("> Enter the branch to follow: ");
+			branch = this.inputScanner.nextInt();
+			this.inputScanner.nextLine();
+
+			if (branch < 1) {
+				System.out.println("> Invalid branch, it should be greater or equal to 1. Try again...");
+			}
+		} while (branch < 1);
+
+		return branch - 1;
 	}
 
 	private void showCraftableItemsByProlog() throws IOException {
