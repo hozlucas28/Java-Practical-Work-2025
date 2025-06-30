@@ -5,7 +5,6 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
 import exceptions.ItemNotFoundException;
-import exceptions.OutOfRangeException;
 import inventory.Inventory;
 import repositories.ItemsRepository;
 import services.PrologService;
@@ -25,7 +24,7 @@ public class Main {
 		} catch (JsonIOException | JsonSyntaxException e) {
 			System.out.print("Fatal error! Items repository file has an invalid JSON syntax.");
 			System.exit(102);
-		} catch (ItemNotFoundException | OutOfRangeException e) {
+		} catch (ItemNotFoundException e) {
 			System.out.print("Fatal error! Items repository file has an invalid recipes structure.");
 			System.exit(103);
 		} catch (Exception e) {
