@@ -52,6 +52,8 @@ class Menu {
 		int option = 0;
 		String itemToCraftName = this.itemToCraft.getName();
 
+		int branch;
+
 		do {
 			System.out.println();
 			option = requestOperation(itemToCraftName, this.quantityToCraft);
@@ -86,12 +88,20 @@ class Menu {
 
 				System.out.printf("> Required ingredients to craft %d %ss:\n\n", this.quantityToCraft, itemToCraftName);
 				this.showIngredientsCollection(requiredIngredients.values(), (index) -> {
-					return String.format("> Recipe #%d: not requires ingredients.", index);
+					return String.format("> Recipe #%d: not requires ingredients.", index + 1);
 				});
 				break;
 
 			case 5:
-				// TODO: Show required base ingredients to craft
+				branch = this.requestBranch();
+				HashMap<Recipe, List<Ingredient>> requiredBaseIngredients = this.craftingSystem
+						.getRequiredBaseIngredients(branch);
+
+				System.out.printf("> Required base ingredients to craft %d %ss:\n\n", this.quantityToCraft,
+						itemToCraftName);
+				this.showIngredientsCollection(requiredBaseIngredients.values(), (index) -> {
+					return String.format("> Recipe #%d: not requires base ingredients.", index + 1);
+				});
 				break;
 
 			case 6:
@@ -104,12 +114,12 @@ class Menu {
 				break;
 
 			case 7:
-				int recipePath = this.requestBranch();
+				branch = this.requestBranch();
 				HashMap<Recipe, List<Ingredient>> missingBaseIngredients = this.craftingSystem
-						.getMissingBaseIngredients(recipePath);
+						.getMissingBaseIngredients(branch);
 
 				System.out.printf("\n> Missing base ingredients to craft %d %ss (based on recipe path #%d):\n\n",
-						this.quantityToCraft, itemToCraftName, recipePath + 1);
+						this.quantityToCraft, itemToCraftName, branch + 1);
 				this.showIngredientsCollection(missingBaseIngredients.values(), (index) -> {
 					return String.format("> Recipe #%d: no missing base ingredients within inventory.", index + 1);
 				});
