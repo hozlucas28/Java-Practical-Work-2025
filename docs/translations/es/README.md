@@ -26,13 +26,13 @@
 </p>
 
 <p align="center">
-    <a href="#"> <!-- TODO -->
+    <a href="https://youtu.be/-exAnyC0znc">
         <img src="../../assets/preview.png" width="800" alt="Vista previa">
     </a>
 </p>
 
 <p align="center">
-    <a href="#" target="_blank">(video de demostración)</a> <!-- TODO -->
+    <a href="https://youtu.be/-exAnyC0znc" target="_blank">(video de demostración)</a>
 </p>
 
 ## Resumen
