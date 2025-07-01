@@ -112,6 +112,32 @@ config:
 classDiagram
 direction TB
 
+    class Menu {
+        -Scanner scanner
+        -Inventory inventory
+        -ItemsRepository itemsRepository
+        -Item itemToCraft
+        -int quantityToCraft
+        -CraftingSystem craftingSystem
+        -PrologService prologService
+
+        -Item setItemToCraft()
+        +void init()
+        -int requestOperation(String item, int quantity)
+        -int requestBranch()
+        -int requestRecipeToCraft()
+        -String requestPrologPath()
+        -String requestInventorySavePath()
+        -void showCraftableItemsByProlog()
+        -void showIngredientsCollection(Collection~List~Ingredient~~ collection, Function~Integer, String~ onEmptyList)
+    }
+
+    Menu "1" --o "1" Inventory : Has a reference to
+    Menu "1" --o "1" ItemsRepository : Has a reference to
+    Menu "1" --o "1" Item : Has
+    Menu "1" --o "1" CraftingSystem : Has
+    Menu "1" --o "1" PrologService : Has a reference to
+
     class ItemsRepository {
 	    -HashMap~String, Item~ items
 
@@ -135,21 +161,6 @@ direction TB
         -String toProlog(ItemsRepository itemsRepository)
         -String toProlog(Inventory inventory)
         -String utilityRules()
-    }
-
-    class PrologServiceBuilder {
-	    -String baseItemFactName
-	    -String ingredientFactName
-	    -String itemInInventoryFactName
-	    -ItemsRepository itemsRepository
-	    -Inventory inventory
-
-        +PrologServiceBuilder setBaseItemFactName(String baseItemFactName)
-        +PrologServiceBuilder setIngredientFactName(String ingredientFactName)
-        +PrologServiceBuilder setItemInInventoryFactName(String itemInInventoryFactName)
-        +PrologServiceBuilder setItemsRepository(ItemsRepository itemsRepository)
-        +PrologServiceBuilder setInventory(Inventory inventory)
-        +PrologService build()
     }
 
     class Item {
@@ -244,7 +255,6 @@ direction TB
 
     PrologService "1" --o "1" Inventory : Has a reference to
     PrologService "1" --o "1" ItemsRepository : Has a reference to
-    PrologService "1" --* "1" PrologServiceBuilder : Build by
 
     Item "1" --o "0...*" Recipe : Has
 
