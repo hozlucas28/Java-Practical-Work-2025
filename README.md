@@ -121,7 +121,7 @@ direction TB
         -CraftingSystem craftingSystem
         -PrologService prologService
 
-        -Item setItemToCraft()
+        -void setItemToCraft()
         +void init()
         -int requestOperation(String item, int quantity)
         -int requestBranch()

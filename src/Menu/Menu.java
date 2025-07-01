@@ -49,19 +49,17 @@ public class Menu {
 		this.prologService = prologService;
 	}
 
-	private Item setItemToCraft() {
-		String itemName = "";
-		Item itemToCraft = null;
-		int quantityToCraft = 0;
+	private void setItemToCraft() {
+		String itemName = null;
 		boolean isCraftable = true;
 
 		do {
 			do {
 				System.out.print("> Which item do you want to craft? ");
 				itemName = this.scanner.nextLine().toLowerCase().trim();
-				itemToCraft = this.itemsRepository.getItem(itemName);
+				this.itemToCraft = this.itemsRepository.getItem(itemName);
 
-				if (itemToCraft == null) {
+				if (this.itemToCraft == null) {
 					System.out.printf("> %s item was not found within items repository. Try again...\n",
 							StringTransformers.toCapitalize(itemName));
 				}
@@ -71,38 +69,37 @@ public class Menu {
 				System.out.printf("> How many %ss do you want to craft as minimum? ", itemName);
 
 				try {
-					quantityToCraft = this.scanner.nextInt();
+					this.quantityToCraft = this.scanner.nextInt();
 
-					if (quantityToCraft < 1) {
+					if (this.quantityToCraft < 1) {
 						System.out.println("> Error! Quantity to craft must be greater or equal to 1. Try again...");
 					}
 				} catch (NoSuchElementException e) {
-					quantityToCraft = 0;
+					this.quantityToCraft = 0;
 					System.out
 							.println("> Error! Quantity to craft must be a number greater or equal to 1. Try again...");
 				} finally {
 					this.scanner.nextLine();
 				}
-			} while (quantityToCraft < 1);
+			} while (this.quantityToCraft < 1);
 
 			try {
-				this.craftingSystem.setItemToCraft(itemToCraft, quantityToCraft);
+				this.craftingSystem.setItemToCraft(this.itemToCraft, this.quantityToCraft);
 				isCraftable = true;
 			} catch (InvalidItemException e) {
 				isCraftable = false;
 				System.out.printf("\n> %s is a base item! So, it can not be set to be a craftable one.\n\n", itemName);
 			}
 		} while (!isCraftable);
-
-		this.itemToCraft = itemToCraft;
-		this.quantityToCraft = quantityToCraft;
-
-		return itemToCraft;
 	}
 
 	public void init() {
+		if (this.itemToCraft == null) {
+			this.setItemToCraft();
+		}
+
 		int operation = 0;
-		String itemToCraftName = this.itemToCraft == null ? this.setItemToCraft().getName() : this.itemToCraft.getName();
+		String itemToCraftName = this.itemToCraft.getName();
 
 		int branch;
 
