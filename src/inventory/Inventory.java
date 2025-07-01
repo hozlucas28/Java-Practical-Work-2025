@@ -23,21 +23,46 @@ import exceptions.OutOfRangeException;
 import repositories.ItemsRepository;
 import utilities.StringTransformers;
 
+/**
+ * Represents a repository that manages items and their quantities. Providing
+ * methods to add, remove, retrieve, and persist items within it.
+ */
 public class Inventory {
 	private HashMap<Item, Integer> items;
 
+	/**
+	 * Constructs an Inventory with the specified items.
+	 *
+	 * @param items {@link HashMap} of items and their quantities
+	 */
 	public Inventory(HashMap<Item, Integer> items) {
 		this.items = items;
 	}
 
+	/**
+	 * @return a {@link HashMap} of items and their quantities
+	 */
 	public HashMap<Item, Integer> getItems() {
 		return this.items;
 	}
 
+	/**
+	 * Returns the quantity of the specified {@link Item} in the inventory.
+	 *
+	 * @param item
+	 * @return the quantity of the item, or 0 if not present
+	 */
 	public int getItemQuantity(Item item) {
 		return this.items.getOrDefault(item, 0);
 	}
 
+	/**
+	 * Adds the specified quantity of an {@link Item} to the inventory.
+	 *
+	 * @param item     item to add
+	 * @param quantity quantity to add (must be >= 1)
+	 * @throws OutOfRangeException if the quantity is less than 1
+	 */
 	public void addItem(Item item, int quantity) throws OutOfRangeException {
 		if (quantity < 1) {
 			String errorMessage = String.format("Received %d as quantity, but expect it greater than or equal to %d",
@@ -48,6 +73,14 @@ public class Inventory {
 		this.items.put(item, this.items.getOrDefault(item, 0) + quantity);
 	}
 
+	/**
+	 * Removes the specified quantity of an {@link Item} from the inventory.
+	 *
+	 * @param item     item to remove
+	 * @param quantity quantity to remove (must be >= 1 and <= current quantity)
+	 * @throws ItemNotFoundException if the item is not found in the inventory
+	 * @throws OutOfRangeException   if the quantity is out of valid range
+	 */
 	public void removeItem(Item item, int quantity) throws ItemNotFoundException, OutOfRangeException {
 		String errorMessage;
 
@@ -73,6 +106,12 @@ public class Inventory {
 		}
 	}
 
+	/**
+	 * Stores the inventory data as a JSON file.
+	 *
+	 * @param path JSON file path
+	 * @throws IOException if an I/O error occurs during writing
+	 */
 	public void storeOnJSON(String path) throws IOException {
 		JsonObject json = new JsonObject();
 
@@ -87,9 +126,7 @@ public class Inventory {
 
 		try {
 			FileWriter writer = new FileWriter(path, StandardCharsets.UTF_8);
-
 			gson.toJson(json, writer);
-
 			writer.close();
 		} catch (IOException e) {
 			String errorMessage = String.format("Failed to write inventory to \"%s\" file", path);
@@ -97,6 +134,18 @@ public class Inventory {
 		}
 	}
 
+	/**
+	 * Loads inventory from a JSON file content.
+	 *
+	 * @param path            JSON file path
+	 * @param itemsRepository items repository to resolve item names to {@link Item}
+	 *                        objects
+	 * @return an Inventory object loaded with the JSON file content
+	 * @throws FileNotFoundException if the file does not exist
+	 * @throws JsonIOException       if there is a problem reading the JSON
+	 * @throws JsonSyntaxException   if the JSON is malformed
+	 * @throws IOException           if an I/O error occurs during reading
+	 */
 	public static Inventory loadFromJSON(String path, ItemsRepository itemsRepository)
 			throws FileNotFoundException, JsonIOException, JsonSyntaxException, IOException {
 		FileInputStream fileStream = new FileInputStream(path);
@@ -120,7 +169,14 @@ public class Inventory {
 
 		return inventory;
 	}
-	
+
+	/**
+	 * Returns a string representation of the inventory with custom formatting.
+	 *
+	 * @param itemMarker string marker to prefix each item
+	 * @param lPadding   left padding for each line
+	 * @return a formatted string representation of the inventory
+	 */
 	public String toString(String itemMarker, int lPadding) {
 		StringBuilder builder = new StringBuilder();
 		Formatter formatter = new Formatter(builder);
