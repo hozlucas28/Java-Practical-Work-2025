@@ -83,15 +83,52 @@ public class CraftingSystem {
 		Integer minCraftableUnits = null;
 		List<Ingredient> ingredients = recipe.getIngredients();
 
-		// Check the existence of the crafting table within inventory if the recipe
-		// required it
+		// Take a snapshot of current inventory
+		HashMap<Item, Integer> inventorySnapshot = new HashMap<Item, Integer>();
+
+		for (Ingredient ingredient : ingredients) {
+			Item item = ingredient.getItem();
+			inventorySnapshot.put(item, this.inventory.getItemQuantity(item));
+		}
+
+		// Track crafting table if needed
+		Item craftingTable = null;
+		List<Ingredient> craftingTableIngredients = null;
+
 		if (recipe.needsCraftingTable()) {
-			Item craftingTable = recipe.getCraftingTable();
+			craftingTable = recipe.getCraftingTable();
 			int quantityInInventory = this.inventory.getItemQuantity(craftingTable);
 
-			// If crafting table is not in inventory return
 			if (quantityInInventory < 1) {
-				return 0;
+				// If crafting table is not in inventory, check if it is craftable
+				if (!craftingTable.isBase()) {
+					int maxCraftable = 0;
+					Recipe bestRecipe = null;
+
+					for (Recipe tableRecipe : craftingTable.getRecipes()) {
+						int craftableUnits = getCraftableUnits(tableRecipe);
+
+						if (craftableUnits > maxCraftable) {
+							maxCraftable = craftableUnits;
+							bestRecipe = tableRecipe;
+						}
+					}
+
+					if (maxCraftable < 1) {
+						return 0;
+					}
+					// Subtract ingredients needed for crafting table from inventory snapshot
+					craftingTableIngredients = bestRecipe.getIngredients();
+
+					for (Ingredient ctIng : craftingTableIngredients) {
+						Item ctItem = ctIng.getItem();
+						int ctQty = ctIng.getQuantity();
+						inventorySnapshot.put(ctItem,
+								inventorySnapshot.getOrDefault(ctItem, this.inventory.getItemQuantity(ctItem)) - ctQty);
+					}
+				} else {
+					return 0;
+				}
 			}
 		}
 
@@ -99,7 +136,7 @@ public class CraftingSystem {
 		for (Ingredient ingredient : ingredients) {
 			Item item = ingredient.getItem();
 			int requiredQuantity = ingredient.getQuantity();
-			int quantityInInventory = this.inventory.getItemQuantity(item);
+			int quantityInInventory = inventorySnapshot.getOrDefault(item, this.inventory.getItemQuantity(item));
 
 			int totalAvailable = quantityInInventory;
 
