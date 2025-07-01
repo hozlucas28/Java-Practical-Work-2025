@@ -23,6 +23,18 @@ import repositories.ItemsRepository;
 import services.PrologService;
 import utilities.StringTransformers;
 
+/**
+ * {@code Menu} class provides a command-line interface for interacting with a
+ * crafting system. It allows users to select items to craft, manage inventory,
+ * view and craft recipes, and interact with a Prolog service for advanced
+ * crafting queries.
+ *
+ * <p>
+ * This class handles user input, displays available operations, and delegates
+ * crafting logic to the underlying {@link CraftingSystem}, {@link Inventory},
+ * {@link ItemsRepository}, and {@link PrologService}.
+ * </p>
+ */
 public class Menu {
 	private final Scanner scanner;
 
@@ -35,6 +47,18 @@ public class Menu {
 
 	private final PrologService prologService;
 
+	/**
+	 * Constructs a new {@code Menu} with the specified dependencies and initial
+	 * crafting selection.
+	 *
+	 * @param scanner         scanner for user input
+	 * @param inventory       user's inventory
+	 * @param itemsRepository repository of items and recipes
+	 * @param itemToCraft     initial item to craft (can be {@code null})
+	 * @param quantityToCraft initial quantity to craft
+	 * @param craftingSystem  crafting system
+	 * @param prologService   Prolog service
+	 */
 	public Menu(Scanner scanner, Inventory inventory, ItemsRepository itemsRepository, Item itemToCraft,
 			int quantityToCraft, CraftingSystem craftingSystem, PrologService prologService) {
 		this.scanner = scanner;
@@ -93,6 +117,10 @@ public class Menu {
 		} while (!isCraftable);
 	}
 
+	/**
+	 * Starts the menu loop, displaying available operations and handling user
+	 * selections.
+	 */
 	public void init() {
 		if (this.itemToCraft == null) {
 			this.setItemToCraft();

@@ -8,6 +8,11 @@ import inventory.Item;
 import repositories.ItemsRepository;
 import services.PrologService;
 
+// @formatter:off
+/**
+ * Builder class for constructing instances of {@link Menu}.
+ */
+// @formatter:on
 public class MenuBuilder {
 	private Scanner scanner;
 
