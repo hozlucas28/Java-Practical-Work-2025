@@ -235,7 +235,7 @@ direction TB
         -HashMap~Recipe, List~Ingredient~~ getMissingIngredients(HashMap~Recipe, List~Ingredient~~ recipes)
 	    +HashMap~Recipe, List~Ingredient~~ getRequiredIngredients()
         +HashMap~Recipe, List~Ingredient~~ getRequiredBaseIngredients(int branch)
-        -List~Ingredient~ getBaseIngredientsRecursive(Recipe recipe, int totalToCraft, int branch)
+        -List~Ingredient~ getBaseIngredientsRecursive(Recipe recipe, int totalToCraft, int branch, Set~Item~ processedCraftingTables)
 	    +boolean canCraft()
 	    +void setItemToCraft(Item item, int quantity)
 	    +CraftedItem craftItem(int recipe)
