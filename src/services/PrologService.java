@@ -22,14 +22,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
- * PrologService class provides functionality to generate Prolog facts
- * and rules from Java objects representing items, recipes, and inventory, and
- * to query which items are craftable given the current inventory using Prolog
- * logic.
- * 
+ * PrologService class provides functionality to generate Prolog facts and rules
+ * from Java objects representing items, recipes, and inventory, and to query
+ * which items are craftable given the current inventory using Prolog logic.
+ *
  * <p>
  * This service is responsible for:
- * 
+ *
  * <ul>
  * <li>Serializing items and inventory into Prolog facts.</li>
  * <li>Writing utility rules for crafting logic in Prolog.</li>
@@ -83,6 +82,14 @@ public class PrologService {
 
 		this.toFile(tempFileWriter);
 		tempFileWriter.close();
+
+		// Clear previous Prolog definitions to avoid redefinition warnings
+		new Query(String.format("abolish(%s/1)", this.baseItemFactName)).hasSolution();
+		new Query(String.format("abolish(%s/4)", this.ingredientFactName)).hasSolution();
+		new Query(String.format("abolish(%s/2)", this.itemInInventoryFactName)).hasSolution();
+		new Query("abolish(craftable_items/2)").hasSolution();
+		new Query("abolish(maximum_craftable_items/2)").hasSolution();
+		new Query("abolish(maximum_craftable_items/3)").hasSolution();
 
 		// Build query
 		String consultQuery = String.format("consult(\"%s\")", tempFilePath);
