@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
- * {@link PrologService} class provides functionality to generate Prolog facts
+ * PrologService class provides functionality to generate Prolog facts
  * and rules from Java objects representing items, recipes, and inventory, and
  * to query which items are craftable given the current inventory using Prolog
  * logic.
