@@ -13,7 +13,7 @@ class RecipeTests {
 	@Test
 	void getCraftingTable() {
 		// Arrange
-		Item woodCraftingTable = new Item("Wood crafting table");
+		Item woodCraftingTable = new Item("wood crafting table");
 
 		Recipe recipe = new Recipe(woodCraftingTable, List.of(), 1000, 2);
 
@@ -101,7 +101,7 @@ class RecipeTests {
 	@Test
 	void needsCraftingTable() {
 		// Arrange
-		Item woodCraftingTable = new Item("Wood crafting table");
+		Item woodCraftingTable = new Item("wood crafting table");
 
 		Recipe recipe = new Recipe(List.of(), 1000, 2);
 		Recipe recipeWithCT = new Recipe(woodCraftingTable, List.of(), 1275, 1);
@@ -114,7 +114,7 @@ class RecipeTests {
 	@Test
 	void setCraftingTable() {
 		// Arrange
-		Item woodCraftingTable = new Item("Wood crafting table");
+		Item woodCraftingTable = new Item("wood crafting table");
 
 		Recipe recipe = new Recipe(List.of(), 1000, 2);
 
@@ -135,7 +135,7 @@ class RecipeTests {
 		List<Ingredient> ingredients = List.of(new Ingredient(wood, 5));
 
 		Recipe recipe = new Recipe(List.of(), 1500, 7);
-		
+
 		// Act
 		recipe.setIngredients(ingredients);
 

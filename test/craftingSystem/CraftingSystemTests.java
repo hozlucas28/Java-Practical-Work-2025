@@ -153,7 +153,7 @@ class CraftingSystemTests {
 		Item iron = new Item("iron");
 		Item redstone = new Item("redstone");
 
-		Item craftingTable = new Item("Crafting table");
+		Item craftingTable = new Item("crafting table");
 
 		Recipe swordRecipe = new Recipe(craftingTable, List.of(new Ingredient(wood, 2), new Ingredient(iron, 6)), 1850,
 				2);
@@ -306,7 +306,7 @@ class CraftingSystemTests {
 		Recipe glassRecipe = new Recipe(furnace, List.of(new Ingredient(sand, 4)), 1250, 4);
 
 		Item shovel = new Item("shovel", List.of(shovelRecipe));
-		Item glass = new Item("Item A02", List.of(glassRecipe));
+		Item glass = new Item("glass", List.of(glassRecipe));
 
 		// Acts within asserts
 		// @formatter:off
