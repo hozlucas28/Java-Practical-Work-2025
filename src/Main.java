@@ -5,6 +5,9 @@ import java.util.Scanner;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
+import Menu.Menu;
+import Menu.MenuBuilder;
+import craftingSystem.CraftingSystem;
 import exceptions.ItemNotFoundException;
 import inventory.Inventory;
 import repositories.ItemsRepository;
@@ -55,9 +58,29 @@ public class Main {
 		// Build prolog service
 		PrologServiceBuilder prologServiceBuilder = new PrologServiceBuilder();
 
-		PrologService prologService = prologServiceBuilder.setBaseItemFactName("base_item")
-				.setIngredientFactName("ingredient").setItemInInventoryFactName("have")
-				.setItemsRepository(itemsRepository).setInventory(inventory).build();
+		// @formatter:off
+		PrologService prologService = prologServiceBuilder
+			.setBaseItemFactName("base_item")
+			.setIngredientFactName("ingredient")
+			.setItemInInventoryFactName("have")
+			.setItemsRepository(itemsRepository)
+			.setInventory(inventory)
+			.build();
+		// @formatter:on
+
+		// Build menu
+		Scanner stdin = new Scanner(System.in);
+		MenuBuilder menuBuilder = new MenuBuilder();
+
+		// @formatter:off
+		Menu menu = menuBuilder
+			.setScanner(stdin)
+			.setInventory(inventory)
+			.setItemsRepository(itemsRepository)
+			.setCraftingSystem(new CraftingSystem(inventory))
+			.setPrologService(prologService)
+			.build();
+		// @formatter:on
 
 		// Print items within items repository
 		System.out.println("> Repository items:\n");
@@ -67,10 +90,7 @@ public class Main {
 		System.out.println("\n> Inventory:\n");
 		System.out.printf("%s\n\n", inventory.toString("•", 2));
 
-		// Create and initialize menu
-		Scanner stdin = new Scanner(System.in);
-		Menu menu = new Menu(stdin, inventory, itemsRepository, prologService);
-		
+		// Initialize menu
 		menu.init();
 		stdin.close();
 

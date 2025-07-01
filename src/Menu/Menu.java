@@ -1,3 +1,4 @@
+package Menu;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -22,7 +23,7 @@ import repositories.ItemsRepository;
 import services.PrologService;
 import utilities.StringTransformers;
 
-class Menu {
+public class Menu {
 	private final Scanner scanner;
 
 	private final Inventory inventory;
@@ -34,24 +35,74 @@ class Menu {
 
 	private final PrologService prologService;
 
-	public Menu(Scanner scanner, Inventory inventory, ItemsRepository itemsRepository, PrologService prologService) {
+	public Menu(Scanner scanner, Inventory inventory, ItemsRepository itemsRepository, Item itemToCraft,
+			int quantityToCraft, CraftingSystem craftingSystem, PrologService prologService) {
 		this.scanner = scanner;
 
 		this.inventory = inventory;
 		this.itemsRepository = itemsRepository;
 
-		this.itemToCraft = null;
-		this.quantityToCraft = 0;
-		this.craftingSystem = new CraftingSystem(this.inventory);
+		this.itemToCraft = itemToCraft;
+		this.quantityToCraft = quantityToCraft;
+		this.craftingSystem = craftingSystem;
 
 		this.prologService = prologService;
 	}
 
-	public void init() {
-		this.setItemToCraft();
+	private Item setItemToCraft() {
+		String itemName = "";
+		Item itemToCraft = null;
+		int quantityToCraft = 0;
+		boolean isCraftable = true;
 
+		do {
+			do {
+				System.out.print("> Which item do you want to craft? ");
+				itemName = this.scanner.nextLine().toLowerCase().trim();
+				itemToCraft = this.itemsRepository.getItem(itemName);
+
+				if (itemToCraft == null) {
+					System.out.printf("> %s item was not found within items repository. Try again...\n",
+							StringTransformers.toCapitalize(itemName));
+				}
+			} while (itemToCraft == null);
+
+			do {
+				System.out.printf("> How many %ss do you want to craft as minimum? ", itemName);
+
+				try {
+					quantityToCraft = this.scanner.nextInt();
+
+					if (quantityToCraft < 1) {
+						System.out.println("> Error! Quantity to craft must be greater or equal to 1. Try again...");
+					}
+				} catch (NoSuchElementException e) {
+					quantityToCraft = 0;
+					System.out
+							.println("> Error! Quantity to craft must be a number greater or equal to 1. Try again...");
+				} finally {
+					this.scanner.nextLine();
+				}
+			} while (quantityToCraft < 1);
+
+			try {
+				this.craftingSystem.setItemToCraft(itemToCraft, quantityToCraft);
+				isCraftable = true;
+			} catch (InvalidItemException e) {
+				isCraftable = false;
+				System.out.printf("\n> %s is a base item! So, it can not be set to be a craftable one.\n\n", itemName);
+			}
+		} while (!isCraftable);
+
+		this.itemToCraft = itemToCraft;
+		this.quantityToCraft = quantityToCraft;
+
+		return itemToCraft;
+	}
+
+	public void init() {
 		int operation = 0;
-		String itemToCraftName = this.itemToCraft.getName();
+		String itemToCraftName = this.itemToCraft == null ? this.setItemToCraft().getName() : this.itemToCraft.getName();
 
 		int branch;
 
@@ -214,55 +265,6 @@ class Menu {
 		} while (operation != 0);
 	}
 
-	private void setItemToCraft() {
-		String itemName = "";
-		Item itemToCraft = null;
-		int quantityToCraft = 0;
-		boolean isCraftable = true;
-
-		do {
-			do {
-				System.out.print("> Which item do you want to craft? ");
-				itemName = this.scanner.nextLine().toLowerCase().trim();
-				itemToCraft = this.itemsRepository.getItem(itemName);
-
-				if (itemToCraft == null) {
-					System.out.printf("> %s item was not found within items repository. Try again...\n",
-							StringTransformers.toCapitalize(itemName));
-				}
-			} while (itemToCraft == null);
-
-			do {
-				System.out.printf("> How many %ss do you want to craft as minimum? ", itemName);
-
-				try {
-					quantityToCraft = this.scanner.nextInt();
-
-					if (quantityToCraft < 1) {
-						System.out.println("> Error! Quantity to craft must be greater or equal to 1. Try again...");
-					}
-				} catch (NoSuchElementException e) {
-					quantityToCraft = 0;
-					System.out
-							.println("> Error! Quantity to craft must be a number greater or equal to 1. Try again...");
-				} finally {
-					this.scanner.nextLine();
-				}
-			} while (quantityToCraft < 1);
-
-			try {
-				this.craftingSystem.setItemToCraft(itemToCraft, quantityToCraft);
-				isCraftable = true;
-			} catch (InvalidItemException e) {
-				isCraftable = false;
-				System.out.printf("\n> %s is a base item! So, it can not be set to be a craftable one.\n\n", itemName);
-			}
-		} while (!isCraftable);
-
-		this.itemToCraft = itemToCraft;
-		this.quantityToCraft = quantityToCraft;
-	}
-
 	private int requestOperation(String item, int quantity) {
 		int operation = -1;
 
@@ -283,7 +285,7 @@ class Menu {
 			System.out.println("  12 - Show items repository");
 			System.out.println("  13 - Show repository craftable items");
 			System.out.println("  14 - Show craftable items with inventory items (Prolog service)");
-			System.out.println("  15 - Create a Prolog file with items repository, inventory, and all the necessary facts and rules");			
+			System.out.println("  15 - Create a Prolog file with items repository, inventory, and all the necessary facts and rules");
 			System.out.println("  0  - Exit\n");
 			// @formatter:on
 
@@ -303,6 +305,29 @@ class Menu {
 		} while (operation < 0 || operation > 15);
 
 		return operation;
+	}
+
+	private int requestBranch() {
+		int branch = 0;
+
+		do {
+			System.out.printf("> Enter the branch to follow: ");
+
+			try {
+				branch = this.scanner.nextInt();
+
+				if (branch < 1) {
+					System.out.println("> Invalid branch, it should be greater or equal to 1. Try again...");
+				}
+			} catch (NoSuchElementException e) {
+				branch = 0;
+				System.out.println("> Invalid branch, it should be a number greater or equal to 1. Try again...");
+			} finally {
+				this.scanner.nextLine();
+			}
+		} while (branch < 1);
+
+		return branch - 1;
 	}
 
 	private int requestRecipeToCraft() {
@@ -336,6 +361,22 @@ class Menu {
 		return recipe - 1;
 	}
 
+	private String requestPrologPath() {
+		String savePath = "";
+
+		do {
+			System.out.printf("> Enter the file path where do you want to create the Prolog file: ");
+			savePath = this.scanner.nextLine().trim();
+
+			if (!savePath.endsWith(".pl")) {
+				System.out.printf("> \"%s\" is an invalid Prolog path. Try again (for example \"prolog_file.pl\")...\n",
+						savePath);
+			}
+		} while (!savePath.endsWith(".pl"));
+
+		return savePath;
+	}
+
 	private String requestInventorySavePath() {
 		String savePath = "";
 
@@ -351,6 +392,19 @@ class Menu {
 		} while (!savePath.endsWith(".json"));
 
 		return savePath;
+	}
+
+	private void showCraftableItemsByProlog() throws IOException {
+		HashMap<Item, Integer> craftableItems = this.prologService.craftableItems();
+
+		for (Map.Entry<Item, Integer> craftableItemEntry : craftableItems.entrySet()) {
+			Item item = craftableItemEntry.getKey();
+			Integer quantity = craftableItemEntry.getValue();
+
+			String itemName = StringTransformers.toTitle(item.getName());
+
+			System.out.printf("  • %ss (x%d).\n", itemName, quantity);
+		}
 	}
 
 	private void showIngredientsCollection(Collection<List<Ingredient>> collection,
@@ -380,57 +434,5 @@ class Menu {
 
 			i++;
 		}
-	}
-
-	private int requestBranch() {
-		int branch = 0;
-
-		do {
-			System.out.printf("> Enter the branch to follow: ");
-
-			try {
-				branch = this.scanner.nextInt();
-
-				if (branch < 1) {
-					System.out.println("> Invalid branch, it should be greater or equal to 1. Try again...");
-				}
-			} catch (NoSuchElementException e) {
-				branch = 0;
-				System.out.println("> Invalid branch, it should be a number greater or equal to 1. Try again...");
-			} finally {
-				this.scanner.nextLine();
-			}
-		} while (branch < 1);
-
-		return branch - 1;
-	}
-
-	private void showCraftableItemsByProlog() throws IOException {
-		HashMap<Item, Integer> craftableItems = this.prologService.craftableItems();
-
-		for (Map.Entry<Item, Integer> craftableItemEntry : craftableItems.entrySet()) {
-			Item item = craftableItemEntry.getKey();
-			Integer quantity = craftableItemEntry.getValue();
-
-			String itemName = StringTransformers.toTitle(item.getName());
-
-			System.out.printf("  • %ss (x%d).\n", itemName, quantity);
-		}
-	}
-
-	private String requestPrologPath() {
-		String savePath = "";
-
-		do {
-			System.out.printf("> Enter the file path where do you want to create the Prolog file: ");
-			savePath = this.scanner.nextLine().trim();
-
-			if (!savePath.endsWith(".pl")) {
-				System.out.printf("> \"%s\" is an invalid Prolog path. Try again (for example \"prolog_file.pl\")...\n",
-						savePath);
-			}
-		} while (!savePath.endsWith(".pl"));
-
-		return savePath;
 	}
 }
