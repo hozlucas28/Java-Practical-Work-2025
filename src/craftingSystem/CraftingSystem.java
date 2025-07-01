@@ -22,7 +22,6 @@ public class CraftingSystem {
 	private final CraftingHistory history;
 
 	public CraftingSystem(Inventory inventory) {
-		this.quantityToCraft = 0;
 		this.inventory = inventory;
 		this.history = new CraftingHistory();
 	}
