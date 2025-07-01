@@ -56,10 +56,10 @@ Este repositorio contiene el trabajo práctico para el curso de Paradigmas de Pr
 
 ## Instalación
 
-1. Clona el repositorio en tu dispositivo.
+1. Descarga el [código fuente del último release](https://github.com/hozlucas28/Java-Practical-Work-2025/releases) (`zip version`) en tu dispositivo.
 2. Instala [Java](https://www.java.com/en/download/) y [Prolog](https://www.swi-prolog.org/download/stable) (marca la opción `Add swipl to the system PATH` durante la instalación).
 3. Instala [Eclipse IDE for Java developers](https://www.eclipse.org/downloads/packages/).
-4. Abre el repositorio clonado con Eclipse IDE.
+4. Abre el código fuente descargado con Eclipse IDE.
 5. Luego, haz clic derecho sobre el archivo [Main.java](../../../src/Main.java) y selecciona `Run As` -> `Java Application`.
 6. Eso es todo, disfruta del sistema de crafteo a través de la interacción con la consola.
 
