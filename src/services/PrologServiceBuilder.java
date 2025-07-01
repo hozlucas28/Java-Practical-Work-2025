@@ -3,6 +3,23 @@ package services;
 import inventory.Inventory;
 import repositories.ItemsRepository;
 
+// @formatter:off
+/**
+ * Builder class for constructing instances of {@link PrologService}.
+ * 
+ * <p>Usage example:</p>
+ * 
+ * <pre>
+ * PrologService service = new PrologServiceBuilder()
+ *     .setBaseItemFactName("baseItem")
+ *     .setIngredientFactName("ingredient")
+ *     .setItemInInventoryFactName("itemInInventory")
+ *     .setItemsRepository(itemsRepository)
+ *     .setInventory(inventory)
+ *     .build();
+ * </pre>
+ */
+// @formatter:on
 public class PrologServiceBuilder {
 	private String baseItemFactName;
 	private String ingredientFactName;

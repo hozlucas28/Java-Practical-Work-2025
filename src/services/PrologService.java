@@ -21,6 +21,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * {@link PrologService} class provides functionality to generate Prolog facts
+ * and rules from Java objects representing items, recipes, and inventory, and
+ * to query which items are craftable given the current inventory using Prolog
+ * logic.
+ * 
+ * <p>
+ * This service is responsible for:
+ * 
+ * <ul>
+ * <li>Serializing items and inventory into Prolog facts.</li>
+ * <li>Writing utility rules for crafting logic in Prolog.</li>
+ * <li>Interfacing with a Prolog engine to determine craftable items and their
+ * quantities.</li>
+ * </ul>
+ */
 public class PrologService {
 	private final String baseItemFactName;
 	private final String ingredientFactName;
@@ -29,6 +45,16 @@ public class PrologService {
 	private final ItemsRepository itemsRepository;
 	private final Inventory inventory;
 
+	/**
+	 * Constructs a new {@link PrologService} with the specified fact names,
+	 * repository, and inventory.
+	 *
+	 * @param baseItemFactName        Prolog fact name for base items
+	 * @param ingredientFactName      Prolog fact name for ingredients
+	 * @param itemInInventoryFactName Prolog fact name for inventory items
+	 * @param itemsRepository         items repository
+	 * @param inventory               inventory
+	 */
 	public PrologService(String baseItemFactName, String ingredientFactName, String itemInInventoryFactName,
 			ItemsRepository itemsRepository, Inventory inventory) {
 		this.baseItemFactName = baseItemFactName;
@@ -39,9 +65,18 @@ public class PrologService {
 		this.inventory = inventory;
 	}
 
+	/**
+	 * Determines which items are craftable and in what quantities, based on the
+	 * inventory. This method generates a temporary Prolog file, consults it, and
+	 * queries for craftable items.
+	 *
+	 * @return craftable items with the maximum number of units that can be crafted
+	 * @throws IOException if an I/O error occurs during file operations
+	 */
 	public HashMap<Item, Integer> craftableItems() throws IOException {
 		HashMap<Item, Integer> craftableItems = new HashMap<Item, Integer>();
 
+		// Create temporary Prolog file
 		File tempFile = File.createTempFile("prologService__craftableItems", ".tmp.pl");
 		String tempFilePath = tempFile.getPath().replace("\\", "/");
 		FileWriter tempFileWriter = new FileWriter(tempFile, StandardCharsets.UTF_8);
@@ -49,6 +84,7 @@ public class PrologService {
 		this.toFile(tempFileWriter);
 		tempFileWriter.close();
 
+		// Build query
 		String consultQuery = String.format("consult(\"%s\")", tempFilePath);
 		Query consult = new Query(consultQuery);
 
@@ -62,19 +98,29 @@ public class PrologService {
 
 		Query query = new Query(goal);
 
+		// Run query
 		while (query.hasMoreSolutions()) {
 			Map<String, Term> solution = query.nextSolution();
 			String item = solution.get("Item").name();
 			int craftableUnits = solution.get("Craftable_Units").intValue();
 
+			// Save result
 			craftableItems.put(this.itemsRepository.getItem(item), craftableUnits);
 		}
 
+		// Delete temporary Prolog file
 		tempFile.delete();
 
 		return craftableItems;
 	}
 
+	/**
+	 * Writes the Prolog representation of the items, inventory, and related rules
+	 * into a file at the specified path.
+	 *
+	 * @param file path
+	 * @throws IOException if an I/O error occurs during writing
+	 */
 	public void toFile(String path) throws IOException {
 		FileWriter writer = new FileWriter(path, StandardCharsets.UTF_8);
 		this.toFile(writer);
@@ -104,6 +150,7 @@ public class PrologService {
 
 		HashMap<String, Item> repositoryItems = itemsRepository.getItems();
 
+		// Separate base items from craftable ones
 		for (Map.Entry<String, Item> itemEntry : repositoryItems.entrySet()) {
 			String itemName = itemEntry.getKey();
 			Item item = itemEntry.getValue();
@@ -177,6 +224,7 @@ public class PrologService {
 		StringBuilder prologLinesBuilder = new StringBuilder();
 		Formatter prologLinesFormatter = new Formatter(prologLinesBuilder);
 
+		// Migrate inventory items to prolog
 		HashMap<Item, Integer> inventoryItems = inventory.getItems();
 
 		for (Map.Entry<Item, Integer> itemEntry : inventoryItems.entrySet()) {
@@ -184,6 +232,7 @@ public class PrologService {
 			String itemName = item.getName();
 			Integer itemQuantity = itemEntry.getValue();
 
+			// Item to prolog
 			prologLinesFormatter.format("%s(\"%s\", %d).\n", this.itemInInventoryFactName, itemName, itemQuantity);
 		}
 
