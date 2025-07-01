@@ -56,10 +56,8 @@ public class Main {
 		}
 
 		// Build prolog service
-		PrologServiceBuilder prologServiceBuilder = new PrologServiceBuilder();
-
 		// @formatter:off
-		PrologService prologService = prologServiceBuilder
+		PrologService prologService = new PrologServiceBuilder()
 			.setBaseItemFactName("base_item")
 			.setIngredientFactName("ingredient")
 			.setItemInInventoryFactName("have")
@@ -70,10 +68,9 @@ public class Main {
 
 		// Build menu
 		Scanner stdin = new Scanner(System.in);
-		MenuBuilder menuBuilder = new MenuBuilder();
 
 		// @formatter:off
-		Menu menu = menuBuilder
+		Menu menu = new MenuBuilder()
 			.setScanner(stdin)
 			.setInventory(inventory)
 			.setItemsRepository(itemsRepository)
