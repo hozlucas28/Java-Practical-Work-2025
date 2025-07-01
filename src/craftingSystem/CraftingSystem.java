@@ -15,21 +15,55 @@ import inventory.Item;
 import recipe.Ingredient;
 import recipe.Recipe;
 
+/**
+ * {@code CraftingSystem} class provides functionality for crafting items using
+ * recipes, managing inventory, and tracking crafting history. It supports
+ * calculating craftable units, determining missing and required ingredients,
+ * and undoing crafting actions.
+ *
+ * <p>
+ * This class interacts with {@link Inventory}, {@link Item}, {@link Recipe},
+ * {@link Ingredient}, and {@link CraftingHistory} to facilitate a flexible
+ * crafting system.
+ * </p>
+ *
+ * <p>
+ * Usage includes setting the item and quantity to craft, checking if crafting
+ * is possible, performing the crafting operation, and undoing the last craft.
+ * </p>
+ */
 public class CraftingSystem {
 	private Item itemToCraft;
 	private int quantityToCraft;
 	private final Inventory inventory;
 	private final CraftingHistory history;
 
+	/**
+	 * Constructs a new {@code CraftingSystem} with the specified inventory.
+	 *
+	 * @param inventory
+	 */
 	public CraftingSystem(Inventory inventory) {
 		this.inventory = inventory;
 		this.history = new CraftingHistory();
 	}
 
+	/**
+	 * Returns the {@link List} of crafted items from the crafting history.
+	 *
+	 * @return a {@link List} of {@link CraftedItem} objects
+	 */
 	public List<CraftedItem> getCraftedItems() {
 		return this.history.getItems();
 	}
 
+	/**
+	 * Calculates the maximum number of units that can be crafted for the current
+	 * item and quantity. Taking into account if it can craft the missing
+	 * ingredients.
+	 *
+	 * @return the maximum craftable units
+	 */
 	public int getCraftableUnits() {
 		int maxCraftableUnits = 0;
 
@@ -47,15 +81,19 @@ public class CraftingSystem {
 		Integer minCraftableUnits = null;
 		List<Ingredient> ingredients = recipe.getIngredients();
 
+		// Check the existence of the crafting table within inventory if the recipe
+		// required it
 		if (recipe.needsCraftingTable()) {
 			Item craftingTable = recipe.getCraftingTable();
 			int quantityInInventory = this.inventory.getItemQuantity(craftingTable);
 
+			// If crafting table is not in inventory return
 			if (quantityInInventory < 1) {
 				return 0;
 			}
 		}
 
+		// Check the existence of each required ingredient to craft the recipe
 		for (Ingredient ingredient : ingredients) {
 			Item item = ingredient.getItem();
 			int requiredQuantity = ingredient.getQuantity();
@@ -63,6 +101,7 @@ public class CraftingSystem {
 
 			int totalAvailable = quantityInInventory;
 
+			// If the ingredient quantity isn't enough, get the number of craftable ones
 			if (!item.isBase() && quantityInInventory < requiredQuantity) {
 				int maxCraftable = 0;
 
@@ -77,22 +116,48 @@ public class CraftingSystem {
 			minCraftableUnits = minCraftableUnits == null ? ingredientUnits
 					: Math.min(minCraftableUnits, ingredientUnits);
 
+			// If the ingredient quantity isn't enough and the number of craftable ones is 0
+			// return
 			if (minCraftableUnits < 1) {
 				return 0;
 			}
 		}
 
-		return minCraftableUnits == null ? 0 : minCraftableUnits * recipe.getQuantityToCraft();
+		int craftableUnits = minCraftableUnits == null ? 0 : minCraftableUnits * recipe.getQuantityToCraft();
+
+		return craftableUnits;
 	}
 
+	/**
+	 * @return a {@code HashMap} of recipes and each value is a {@link List} with
+	 *         the missing {@link Ingredient}s within inventory.
+	 */
 	public HashMap<Recipe, List<Ingredient>> getMissingIngredients() {
 		return this.getMissingIngredients(this.getRequiredIngredients());
 	}
 
+	/**
+	 * Returns a {@code HashMap} of recipes and each value is a {@link List} with
+	 * the missing base {@link Ingredient}s within inventory for the specified
+	 * recipe branch.
+	 *
+	 * @param branch recipe branch
+	 * @return a {@code HashMap} of recipes and each value is a {@link List} with
+	 *         the missing base {@link Ingredient}s
+	 */
 	public HashMap<Recipe, List<Ingredient>> getMissingBaseIngredients(int branch) {
 		return this.getMissingIngredients(this.getRequiredBaseIngredients(branch));
 	}
 
+	/**
+	 * Returns a {@code HashMap} of recipes and each value is a {@link List} with
+	 * the missing {@link Ingredient}s within inventory for the specified recipe
+	 * branch.
+	 *
+	 * @param branch recipe branch
+	 * @return a {@code HashMap} of recipes and each value is a {@link List} with
+	 *         the missing {@link Ingredient}s
+	 */
 	private HashMap<Recipe, List<Ingredient>> getMissingIngredients(HashMap<Recipe, List<Ingredient>> recipes) {
 		HashMap<Recipe, List<Ingredient>> missingIngredientsPerRecipe = new HashMap<Recipe, List<Ingredient>>();
 
@@ -102,6 +167,7 @@ public class CraftingSystem {
 
 			List<Ingredient> missingRecipeIngredients = new ArrayList<Ingredient>();
 
+			// Calculate the missing quantity of ingredients to craft the item
 			for (Ingredient ingredient : recipeIngredients) {
 				Item ingredientItem = ingredient.getItem();
 				int ingredientQuantity = ingredient.getQuantity();
@@ -113,12 +179,20 @@ public class CraftingSystem {
 				}
 			}
 
+			// Link recipe with the calculated missing ingredients
 			missingIngredientsPerRecipe.put(recipe, missingRecipeIngredients);
 		}
 
 		return missingIngredientsPerRecipe;
 	}
 
+	/**
+	 * Returns a {@code HashMap} of recipes and each value is a {@link List} with
+	 * the required {@link Ingredient}s to craft the item.
+	 *
+	 * @return a {@code HashMap} of recipes and each value is a {@link List} with
+	 *         the required {@link Ingredient}s
+	 */
 	public HashMap<Recipe, List<Ingredient>> getRequiredIngredients() {
 		HashMap<Recipe, List<Ingredient>> ingredientsPerRecipe = new HashMap<Recipe, List<Ingredient>>();
 
@@ -131,11 +205,13 @@ public class CraftingSystem {
 
 				List<Ingredient> realRecipeIngredients = new ArrayList<Ingredient>();
 
+				// Append crafting table if the recipe required it
 				if (recipe.needsCraftingTable()) {
 					Ingredient table = new Ingredient(recipe.getCraftingTable(), 1);
 					realRecipeIngredients.add(table);
 				}
 
+				// Calculate the required quantity of ingredients to craft the item
 				for (Ingredient ingredient : recipeIngredients) {
 					int realQuantity = (int) Math.ceil(this.quantityToCraft / (double) recipeQuantityToCraft)
 							* ingredient.getQuantity();
@@ -145,6 +221,7 @@ public class CraftingSystem {
 					realRecipeIngredients.add(realIngredient);
 				}
 
+				// Link recipe with the calculated required ingredients
 				ingredientsPerRecipe.put(recipe, realRecipeIngredients);
 			}
 		}
@@ -152,6 +229,13 @@ public class CraftingSystem {
 		return ingredientsPerRecipe;
 	}
 
+	/**
+	 * Returns a {@code HashMap} of recipes and each value is a {@link List} with
+	 * the required base {@link Ingredient}s to craft the item.
+	 *
+	 * @return a {@code HashMap} of recipes and each value is a {@link List} with
+	 *         the required base {@link Ingredient}s
+	 */
 	public HashMap<Recipe, List<Ingredient>> getRequiredBaseIngredients(int branch) {
 		HashMap<Recipe, List<Ingredient>> ingredientsPerRecipe = new HashMap<Recipe, List<Ingredient>>();
 
@@ -159,7 +243,10 @@ public class CraftingSystem {
 			List<Recipe> recipes = this.itemToCraft.getRecipes();
 
 			for (Recipe recipe : recipes) {
+				// Calculate required base ingredients to craft the item
 				List<Ingredient> baseIngredients = getBaseIngredientsRecursive(recipe, this.quantityToCraft, branch);
+
+				// Link recipe with the calculated required base ingredients
 				ingredientsPerRecipe.put(recipe, baseIngredients);
 			}
 		}
@@ -177,17 +264,21 @@ public class CraftingSystem {
 
 		Item craftingTable = recipe.getCraftingTable();
 
+		// Set crafting table ingredient quantity
 		if (recipe.needsCraftingTable()) {
 			quantitiesPerItem.put(craftingTable, 1);
 		}
 
+		// Set each ingredient quantity
 		for (Ingredient ingredient : ingredients) {
 			Item item = ingredient.getItem();
 			int itemQuantityNeeded = ingredient.getQuantity() * craftsNeeded;
 
 			if (item.isBase()) {
+				// Append if it is a base one
 				quantitiesPerItem.put(item, quantitiesPerItem.getOrDefault(item, 0) + itemQuantityNeeded);
 			} else {
+				// Follow the recipe path if it is a complex one
 				List<Recipe> itemRecipes = item.getRecipes();
 
 				int recipeIndex = (branch + itemRecipes.size()) % itemRecipes.size();
@@ -196,6 +287,7 @@ public class CraftingSystem {
 				List<Ingredient> desiredRecipeBaseIngredients = getBaseIngredientsRecursive(desiredRecipe,
 						itemQuantityNeeded, branch);
 
+				// Append each base ingredient of the complex one
 				for (Ingredient baseIngredient : desiredRecipeBaseIngredients) {
 					Item baseItem = baseIngredient.getItem();
 					int baseItemQuantity = baseIngredient.getQuantity();
@@ -207,6 +299,7 @@ public class CraftingSystem {
 			}
 		}
 
+		// Calculate real base ingredient quantities
 		for (Map.Entry<Item, Integer> itemEntry : quantitiesPerItem.entrySet()) {
 			Item item = itemEntry.getKey();
 			Integer itemQuantity = itemEntry.getValue();
@@ -219,10 +312,18 @@ public class CraftingSystem {
 		return baseIngredients;
 	}
 
+	/**
+	 * Determines if the current item and quantity can be crafted with the available
+	 * inventory.
+	 *
+	 * @return {@code true} if crafting is possible, {@code false} otherwise
+	 */
 	public boolean canCraft() {
 		HashMap<Recipe, List<Ingredient>> missingIngredientsPerRecipe = this.getMissingIngredients();
 
 		for (List<Ingredient> missingIngredients : missingIngredientsPerRecipe.values()) {
+
+			// Return true when it finds a craftable recipe
 			if (missingIngredients.isEmpty()) {
 				return true;
 			}
@@ -231,6 +332,13 @@ public class CraftingSystem {
 		return false;
 	}
 
+	/**
+	 * Sets the item and quantity to craft.
+	 *
+	 * @param item
+	 * @param quantity
+	 * @throws InvalidItemException if the item is a base one
+	 */
 	public void setItemToCraft(Item item, int quantity) throws InvalidItemException {
 		if (item.isBase()) {
 			throw new InvalidItemException("Item to craft should not be a base one");
@@ -240,6 +348,14 @@ public class CraftingSystem {
 		this.quantityToCraft = quantity;
 	}
 
+	/**
+	 * Crafts the specified quantity of the item using the specified recipe.
+	 *
+	 * @param recipe recipe branch index to use for crafting
+	 * @return the crafted item as a {@link CraftedItem}
+	 * @throws NonCraftableItemException if the item cannot be crafted due to
+	 *                                   missing ingredients
+	 */
 	public CraftedItem craftItem(int recipe) throws NonCraftableItemException {
 		List<Recipe> recipes = this.itemToCraft.getRecipes();
 
@@ -249,6 +365,7 @@ public class CraftingSystem {
 		List<Ingredient> ingredients = selectedRecipe.getIngredients();
 		int recipeQuantityToCraft = selectedRecipe.getQuantityToCraft();
 
+		// Check if the required crafting table is within inventory
 		if (selectedRecipe.needsCraftingTable()) {
 			Item craftingTable = selectedRecipe.getCraftingTable();
 
@@ -261,6 +378,7 @@ public class CraftingSystem {
 			}
 		}
 
+		// Check if each ingredient quantity is within inventory
 		for (Ingredient ingredient : ingredients) {
 			Item ingItem = ingredient.getItem();
 			int ingQuantity = ingredient.getQuantity();
@@ -275,6 +393,7 @@ public class CraftingSystem {
 			}
 		}
 
+		// Remove ingredients from the inventory
 		for (Ingredient ingredient : ingredients) {
 			Item item = ingredient.getItem();
 			int quantity = (int) Math.ceil(this.quantityToCraft / (double) selectedRecipe.getQuantityToCraft())
@@ -289,6 +408,7 @@ public class CraftingSystem {
 			}
 		}
 
+		// Add crafted item to the inventory and append it to the crafting history
 		int itemsCrafted = selectedRecipe.getQuantityToCraft()
 				* (int) Math.ceil(this.quantityToCraft / (double) selectedRecipe.getQuantityToCraft());
 
@@ -305,10 +425,20 @@ public class CraftingSystem {
 		return craftedItem;
 	}
 
+	/**
+	 * Undoes the last crafted item, removing it from inventory and restoring used
+	 * ingredients.
+	 *
+	 * @return the last crafted item as a {@link CraftedItem}
+	 * @throws EmptyHistoryException if the crafting history is empty
+	 * @throws ItemNotFoundException if the crafted item is not found in the
+	 *                               inventory
+	 */
 	public CraftedItem undoLastCraft() throws EmptyHistoryException, ItemNotFoundException {
 		CraftedItem lastCraftedItem = this.history.getLastItem();
 		int quantityCrafted = lastCraftedItem.getQuantityCrafted();
 
+		// Remove crafted item from the inventory
 		try {
 			this.inventory.removeItem(lastCraftedItem, quantityCrafted);
 		} catch (ItemNotFoundException e) {
@@ -318,10 +448,12 @@ public class CraftingSystem {
 			// OutOfRangeException.
 		}
 
+		// Remove crafted item from the crafting history
 		lastCraftedItem = this.history.removeLastItem();
 		Recipe usedRecipe = lastCraftedItem.getUsedRecipe();
 		List<Ingredient> usedIngredients = usedRecipe.getIngredients();
 
+		// Add used ingredients
 		for (Ingredient ingredient : usedIngredients) {
 			Item itemIngredient = ingredient.getItem();
 			int itemIngredientQuantity = (int) Math.ceil(quantityCrafted / (double) usedRecipe.getQuantityToCraft())
