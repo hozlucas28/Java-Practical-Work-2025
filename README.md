@@ -43,7 +43,7 @@ This repository contains the practical work for the Programming Paradigms course
 
 -   Architecture planning
 -   Code conventions and standards
--   Code documentation
+-   Code documentation using [JavaDoc](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html) syntax
 -   Collections
 -   Commits following the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
 -   Deployment of releases
