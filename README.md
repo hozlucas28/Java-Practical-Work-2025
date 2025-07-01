@@ -1,5 +1,5 @@
 <h1 align="center">
-    Java Practical Work [2025] [WIP] <!-- TODO -->
+    Java Practical Work [2025]
 </h1>
 
 <p align="center">
