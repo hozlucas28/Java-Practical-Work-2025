@@ -53,7 +53,7 @@ public class Recipe {
 
 	/**
 	 *
-	 * @return an unmodifiable list of the recipe ingredients
+	 * @return an unmodifiable {@link List} of the recipe ingredients
 	 */
 	public List<Ingredient> getIngredients() {
 		return Collections.unmodifiableList(this.ingredients);
@@ -74,10 +74,10 @@ public class Recipe {
 	}
 
 	/**
-	 * Returns a list of base ingredients required for this recipe, resolving any
+	 * Returns a {@link List} of base ingredients required for this recipe, resolving any
 	 * non-base ingredients recursively.
 	 *
-	 * @return the list of base ingredients
+	 * @return the {@link List} of base ingredients
 	 */
 	public List<Ingredient> getBaseIngredients() {
 		HashMap<Ingredient, Integer> baseIngredientsMap = new HashMap<Ingredient, Integer>();

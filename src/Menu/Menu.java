@@ -51,13 +51,13 @@ public class Menu {
 	 * Constructs a new {@code Menu} with the specified dependencies and initial
 	 * crafting selection.
 	 *
-	 * @param scanner         scanner for user input
-	 * @param inventory       user's inventory
-	 * @param itemsRepository repository of items and recipes
-	 * @param itemToCraft     initial item to craft (can be {@code null})
-	 * @param quantityToCraft initial quantity to craft
-	 * @param craftingSystem  crafting system
-	 * @param prologService   Prolog service
+	 * @param scanner
+	 * @param inventory
+	 * @param itemsRepository
+	 * @param itemToCraft     can be {@code null}
+	 * @param quantityToCraft
+	 * @param craftingSystem
+	 * @param prologService
 	 */
 	public Menu(Scanner scanner, Inventory inventory, ItemsRepository itemsRepository, Item itemToCraft,
 			int quantityToCraft, CraftingSystem craftingSystem, PrologService prologService) {
