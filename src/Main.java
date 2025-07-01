@@ -32,7 +32,7 @@ public class Main {
 			System.out.print("> Fatal error! Items repository file has an invalid recipes structure.");
 			System.exit(103);
 		} catch (Exception e) {
-			System.out.printf("> Fatal error! An error occured on try to load items repository from \"%s\" json file.",
+			System.out.printf("> Fatal error! An error occurred on try to load items repository from \"%s\" json file.",
 					recipesPath);
 			System.exit(104);
 		}
@@ -50,7 +50,7 @@ public class Main {
 			System.out.print("> Fatal error! Inventory file has an invalid JSON syntax.");
 			System.exit(202);
 		} catch (Exception e) {
-			System.out.printf("> Fatal error! An error occured on try to load the inventory from \"%s\" json file.",
+			System.out.printf("> Fatal error! An error occurred on try to load the inventory from \"%s\" json file.",
 					inventoryPath);
 			System.exit(203);
 		}
