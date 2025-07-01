@@ -2,8 +2,10 @@ package craftingSystem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import exceptions.EmptyHistoryException;
 import exceptions.InvalidItemException;
@@ -244,7 +246,8 @@ public class CraftingSystem {
 
 			for (Recipe recipe : recipes) {
 				// Calculate required base ingredients to craft the item
-				List<Ingredient> baseIngredients = getBaseIngredientsRecursive(recipe, this.quantityToCraft, branch);
+				List<Ingredient> baseIngredients = getBaseIngredientsRecursive(recipe, this.quantityToCraft, branch,
+						new HashSet<Item>());
 
 				// Link recipe with the calculated required base ingredients
 				ingredientsPerRecipe.put(recipe, baseIngredients);
@@ -254,20 +257,53 @@ public class CraftingSystem {
 		return ingredientsPerRecipe;
 	}
 
-	private List<Ingredient> getBaseIngredientsRecursive(Recipe recipe, int totalToCraft, int branch) {
-		List<Ingredient> ingredients = recipe.getIngredients();
+	private List<Ingredient> getBaseIngredientsRecursive(Recipe recipe, int totalToCraft, int branch,
+			Set<Item> processedCraftingTables) {
 
-		Map<Item, Integer> quantitiesPerItem = new HashMap<Item, Integer>();
+		HashMap<Item, Integer> quantitiesPerItem = new HashMap<Item, Integer>();
 		List<Ingredient> baseIngredients = new ArrayList<Ingredient>();
 
 		int craftsNeeded = (int) Math.ceil(totalToCraft / (double) recipe.getQuantityToCraft());
 
 		Item craftingTable = recipe.getCraftingTable();
 
-		// Set crafting table ingredient quantity
+		// Handle crafting table
 		if (recipe.needsCraftingTable()) {
-			quantitiesPerItem.put(craftingTable, 1);
+			if (!processedCraftingTables.contains(craftingTable)) {
+				processedCraftingTables.add(craftingTable);
+
+				// Check if the crafting table is a base one
+				if (craftingTable.isBase()) {
+					// Set quantity if it is a base one
+					quantitiesPerItem.put(craftingTable, 1);
+				} else {
+					// Follow the recipe path if it is a complex one
+					List<Recipe> recipes = craftingTable.getRecipes();
+
+					int recipeIndex = (branch + recipes.size()) % recipes.size();
+					Recipe desiredRecipe = recipes.get(recipeIndex);
+
+					List<Ingredient> tableBaseIngredients = getBaseIngredientsRecursive(desiredRecipe, 1, branch,
+							processedCraftingTables);
+
+					// Set each base ingredient quantity of the complex one
+					for (Ingredient baseIngredient : tableBaseIngredients) {
+						Item baseItem = baseIngredient.getItem();
+						int baseItemQuantity = baseIngredient.getQuantity();
+
+						// Check if base item is the crafting table
+						if (baseItem.equals(craftingTable)) {
+							quantitiesPerItem.put(craftingTable, 1);
+						} else {
+							quantitiesPerItem.put(baseItem,
+									quantitiesPerItem.getOrDefault(baseItem, 0) + baseItemQuantity);
+						}
+					}
+				}
+			}
 		}
+
+		List<Ingredient> ingredients = recipe.getIngredients();
 
 		// Set each ingredient quantity
 		for (Ingredient ingredient : ingredients) {
@@ -275,9 +311,9 @@ public class CraftingSystem {
 			int itemQuantityNeeded = ingredient.getQuantity() * craftsNeeded;
 
 			if (item.isBase()) {
-				// Append if it is a base one
+				// Set quantity if it is a base one
 				quantitiesPerItem.put(item, quantitiesPerItem.getOrDefault(item, 0) + itemQuantityNeeded);
-			} else {
+			} else if (!item.equals(craftingTable)) {
 				// Follow the recipe path if it is a complex one
 				List<Recipe> itemRecipes = item.getRecipes();
 
@@ -285,14 +321,17 @@ public class CraftingSystem {
 				Recipe desiredRecipe = itemRecipes.get(recipeIndex);
 
 				List<Ingredient> desiredRecipeBaseIngredients = getBaseIngredientsRecursive(desiredRecipe,
-						itemQuantityNeeded, branch);
+						itemQuantityNeeded, branch, processedCraftingTables);
 
-				// Append each base ingredient of the complex one
+				// Set each base ingredient quantity of the complex one
 				for (Ingredient baseIngredient : desiredRecipeBaseIngredients) {
 					Item baseItem = baseIngredient.getItem();
 					int baseItemQuantity = baseIngredient.getQuantity();
 
-					if (baseItem != craftingTable) {
+					// Check if base item is the crafting table
+					if (baseItem.equals(craftingTable)) {
+						quantitiesPerItem.put(craftingTable, 1);
+					} else {
 						quantitiesPerItem.put(baseItem, quantitiesPerItem.getOrDefault(baseItem, 0) + baseItemQuantity);
 					}
 				}

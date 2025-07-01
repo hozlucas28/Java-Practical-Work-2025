@@ -211,15 +211,22 @@ class CraftingSystemTests {
 		Inventory inventory = new Inventory(new HashMap<Item, Integer>());
 		CraftingSystem craftingSystem = new CraftingSystem(inventory);
 
+		Item wood = new Item("wood");
 		Item lava = new Item("lava");
 		Item water = new Item("water");
 		Item paper = new Item("paper");
 		Item diamond = new Item("diamond");
 		Item cowhide = new Item("cowhide");
 
-		Item woodCraftingTable = new Item("wood crafting table");
-
 		// @formatter:off
+		Recipe woodCraftingTableRecipe = new Recipe(
+			List.of(new Ingredient(wood, 4)),
+			1050,
+			1
+		);
+		
+		Item woodCraftingTable = new Item("wood crafting table", List.of(woodCraftingTableRecipe));
+		
 		Recipe bookRecipe = new Recipe(
 			woodCraftingTable,
 			List.of(
@@ -275,8 +282,8 @@ class CraftingSystemTests {
 		Map<Recipe, List<Ingredient>> expected = Map.of(
 			enchantingTableRecipe,
 			List.of(
-				new Ingredient(woodCraftingTable, 1),
 				new Ingredient(diamond, 4),
+				new Ingredient(wood, 4),
 				new Ingredient(cowhide, 3),
 				new Ingredient(water, 6),
 				new Ingredient(lava, 5)
