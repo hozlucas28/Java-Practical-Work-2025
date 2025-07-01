@@ -25,6 +25,11 @@ import recipe.Ingredient;
 import recipe.Recipe;
 import utilities.StringTransformers;
 
+/**
+ * Repository class for managing a collection of {@link Item} objects. Provides
+ * methods to retrieve, filter, and load items from a JSON file, as well as to
+ * format the repository contents as a string.
+ */
 public class ItemsRepository {
 	private final HashMap<String, Item> items;
 
@@ -32,10 +37,17 @@ public class ItemsRepository {
 		this.items = items;
 	}
 
+	/**
+	 * @return a {@link HashMap} of item names to {@link Item} objects
+	 */
 	public HashMap<String, Item> getItems() {
 		return this.items;
 	}
 
+	/**
+	 * @return a {@link HashMap} of craftable item names (non-base items) to
+	 *         {@link Item} objects
+	 */
 	public HashMap<String, Item> getCraftableItems() {
 		HashMap<String, Item> craftableItems = new HashMap<String, Item>();
 
@@ -51,11 +63,31 @@ public class ItemsRepository {
 		return craftableItems;
 	}
 
+	/**
+	 * Retrieves an item by its name.
+	 *
+	 * @param name item name to retrieve
+	 * @return the {@link Item} with the specified name, or {@code null} if not
+	 *         found
+	 */
 	public Item getItem(String name) {
 		Item item = this.items.get(name);
 		return item;
 	}
 
+	/**
+	 * Loads an {@code ItemsRepository} from a JSON file at the specified path. The
+	 * JSON must define items and their recipes, which are parsed and linked.
+	 *
+	 * @param path file path to the JSON file
+	 * @return a new {@code ItemsRepository} instance loaded from the JSON file
+	 * @throws FileNotFoundException if the file does not exist
+	 * @throws JsonIOException       if there is an I/O error during JSON parsing
+	 * @throws JsonSyntaxException   if the JSON is malformed
+	 * @throws ItemNotFoundException if a referenced item is not found in the items
+	 *                               map
+	 * @throws IOException           if an I/O error occurs
+	 */
 	public static ItemsRepository loadFromJSON(String path)
 			throws FileNotFoundException, JsonIOException, JsonSyntaxException, ItemNotFoundException, IOException {
 		FileInputStream fileStream = new FileInputStream(path);
@@ -128,12 +160,14 @@ public class ItemsRepository {
 
 		// Link recipes with items
 		for (Item item : items.values()) {
+			// Don't link it if it is base item
 			if (item.isBase()) {
 				continue;
 			}
 
 			List<Recipe> itemRecipes = item.getRecipes();
 			for (Recipe recipe : itemRecipes) {
+				// Link crafting table if it's exists
 				if (recipe.needsCraftingTable()) {
 					Item craftingTable = recipe.getCraftingTable();
 					Item craftingTableRef = items.get(craftingTable.getName());
@@ -148,6 +182,7 @@ public class ItemsRepository {
 					recipe.setCraftingTable(craftingTableRef);
 				}
 
+				// Link ingredients with items
 				List<Ingredient> ingredients = recipe.getIngredients();
 				List<Ingredient> realIngredients = new ArrayList<Ingredient>();
 
@@ -169,6 +204,7 @@ public class ItemsRepository {
 					realIngredients.add(realIngredient);
 				}
 
+				// Set linked ingredients
 				recipe.setIngredients(realIngredients);
 			}
 		}
@@ -179,6 +215,15 @@ public class ItemsRepository {
 		return itemsRepository;
 	}
 
+	/**
+	 * Returns a formatted string representation of the repository's items and their
+	 * recipes.
+	 *
+	 * @param itemMarkers array with three string markers used for formatting items
+	 *                    and recipes.
+	 * @param lPadding    left padding to apply for formatting
+	 * @return a formatted string representing the items and their recipes
+	 */
 	public String toString(String itemMarkers[], int lPadding) {
 		StringBuilder builder = new StringBuilder();
 		Formatter formatter = new Formatter(builder);
@@ -186,6 +231,7 @@ public class ItemsRepository {
 		HashMap<String, Item> baseItems = new HashMap<String, Item>();
 		HashMap<String, Item> craftableItems = new HashMap<String, Item>();
 
+		// Separate base items from craftable ones
 		for (Map.Entry<String, Item> itemEntry : this.items.entrySet()) {
 			String itemName = itemEntry.getKey();
 			Item item = itemEntry.getValue();
@@ -197,11 +243,13 @@ public class ItemsRepository {
 			}
 		}
 
+		// Append base items to formatter
 		for (String itemName : baseItems.keySet()) {
 			formatter.format("%" + lPadding + "s%s ", " ", itemMarkers[0]);
 			formatter.format("%s\n", StringTransformers.toTitle(itemName));
 		}
 
+		// Append craftable items to formatter
 		for (Map.Entry<String, Item> itemEntry : craftableItems.entrySet()) {
 			String itemName = itemEntry.getKey();
 			Item item = itemEntry.getValue();
@@ -212,6 +260,7 @@ public class ItemsRepository {
 			List<Recipe> itemRecipes = item.getRecipes();
 			int itemRecipesLength = itemRecipes.size();
 
+			// Append recipes to formatter
 			for (int i = 0; i < itemRecipesLength; i++) {
 				Recipe recipe = itemRecipes.get(i);
 
@@ -224,6 +273,7 @@ public class ItemsRepository {
 				formatter.format("Recipe #%d (x%d ~ %d milliseconds)\n", i + 1, quantityToCraft,
 						timeToCraftInMilliseconds);
 
+				// Append crafting table to formatter if it's exists
 				if (recipe.needsCraftingTable()) {
 					String craftingTable = recipe.getCraftingTable().getName();
 
@@ -231,6 +281,7 @@ public class ItemsRepository {
 					formatter.format("%s (x1)\n", StringTransformers.toTitle(craftingTable));
 				}
 
+				// Append recipe ingredients to formatter
 				for (Ingredient ingredient : ingredients) {
 					formatter.format("%s\n", ingredient.toString(itemMarkers[2], lPadding * 3));
 				}
