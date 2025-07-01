@@ -14,12 +14,29 @@ public class Recipe {
 	private final int timeToCraftInMilliseconds;
 	private final int quantityToCraft;
 
+	/**
+	 * Constructs a Recipe with the specified ingredients, crafting time, and
+	 * quantity.
+	 *
+	 * @param ingredients               list of ingredients
+	 * @param timeToCraftInMilliseconds time required to craft, in milliseconds
+	 * @param quantityToCraft           quantity produced when it is crafted
+	 */
 	public Recipe(List<Ingredient> ingredients, int timeToCraftInMilliseconds, int quantityToCraft) {
 		this.ingredients = ingredients;
 		this.timeToCraftInMilliseconds = timeToCraftInMilliseconds;
 		this.quantityToCraft = quantityToCraft;
 	}
 
+	/**
+	 * Constructs a Recipe with a crafting table, ingredients, crafting time, and
+	 * quantity.
+	 *
+	 * @param craftingTable      crafting table required
+	 * @param ingredients        list of ingredients required
+	 * @param timeInMilliseconds time required to craft, in milliseconds
+	 * @param quantityToCraft    quantity produced when it is crafted
+	 */
 	public Recipe(Item craftingTable, List<Ingredient> ingredients, int timeInMilliseconds, int quantityToCraft) {
 		this.craftingTable = craftingTable;
 		this.ingredients = ingredients;
@@ -27,22 +44,41 @@ public class Recipe {
 		this.quantityToCraft = quantityToCraft;
 	}
 
+	/**
+	 * @return the crafting table for this recipe, or null if not required.
+	 */
 	public Item getCraftingTable() {
 		return this.craftingTable;
 	}
 
+	/**
+	 *
+	 * @return an unmodifiable list of the recipe ingredients
+	 */
 	public List<Ingredient> getIngredients() {
 		return Collections.unmodifiableList(this.ingredients);
 	}
 
+	/**
+	 * @return the crafting time in milliseconds to craft this recipe
+	 */
 	public int getTimeToCraftInMilliseconds() {
 		return this.timeToCraftInMilliseconds;
 	}
 
+	/**
+	 * @return the quantity produced when this recipe is crafted
+	 */
 	public int getQuantityToCraft() {
 		return this.quantityToCraft;
 	}
 
+	/**
+	 * Returns a list of base ingredients required for this recipe, resolving any
+	 * non-base ingredients recursively.
+	 *
+	 * @return the list of base ingredients
+	 */
 	public List<Ingredient> getBaseIngredients() {
 		HashMap<Ingredient, Integer> baseIngredientsMap = new HashMap<Ingredient, Integer>();
 
@@ -79,6 +115,11 @@ public class Recipe {
 		return baseIngredients;
 	}
 
+	/**
+	 * Returns whether this recipe requires a crafting table.
+	 *
+	 * @return true if a crafting table is required, false otherwise
+	 */
 	public boolean needsCraftingTable() {
 		return this.craftingTable != null;
 	}
