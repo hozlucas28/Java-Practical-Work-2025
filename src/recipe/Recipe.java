@@ -15,7 +15,6 @@ public class Recipe {
 	private final int quantityToCraft;
 
 	public Recipe(List<Ingredient> ingredients, int timeToCraftInMilliseconds, int quantityToCraft) {
-		this.craftingTable = null;
 		this.ingredients = ingredients;
 		this.timeToCraftInMilliseconds = timeToCraftInMilliseconds;
 		this.quantityToCraft = quantityToCraft;
