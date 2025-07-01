@@ -117,14 +117,16 @@ public class CraftingSystem {
 					if (maxCraftable < 1) {
 						return 0;
 					}
+
 					// Subtract ingredients needed for crafting table from inventory snapshot
 					craftingTableIngredients = bestRecipe.getIngredients();
 
-					for (Ingredient ctIng : craftingTableIngredients) {
-						Item ctItem = ctIng.getItem();
-						int ctQty = ctIng.getQuantity();
-						inventorySnapshot.put(ctItem,
-								inventorySnapshot.getOrDefault(ctItem, this.inventory.getItemQuantity(ctItem)) - ctQty);
+					for (Ingredient ingredient : craftingTableIngredients) {
+						Item item = ingredient.getItem();
+						int quantity = ingredient.getQuantity();
+
+						inventorySnapshot.put(item,
+								inventorySnapshot.getOrDefault(item, this.inventory.getItemQuantity(item)) - quantity);
 					}
 				} else {
 					return 0;
