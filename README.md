@@ -218,6 +218,7 @@ direction TB
 
         +List~CraftedItem~ getCraftedItems()
 	    +int getCraftableUnits()
+        -int getCraftableUnits(Recipe recipe)
         +HashMap~Recipe, List~Ingredient~~ getMissingIngredients()
         +HashMap~Recipe, List~Ingredient~~ getMissingBaseIngredients(int branch)
         -HashMap~Recipe, List~Ingredient~~ getMissingIngredients(HashMap~Recipe, List~Ingredient~~ recipes)

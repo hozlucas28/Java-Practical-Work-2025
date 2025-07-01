@@ -85,10 +85,15 @@ class CraftingSystemTests {
 		// Arrange
 		Item iron = new Item("iron");
 		Item coal = new Item("coal");
-		Item stick = new Item("stick");
+		Item wood = new Item("wood");
 		Item charcoal = new Item("coal");
 
 		Item woodCraftingTable = new Item("wood crafting table");
+		
+		List<Ingredient> stickRecipeIngredients = List.of(new Ingredient(wood, 1));
+		Recipe stickRecipe = new Recipe(stickRecipeIngredients , 1350, 4);
+		
+		Item stick = new Item("stick", List.of(stickRecipe));
 
 		List<Ingredient> swordRecipeIngredients = List.of(new Ingredient(iron, 2), new Ingredient(stick, 1));
 		Recipe swordRecipe = new Recipe(woodCraftingTable, swordRecipeIngredients, 2100, 1);
@@ -107,7 +112,7 @@ class CraftingSystemTests {
 
 		inventoryItems.put(iron, 5);
 		inventoryItems.put(coal, 2);
-		inventoryItems.put(stick, 3);
+		inventoryItems.put(wood, 2);
 		inventoryItems.put(charcoal, 3);
 		inventoryItems.put(woodCraftingTable, 1);
 

@@ -37,38 +37,54 @@ public class CraftingSystem {
 
 		if (this.quantityToCraft > 0) {
 			for (Recipe recipe : this.itemToCraft.getRecipes()) {
-				List<Ingredient> ingredients = recipe.getIngredients();
-
-				Integer minCraftableUnits = null;
-
-				if (recipe.needsCraftingTable()) {
-					Item craftingTable = recipe.getCraftingTable();
-					int quantityInInventory = this.inventory.getItemQuantity(craftingTable);
-
-					if (quantityInInventory < 1) {
-						continue;
-					}
-				}
-
-				for (Ingredient ingredient : ingredients) {
-					Item item = ingredient.getItem();
-					int quantity = ingredient.getQuantity();
-					int quantityInInventory = this.inventory.getItemQuantity(item);
-
-					int ingredientUnits = quantityInInventory / quantity;
-
-					minCraftableUnits = minCraftableUnits == null ? ingredientUnits
-							: Math.min(minCraftableUnits, ingredientUnits);
-				}
-
-				int craftableRecipeUnits = minCraftableUnits == null ? 0
-						: minCraftableUnits * recipe.getQuantityToCraft();
-
-				maxCraftableUnits = Math.max(maxCraftableUnits, craftableRecipeUnits);
+				int craftableByRecipe = getCraftableUnits(recipe);
+				maxCraftableUnits = Math.max(maxCraftableUnits, craftableByRecipe);
 			}
 		}
 
 		return maxCraftableUnits;
+	}
+
+	private int getCraftableUnits(Recipe recipe) {
+		Integer minCraftableUnits = null;
+		List<Ingredient> ingredients = recipe.getIngredients();
+
+		if (recipe.needsCraftingTable()) {
+			Item craftingTable = recipe.getCraftingTable();
+			int quantityInInventory = this.inventory.getItemQuantity(craftingTable);
+
+			if (quantityInInventory < 1) {
+				return 0;
+			}
+		}
+
+		for (Ingredient ingredient : ingredients) {
+			Item item = ingredient.getItem();
+			int requiredQuantity = ingredient.getQuantity();
+			int quantityInInventory = this.inventory.getItemQuantity(item);
+
+			int totalAvailable = quantityInInventory;
+
+			if (!item.isBase() && quantityInInventory < requiredQuantity) {
+				int maxCraftable = 0;
+
+				for (Recipe subRecipe : item.getRecipes()) {
+					maxCraftable = Math.max(maxCraftable, getCraftableUnits(subRecipe));
+				}
+
+				totalAvailable += maxCraftable;
+			}
+
+			int ingredientUnits = totalAvailable / requiredQuantity;
+			minCraftableUnits = minCraftableUnits == null ? ingredientUnits
+					: Math.min(minCraftableUnits, ingredientUnits);
+
+			if (minCraftableUnits < 1) {
+				return 0;
+			}
+		}
+
+		return minCraftableUnits == null ? 0 : minCraftableUnits * recipe.getQuantityToCraft();
 	}
 
 	public HashMap<Recipe, List<Ingredient>> getMissingIngredients() {
