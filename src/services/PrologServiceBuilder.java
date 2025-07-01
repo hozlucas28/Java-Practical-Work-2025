@@ -1,21 +1,15 @@
 package services;
 
-import java.util.HashMap;
-
 import inventory.Inventory;
-import inventory.Item;
 import repositories.ItemsRepository;
 
 public class PrologServiceBuilder {
-	private String baseItemFactName = "base_item";
-	private String ingredientFactName = "ingredient";
-	private String itemInInventoryFactName = "have";
+	private String baseItemFactName;
+	private String ingredientFactName;
+	private String itemInInventoryFactName;
 
-	private ItemsRepository itemsRepository = new ItemsRepository(new HashMap<String, Item>());
-	private Inventory inventory = new Inventory(new HashMap<Item, Integer>());
-
-	public PrologServiceBuilder() {
-	}
+	private ItemsRepository itemsRepository;
+	private Inventory inventory;
 
 	public PrologServiceBuilder setBaseItemFactName(String baseItemFactName) {
 		this.baseItemFactName = baseItemFactName;
@@ -43,7 +37,14 @@ public class PrologServiceBuilder {
 	}
 
 	public PrologService build() {
-		return new PrologService(this.baseItemFactName, this.ingredientFactName, this.itemInInventoryFactName,
-				this.itemsRepository, this.inventory);
+		// @formatter:off
+		return new PrologService(
+			this.baseItemFactName,
+			this.ingredientFactName,
+			this.itemInInventoryFactName,
+			this.itemsRepository,
+			this.inventory
+		);
+		// @formatter:on
 	}
 }
