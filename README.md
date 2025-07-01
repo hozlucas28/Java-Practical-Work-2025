@@ -350,7 +350,7 @@ gitGraph:
 
 ## Additional material
 
--   [Practical work report](#) <!-- TODO -->
+-   [Practical work report](./docs/assets/report.pdf)
 -   [Practical work requirements](./docs/translations/en/requirements.md)
 
 ## License
