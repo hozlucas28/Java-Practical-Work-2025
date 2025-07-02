@@ -37,7 +37,8 @@ class CraftingHistoryTests {
 		List<CraftedItem> received = craftingHistory.getItems();
 
 		// Assert
-		assertEquals(expected, received, "Should add crafted items (refined stone and sturdy wood) to the crafting history");
+		assertEquals(expected, received,
+				"Should add crafted items (refined stone and sturdy wood) to the crafting history");
 	}
 
 	@Test
