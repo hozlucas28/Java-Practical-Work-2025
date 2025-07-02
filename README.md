@@ -39,6 +39,9 @@
 
 This repository contains the practical work for the Programming Paradigms course at the [National University of La Matanza (UNLaM)](https://www.unlam.edu.ar/). The practical work consists of doing a crafting system in Java and testing it with [JUnit 5](https://junit.org/junit5/).
 
+> [!TIP]
+> If you want the read an extensive documentation of each process involved within the system, consult the [dedicated documentation page](https://deepwiki.com/hozlucas28/Java-Practical-Work-2025).
+
 ## Features
 
 -   Architecture planning
@@ -46,6 +49,7 @@ This repository contains the practical work for the Programming Paradigms course
 -   Code documentation using [JavaDoc](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html) syntax
 -   Collections
 -   Commits following the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+-   Dedicated documentation page
 -   Deployment of releases
 -   E2E testing with [JUnit 5](https://junit.org/junit5/)
 -   File reading and interpretation

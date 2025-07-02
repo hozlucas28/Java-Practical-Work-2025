@@ -39,6 +39,9 @@
 
 Este repositorio contiene el trabajo práctico para el curso de Paradigmas de Programación en la [Universidad Nacional de La Matanza (UNLaM)](https://www.unlam.edu.ar/). El trabajo práctico consiste en realizar un sistema de crafteo en Java y probarlo con [JUnit 5](https://junit.org/junit5/).
 
+> [!TIP]
+> Si desea leer una documentación extensa de cada proceso involucrado dentro del sistema, consulte la [página con la documentación dedicada](https://deepwiki.com/hozlucas28/Java-Practical-Work-2025).
+
 ## Características
 
 -   Almacenamiento local de registros
@@ -49,6 +52,7 @@ Este repositorio contiene el trabajo práctico para el curso de Paradigmas de Pr
 -   Despliegue de versiones
 -   Documentación del código usando la sintaxis de [JavaDoc](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html)
 -   Lectura e interpretación de archivos
+-   Página de documentación dedicada
 -   Planificación de arquitectura
 -   Planificación del flujo de trabajo en equipo (ramas, etiquetas y versiones)
 -   Pruebas E2E con [JUnit 5](https://junit.org/junit5/)
