@@ -52,7 +52,7 @@ Este repositorio contiene el trabajo práctico para el curso de Paradigmas de Pr
 -   Despliegue de versiones
 -   Documentación del código usando la sintaxis de [JavaDoc](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html)
 -   Lectura e interpretación de archivos
--   Página de documentación dedicada
+-   Página de [documentación dedicada](https://deepwiki.com/hozlucas28/Java-Practical-Work-2025)
 -   Planificación de arquitectura
 -   Planificación del flujo de trabajo en equipo (ramas, etiquetas y versiones)
 -   Pruebas E2E con [JUnit 5](https://junit.org/junit5/)

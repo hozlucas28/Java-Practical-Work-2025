@@ -49,7 +49,7 @@ This repository contains the practical work for the Programming Paradigms course
 -   Code documentation using [JavaDoc](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html) syntax
 -   Collections
 -   Commits following the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
--   Dedicated documentation page
+-   Dedicated [documentation page](https://deepwiki.com/hozlucas28/Java-Practical-Work-2025)
 -   Deployment of releases
 -   E2E testing with [JUnit 5](https://junit.org/junit5/)
 -   File reading and interpretation
