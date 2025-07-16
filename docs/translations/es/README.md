@@ -51,6 +51,7 @@ Este repositorio contiene el trabajo práctico para el curso de Paradigmas de Pr
 -   Convenciones y estándares de código
 -   Despliegue de versiones
 -   Documentación del código usando la sintaxis de [JavaDoc](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html)
+-   Integración con [Prolog](https://www.swi-prolog.org/)
 -   Lectura e interpretación de archivos
 -   Página de [documentación dedicada](https://deepwiki.com/hozlucas28/Java-Practical-Work-2025)
 -   Planificación de arquitectura

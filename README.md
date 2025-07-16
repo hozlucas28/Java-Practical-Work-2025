@@ -54,6 +54,7 @@ This repository contains the practical work for the Programming Paradigms course
 -   E2E testing with [JUnit 5](https://junit.org/junit5/)
 -   File reading and interpretation
 -   Input control using validations
+-   Integration with [Prolog](https://www.swi-prolog.org/)
 -   Local storage of records
 -   Team Workflow planning (branches, tags, and releases)
 -   Unit testing with [JUnit 5](https://junit.org/junit5/)
