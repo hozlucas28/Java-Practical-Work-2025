@@ -3,7 +3,7 @@
 </h1>
 
 <p align="center">
-    <strong>Repository for the practical work of the Programming Paradigms course</strong>
+    <strong>Repository for the practical work of the Programming Paradigms subject</strong>
     <br>
     <strong>- <a href="https://www.unlam.edu.ar/">UNLaM</a> (National University of La Matanza) -</strong>
 </p>
@@ -37,7 +37,7 @@
 
 ## Summary
 
-This repository contains the practical work for the Programming Paradigms course at the [National University of La Matanza (UNLaM)](https://www.unlam.edu.ar/). The practical work consists of doing a crafting system in Java and testing it with [JUnit 5](https://junit.org/junit5/).
+This repository contains the practical work for the Programming Paradigms subject at the [National University of La Matanza (UNLaM)](https://www.unlam.edu.ar/). The practical work consists of doing a crafting system in Java and testing it with [JUnit 5](https://junit.org/junit5/).
 
 > [!TIP]
 > If you want the read an extensive documentation of each process involved within the system, consult the [dedicated documentation page](https://deepwiki.com/hozlucas28/Java-Practical-Work-2025).
@@ -364,4 +364,4 @@ This repository is under the [MIT license](./LICENSE). For more information abou
 
 ## Acknowledgments
 
-We would like to thank the teachers from the [UNLaM](https://www.unlam.edu.ar/) Programming Paradigms course for their support and guidance.
+We would like to thank the teachers from the [UNLaM](https://www.unlam.edu.ar/) Programming Paradigms subject for their support and guidance.
