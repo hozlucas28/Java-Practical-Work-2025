@@ -109,10 +109,6 @@ To change the list of available items to craft, you must update the [recipes.jso
 config:
   class:
     hideEmptyMembersBox: true
-
-  theme: redux
-  look: neo
-  layout: elk
 ---
 classDiagram
 direction TB
