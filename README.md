@@ -22,7 +22,7 @@
 </p>
 
 <p align="center">
-    <a href="./docs/translations/es/README.md">(Spanish version)</a>
+    <a href="./docs/translations/es/README.md">(spanish version)</a>
 </p>
 
 <p align="center">
