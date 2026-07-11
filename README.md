@@ -22,17 +22,15 @@
 </p>
 
 <p align="center">
-    <a href="./docs/translations/es/README.md">[ Spanish version ]</a>
+    <a href="./docs/translations/es/README.md">(Spanish version)</a>
 </p>
 
 <p align="center">
-    <a href="https://youtu.be/-exAnyC0znc">
-        <img src="./docs/assets/preview.png" width="800" alt="Preview">
-    </a>
-</p>
-
-<p align="center">
-    <a href="https://youtu.be/-exAnyC0znc" target="_blank">(demonstration video)</a>
+    <a href="https://youtu.be/-exAnyC0znc" target="_blank">
+		<img src="./docs/assets/preview.png" alt="Preview" width="800">
+		<br />
+		(demonstration video)
+	</a>
 </p>
 
 ## Summary
